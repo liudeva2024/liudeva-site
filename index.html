@@ -70,7 +70,7 @@ section{position:relative;padding:120px 5vw}
 .manifesto-text .accent{color:var(--amber)}
 .manifesto-note{margin-top:34px;text-align:center;font-size:13px;color:var(--ink-faint);letter-spacing:.14em}
 
-/* ===== field notes ===== */
+/* ===== field notes & lab ===== */
 .notes-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:22px}
 .note-card{background:var(--bg-soft);border:1px solid var(--line);padding:34px 30px;transition:transform .3s,border-color .3s}
 .note-card:hover{transform:translateY(-4px);border-color:rgba(229,155,83,.4)}
@@ -79,6 +79,10 @@ section{position:relative;padding:120px 5vw}
 .note-title{font-family:var(--serif);font-size:19px;font-weight:600;margin-bottom:10px;color:var(--ink)}
 .note-body{font-size:14px;color:var(--ink-dim);line-height:1.85}
 .note-tag{display:inline-block;margin-top:16px;font-size:12px;letter-spacing:.1em;color:var(--ink-faint)}
+.note-footer{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:20px;padding-top:14px;border-top:1px solid var(--line)}
+.note-footer .note-tag{margin-top:0}
+.demo-link{font-size:13px;letter-spacing:.08em;color:var(--teal);white-space:nowrap}
+.demo-link:hover{color:var(--amber)}
 
 /* ===== systems ===== */
 .systems{background:var(--bg-mid)}
@@ -142,6 +146,7 @@ footer b{color:var(--ink-dim);font-weight:500}
   <div class="brand">liudeva<span>.</span></div>
   <nav class="nav">
     <a href="#notes">Field Notes</a>
+    <a href="#lab">Field Lab</a>
     <a href="#systems">Systems</a>
     <a href="#quotes">Quotes</a>
     <a href="#connect">Connect</a>
@@ -218,11 +223,35 @@ footer b{color:var(--ink-dim);font-weight:500}
   </div>
 </section>
 
+<!-- ===== field lab ===== -->
+<section class="lab" id="lab">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="sec-no">03 · FIELD LAB</span>
+      <h2 class="sec-title">试验田 · 自己动手搭的东西</h2>
+      <p class="sec-desc">自己实践搭建的 demo——有工作场景的，也有个人提效的。每一次动手，都是把想法变成可用系统的一次试验。</p>
+      <div class="sec-rule"></div>
+    </div>
+    <div class="notes-grid">
+      <article class="note-card">
+        <svg class="note-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="3" y="6" width="18" height="15" rx="2"/><path d="M8 3h8M12 3v7M9.2 6.4 12 3l2.8 3.4"/></svg>
+        <div class="note-kicker">PERSONAL TOOL · 个人提效</div>
+        <h3 class="note-title">堆肥工作台</h3>
+        <p class="note-body">不是收藏夹，是堆肥箱：随手扔进有触动的内容，AI 帮你提炼成问题、模型与反直觉——几个月后回看，看见自己的智识轨迹。</p>
+        <div class="note-footer">
+          <span class="note-tag">知识管理 · AI 提炼</span>
+          <a class="demo-link" href="https://larkcommunity.feishu.cn/base/SXAAbBgAtaubjSsN82Sc2Bh0nnf" target="_blank" rel="noopener">try it →</a>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
 <!-- ===== systems ===== -->
 <section class="systems" id="systems">
   <div class="wrap">
     <div class="sec-head">
-      <span class="sec-no">03 · SYSTEMS & METHODS</span>
+      <span class="sec-no">04 · SYSTEMS & METHODS</span>
       <h2 class="sec-title">系统与方法 · 我沉淀的东西</h2>
       <p class="sec-desc">创造不一定是发布，也可以是可用的系统与流程。以下是我在田野中生长出来的部分产物。</p>
       <div class="sec-rule"></div>
@@ -263,7 +292,7 @@ footer b{color:var(--ink-dim);font-weight:500}
 <section class="quotes" id="quotes">
   <div class="wrap">
     <div class="sec-head">
-      <span class="sec-no">04 · QUOTES</span>
+      <span class="sec-no">05 · QUOTES</span>
       <h2 class="sec-title">相信什么</h2>
       <div class="sec-rule"></div>
     </div>
@@ -291,7 +320,7 @@ footer b{color:var(--ink-dim);font-weight:500}
   <div class="wrap">
     <div class="connect-card">
       <div class="sec-head" style="margin-bottom:30px">
-        <span class="sec-no">05 · CONNECT</span>
+        <span class="sec-no">06 · CONNECT</span>
         <h2 class="sec-title">你好，同行人</h2>
         <div class="sec-rule"></div>
       </div>
