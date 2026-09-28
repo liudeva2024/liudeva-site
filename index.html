@@ -120,6 +120,10 @@ section{position:relative;padding:120px 5vw}
 footer{padding:40px 5vw 44px;text-align:center;border-top:1px solid var(--line);font-size:12.5px;letter-spacing:.18em;color:var(--ink-faint)}
 footer b{color:var(--ink-dim);font-weight:500}
 
+/* ===== toast ===== */
+.toast{position:fixed;left:50%;bottom:44px;transform:translateX(-50%) translateY(16px);background:var(--bg-soft);border:1px solid rgba(229,155,83,.5);color:var(--ink);font-size:13px;letter-spacing:.08em;padding:11px 22px;opacity:0;pointer-events:none;transition:opacity .3s,transform .3s;z-index:99}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
 @media (max-width:720px){
   section{padding:84px 6vw}
   .sec-head{margin-bottom:46px}
@@ -293,20 +297,20 @@ footer b{color:var(--ink-dim);font-weight:500}
       </div>
       <p>如果你也在用数据理解自己、在 AI 时代探索意义，或在组织边缘观察权力与文化——<br>很高兴认识你，欢迎同行。</p>
       <div class="connect-links">
-        <a class="chip" href="#" onclick="return false">
+        <a class="chip" href="mailto:741429607@qq.com">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>
-          EMAIL · 待设置
+          EMAIL · 741429607@qq.com
         </a>
-        <a class="chip" href="#" onclick="return false">
+        <a class="chip" id="wechat-chip" href="javascript:void(0)">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2a10 10 0 0 0-4 19.2V17.5l.6-2.3A6.5 6.5 0 1 1 16 9.5c0 1-.8 1.8-1.8 1.8H12.6"/><circle cx="8" cy="11" r=".5"/><circle cx="12" cy="9" r=".5"/><circle cx="16" cy="11" r=".5"/></svg>
-          SOCIAL · 待设置
+          微信 · Liudeva919
         </a>
-        <a class="chip" href="#" onclick="return false">
+        <a class="chip" id="notes-chip" href="javascript:void(0)">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2 3 7v10l9 5 9-5V7z"/><path d="m3 7 9 5 9-5M12 12v10"/></svg>
           NOTES · 待设置
         </a>
       </div>
-      <div class="connect-note">内容展示为设计稿占位，链接与文案将在正式版替换</div>
+      <div class="connect-note">邮箱可直达，微信号点击复制 · 笔记区规划中，敬请期待</div>
     </div>
   </div>
 </section>
@@ -316,11 +320,47 @@ footer b{color:var(--ink-dim);font-weight:500}
   © 2026 · 一片仍在生长的生命田野
 </footer>
 
+<div class="toast" id="toast"></div>
+
 <script>
   const header = document.querySelector('.site-header');
   window.addEventListener('scroll', () => {
     header.classList.toggle('scrolled', window.scrollY > 40);
   }, {passive:true});
+
+  const toast = document.getElementById('toast');
+  let toastTimer = null;
+  function showToast(msg){
+    toast.textContent = msg;
+    toast.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => toast.classList.remove('show'), 1800);
+  }
+
+  document.getElementById('wechat-chip').addEventListener('click', () => {
+    const text = 'Liudeva919';
+    const done = () => showToast('微信号 Liudeva919 已复制');
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(done, () => fallbackCopy(text, done));
+    } else {
+      fallbackCopy(text, done);
+    }
+  });
+
+  document.getElementById('notes-chip').addEventListener('click', () => {
+    showToast('笔记区规划中，敬请期待');
+  });
+
+  function fallbackCopy(text, done){
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.position = 'fixed';
+    ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.select();
+    try { document.execCommand('copy'); done(); } catch(e) { showToast('复制失败，请长按选择'); }
+    document.body.removeChild(ta);
+  }
 </script>
 </body>
 </html>
