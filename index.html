@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>liudeva — Data Cook, Field Observer, Meaning Surfer</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='26' cy='26' r='10' fill='%23e59b53'/%3E%3Ccircle cx='42' cy='40' r='14' fill='none' stroke='%23df6b4a' stroke-width='5'/%3E%3Cpath d='M8 56 L28 56 L20 44 Z' fill='%2393b8bf'/%3E%3C/svg%3E">
+<link href="https://miaoda.feishu.cn/fonts/css2?family=Noto+Sans+SC:wght@300;400;500;700&family=Noto+Serif+SC:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg-deep:#10132b;
+  --bg-mid:#151a38;
+  --bg-soft:#1c2245;
+  --ink:#f1ece2;
+  --ink-dim:#a9b1cb;
+  --ink-faint:#687095;
+  --amber:#e59b53;
+  --ember:#df6b4a;
+  --teal:#93b8bf;
+  --line:rgba(241,236,226,.14);
+  --serif:'Noto Serif SC','Songti SC','SimSun',serif;
+  --sans:'Noto Sans SC','PingFang SC','Microsoft YaHei','Helvetica Neue',Arial,sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--bg-deep);color:var(--ink);font-family:var(--sans);font-weight:300;line-height:1.75;-webkit-font-smoothing:antialiased}
+a{color:var(--teal);text-decoration:none;transition:color .25s}
+a:hover{color:var(--amber)}
+::selection{background:var(--amber);color:#10132b}
+
+/* ===== header ===== */
+.site-header{position:fixed;top:0;left:0;right:0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:22px 5vw;transition:background .3s}
+.site-header.scrolled{background:rgba(16,19,43,.82);backdrop-filter:blur(10px)}
+.brand{font-size:15px;letter-spacing:.22em;font-weight:500;color:var(--ink);text-transform:none}
+.brand span{color:var(--amber)}
+.nav{display:flex;gap:26px;font-size:13px;letter-spacing:.12em}
+.nav a{color:var(--ink-dim)}
+.nav a:hover{color:var(--ink)}
+
+/* ===== hero ===== */
+.hero{position:relative;min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;overflow:hidden}
+.hero-bg{position:absolute;inset:0;background:url('https://media.doubao.com/space/api/box/stream/download/all_by_mount_point/RFOnbtljaotXXJx9tDacaKJBn0c') center/cover no-repeat}
+.hero-bg::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(16,19,43,.25) 0%,rgba(16,19,43,.55) 55%,var(--bg-deep) 100%)}
+.hero-inner{position:relative;z-index:2;padding:0 6vw;max-width:1100px}
+.hero-kicker{font-size:13px;letter-spacing:.4em;color:var(--ink-dim);margin-bottom:34px;text-transform:none}
+.hero-title{font-family:var(--sans);font-weight:300;font-size:clamp(2.6rem,7vw,5.4rem);letter-spacing:.04em;line-height:1.15;margin-bottom:26px}
+.hero-title em{font-style:normal;color:var(--amber)}
+.hero-sub{font-size:clamp(1rem,2.2vw,1.35rem);letter-spacing:.3em;color:var(--ink-dim);font-weight:300}
+.hero-sub b{font-weight:500;color:var(--ink)}
+.hero-hint{position:absolute;bottom:34px;left:50%;transform:translateX(-50%);font-size:12px;letter-spacing:.3em;color:var(--ink-faint);display:flex;flex-direction:column;align-items:center;gap:10px}
+.hero-hint svg{animation:float 2.6s ease-in-out infinite}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(6px)}}
+.hero-fade{opacity:0;transform:translateY(18px);animation:heroIn 1s .15s ease forwards}
+.hero-fade:nth-child(2){animation-delay:.4s}
+@keyframes heroIn{to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.hero-fade{animation:none;opacity:1;transform:none}.hero-hint svg{animation:none}}
+
+/* ===== section shell ===== */
+section{position:relative;padding:120px 5vw}
+.wrap{max-width:980px;margin:0 auto}
+.sec-head{margin-bottom:64px;text-align:center}
+.sec-no{display:block;font-size:12px;letter-spacing:.4em;color:var(--amber);margin-bottom:16px}
+.sec-title{font-family:var(--serif);font-weight:600;font-size:clamp(1.7rem,3.6vw,2.5rem);letter-spacing:.06em;color:var(--ink);margin-bottom:14px}
+.sec-desc{color:var(--ink-dim);font-size:15px;max-width:560px;margin:0 auto}
+.sec-rule{width:44px;height:1px;background:var(--amber);margin:22px auto 0;opacity:.55}
+
+/* ===== manifesto ===== */
+.manifesto{background:var(--bg-mid);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.manifesto-text{font-family:var(--serif);font-size:clamp(1.15rem,2.4vw,1.5rem);line-height:2;color:var(--ink);text-align:center;max-width:780px;margin:0 auto}
+.manifesto-text .accent{color:var(--amber)}
+.manifesto-note{margin-top:34px;text-align:center;font-size:13px;color:var(--ink-faint);letter-spacing:.14em}
+
+/* ===== field notes ===== */
+.notes-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:22px}
+.note-card{background:var(--bg-soft);border:1px solid var(--line);padding:34px 30px;transition:transform .3s,border-color .3s}
+.note-card:hover{transform:translateY(-4px);border-color:rgba(229,155,83,.4)}
+.note-ico{width:38px;height:38px;margin-bottom:22px;color:var(--amber)}
+.note-kicker{font-size:12px;letter-spacing:.28em;color:var(--teal);margin-bottom:12px}
+.note-title{font-family:var(--serif);font-size:19px;font-weight:600;margin-bottom:10px;color:var(--ink)}
+.note-body{font-size:14px;color:var(--ink-dim);line-height:1.85}
+.note-tag{display:inline-block;margin-top:16px;font-size:12px;letter-spacing:.1em;color:var(--ink-faint)}
+
+/* ===== systems ===== */
+.systems{background:var(--bg-mid)}
+.sys-list{border-top:1px solid var(--line)}
+.sys-row{display:flex;align-items:baseline;gap:26px;padding:30px 4px;border-bottom:1px solid var(--line)}
+.sys-idx{font-family:var(--serif);font-size:14px;color:var(--amber);letter-spacing:.1em;flex:0 0 44px}
+.sys-name{font-family:var(--serif);font-size:18px;font-weight:600;flex:0 0 260px;color:var(--ink)}
+.sys-desc{font-size:14px;color:var(--ink-dim);flex:1}
+.sys-tag{flex:0 0 auto;font-size:12px;letter-spacing:.14em;color:var(--teal)}
+
+/* ===== quotes ===== */
+.quotes{background:var(--bg-deep)}
+
+/* ===== 区块素材 ===== */
+.banner{position:relative;width:100%;height:clamp(200px,26vw,330px);overflow:hidden}
+.banner img{width:100%;height:100%;object-fit:cover;object-position:center;display:block}
+.banner::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,var(--bg-deep) 0%,rgba(16,19,43,.3) 40%,rgba(16,19,43,.4) 62%,var(--bg-deep) 100%)}
+.banner-orbit::after{background:linear-gradient(180deg,var(--bg-mid) 0%,rgba(16,19,43,.3) 40%,rgba(16,19,43,.4) 62%,var(--bg-deep) 100%)}
+.connect-bg{position:absolute;inset:0;background:url('https://media.doubao.com/space/api/box/stream/download/all_by_mount_point/GYNgbDLz5ou4LwxGqsrc3YCbnCd') center 72%/cover no-repeat;opacity:.2}
+.connect-bg::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,var(--bg-mid) 0%,rgba(23,27,51,0) 32%,rgba(23,27,51,.35) 72%,var(--bg-mid) 100%)}
+.quote{max-width:720px;margin:0 auto 58px;text-align:center}
+.quote:last-child{margin-bottom:0}
+.quote-mark{font-family:var(--serif);font-size:44px;color:var(--amber);opacity:.6;line-height:1;margin-bottom:10px}
+.quote-text{font-family:var(--serif);font-size:clamp(1.15rem,2.4vw,1.45rem);line-height:2;color:var(--ink)}
+.quote-source{margin-top:16px;font-size:13px;letter-spacing:.2em;color:var(--ink-faint)}
+
+/* ===== connect ===== */
+.connect{position:relative;background:var(--bg-mid);border-top:1px solid var(--line);overflow:hidden}
+.connect .wrap{position:relative;z-index:2}
+.connect-card{max-width:640px;margin:0 auto;text-align:center}
+.connect-card p{color:var(--ink-dim);font-size:15px;line-height:2;margin-bottom:40px}
+.connect-links{display:flex;flex-wrap:wrap;justify-content:center;gap:14px}
+.chip{display:inline-flex;align-items:center;gap:9px;padding:13px 24px;border:1px solid var(--line);color:var(--ink);font-size:14px;letter-spacing:.06em;background:var(--bg-soft);transition:border-color .25s,color .25s}
+.chip svg{width:16px;height:16px;color:var(--amber)}
+.chip:hover{border-color:rgba(229,155,83,.55);color:var(--amber)}
+.connect-note{margin-top:36px;font-size:12px;letter-spacing:.2em;color:var(--ink-faint)}
+
+/* ===== footer ===== */
+footer{padding:40px 5vw 44px;text-align:center;border-top:1px solid var(--line);font-size:12.5px;letter-spacing:.18em;color:var(--ink-faint)}
+footer b{color:var(--ink-dim);font-weight:500}
+
+@media (max-width:720px){
+  section{padding:84px 6vw}
+  .sec-head{margin-bottom:46px}
+  .nav{display:none}
+  .sys-row{flex-direction:column;gap:8px;padding:24px 2px}
+  .sys-name{flex:none;font-size:17px}
+  .sys-idx{flex:none}
+  .hero-title{letter-spacing:.02em}
+  .hero-sub{letter-spacing:.14em;line-height:2}
+}
+</style>
+</head>
+<body>
+
+<header class="site-header" id="top">
+  <div class="brand">liudeva<span>.</span></div>
+  <nav class="nav">
+    <a href="#notes">Field Notes</a>
+    <a href="#systems">Systems</a>
+    <a href="#quotes">Quotes</a>
+    <a href="#connect">Connect</a>
+  </nav>
+</header>
+
+<!-- ===== hero ===== -->
+<div class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-inner">
+    <div class="hero-kicker hero-fade">DATA COOK · FIELD OBSERVER · MEANING SURFER</div>
+    <h1 class="hero-title hero-fade">Hello, this is <em>liudeva</em>.</h1>
+    <div class="hero-sub hero-fade"><b>数据烹饪师</b> · <b>田野观察员</b> · <b>意义冲浪手</b></div>
+  </div>
+  <div class="hero-hint">
+    <svg width="16" height="22" viewBox="0 0 16 22" fill="none"><path d="M8 2v18M8 20l-6-6M8 20l6-6" stroke="currentColor" stroke-width="1.2"/></svg>
+    SCROLL
+  </div>
+</div>
+
+<!-- ===== manifesto ===== -->
+<section class="manifesto" id="about">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="sec-no">01 · MANIFESTO</span>
+      <h2 class="sec-title">用数据理解自己，用复盘迭代自己</h2>
+      <div class="sec-rule"></div>
+    </div>
+    <p class="manifesto-text">
+      我把生活当作一片可以持续耕耘的<span class="accent">田野</span>，用两年多、两百多次迭代，亲手搭建了一套个人数据系统：
+      记录时间、情绪、关系与思考，再把它们<span class="accent">烹饪</span>成对自我的理解。
+      我在这片田野里观察，在数据与意义之间<span class="accent">冲浪</span>——
+      并相信，认识自己，是认识这个世界最诚实的起点。
+    </p>
+    <p class="manifesto-note">— liudeva，一片仍在生长的生命田野 —</p>
+  </div>
+</section>
+
+<!-- ===== banner · 几何阶梯 ===== -->
+<div class="banner banner-notes"><img src="https://media.doubao.com/space/api/box/stream/download/all_by_mount_point/TVfsbFpouoWeVuxwroEc8FA0nPe" alt="几何阶梯"></div>
+
+<!-- ===== field notes ===== -->
+<section class="notes" id="notes">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="sec-no">02 · FIELD NOTES</span>
+      <h2 class="sec-title">田野笔记 · 正在做的事</h2>
+      <p class="sec-desc">我在 AI 与真实生活之间做田野：把 AI 带进业务与日常，观察它如何改变工作、学习与关系。</p>
+      <div class="sec-rule"></div>
+    </div>
+    <div class="notes-grid">
+      <article class="note-card">
+        <svg class="note-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M3 21h18M5 21V10l7-6 7 6v11M9 21v-6h6v6"/></svg>
+        <div class="note-kicker">PERSONAL DATA SYSTEM</div>
+        <h3 class="note-title">生命田野系统</h3>
+        <p class="note-body">一套基于数据记录与复盘的个人系统，覆盖时间、健康、关系、知识等 50+ 张表的持续运营，让自我认知有据可依。</p>
+        <span class="note-tag">· 持续迭代中 ·</span>
+      </article>
+      <article class="note-card">
+        <svg class="note-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="12" cy="12" r="3"/><path d="M12 2v4M12 18v4M2 12h4M18 12h4M5 5l3 3M16 16l3 3M19 5l-3 3M8 16l-3 3"/></svg>
+        <div class="note-kicker">AI × BUSINESS</div>
+        <h3 class="note-title">AI 进业务实践</h3>
+        <p class="note-body">把 AI 作为协作伙伴带进工作流：自动化复盘、决策辅助、知识沉淀，观察 AI 与人的分工如何演化。</p>
+        <span class="note-tag">· 田野观察中 ·</span>
+      </article>
+      <article class="note-card">
+        <svg class="note-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M4 4h16v16H4zM8 8h8M8 12h8M8 16h5"/></svg>
+        <div class="note-kicker">REFLECTION RITUALS</div>
+        <h3 class="note-title">复盘体系</h3>
+        <p class="note-body">日、周、月、季、年的多维度复盘节奏，把数据沉淀为洞察，把洞察迭代成行动。</p>
+        <span class="note-tag">· 每日运转中 ·</span>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ===== systems ===== -->
+<section class="systems" id="systems">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="sec-no">03 · SYSTEMS & METHODS</span>
+      <h2 class="sec-title">系统与方法 · 我沉淀的东西</h2>
+      <p class="sec-desc">创造不一定是发布，也可以是可用的系统与流程。以下是我在田野中生长出来的部分产物。</p>
+      <div class="sec-rule"></div>
+    </div>
+    <div class="sys-list">
+      <div class="sys-row">
+        <span class="sys-idx">I</span>
+        <h3 class="sys-name">个人数据系统方法论</h3>
+        <p class="sys-desc">如何用数据理解自己：记录、整合、复盘、迭代的完整方法。</p>
+        <span class="sys-tag">METHOD</span>
+      </div>
+      <div class="sys-row">
+        <span class="sys-idx">II</span>
+        <h3 class="sys-name">AI 复盘工作流</h3>
+        <p class="sys-desc">让 AI 成为复盘伙伴的协作流程与提示词工程实践。</p>
+        <span class="sys-tag">WORKFLOW</span>
+      </div>
+      <div class="sys-row">
+        <span class="sys-idx">III</span>
+        <h3 class="sys-name">决策辅助系统</h3>
+        <p class="sys-desc">基于个人数据与模型的决策参考机制，让选择有据可循。</p>
+        <span class="sys-tag">SYSTEM</span>
+      </div>
+      <div class="sys-row">
+        <span class="sys-idx">IV</span>
+        <h3 class="sys-name">深度关系方法论</h3>
+        <p class="sys-desc">从长周期关系脉络中提炼的打开他人、建立深度联结的模式。</p>
+        <span class="sys-tag">PATTERN</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== banner · 双星轨迹 ===== -->
+<div class="banner banner-orbit"><img src="https://media.doubao.com/space/api/box/stream/download/all_by_mount_point/FEGFbtBACoSZ5cxUzdbcA1WSnrg" alt="双星轨迹"></div>
+
+<!-- ===== quotes ===== -->
+<section class="quotes" id="quotes">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="sec-no">04 · QUOTES</span>
+      <h2 class="sec-title">相信什么</h2>
+      <div class="sec-rule"></div>
+    </div>
+    <blockquote class="quote">
+      <div class="quote-mark">“</div>
+      <p class="quote-text">批评总是显得聪明，而建造总是显得笨拙。</p>
+      <div class="quote-source">— 常回味的句子 · 待替换</div>
+    </blockquote>
+    <blockquote class="quote">
+      <div class="quote-mark">“</div>
+      <p class="quote-text">只要持续建造，好事就会发生。</p>
+      <div class="quote-source">— 常回味的句子 · 待替换</div>
+    </blockquote>
+    <blockquote class="quote">
+      <div class="quote-mark">“</div>
+      <p class="quote-text">时代奖励那些愿意第一个走进迷雾的人。</p>
+      <div class="quote-source">— 常回味的句子 · 待替换</div>
+    </blockquote>
+  </div>
+</section>
+
+<!-- ===== connect ===== -->
+<section class="connect" id="connect">
+  <div class="connect-bg"></div>
+  <div class="wrap">
+    <div class="connect-card">
+      <div class="sec-head" style="margin-bottom:30px">
+        <span class="sec-no">05 · CONNECT</span>
+        <h2 class="sec-title">同行人优先</h2>
+        <div class="sec-rule"></div>
+      </div>
+      <p>如果你也在用数据理解自己、在 AI 时代探索意义，或在组织边缘观察世界——<br>很高兴认识你，欢迎同行。</p>
+      <div class="connect-links">
+        <a class="chip" href="#" onclick="return false">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>
+          EMAIL · 待设置
+        </a>
+        <a class="chip" href="#" onclick="return false">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2a10 10 0 0 0-4 19.2V17.5l.6-2.3A6.5 6.5 0 1 1 16 9.5c0 1-.8 1.8-1.8 1.8H12.6"/><circle cx="8" cy="11" r=".5"/><circle cx="12" cy="9" r=".5"/><circle cx="16" cy="11" r=".5"/></svg>
+          SOCIAL · 待设置
+        </a>
+        <a class="chip" href="#" onclick="return false">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2 3 7v10l9 5 9-5V7z"/><path d="m3 7 9 5 9-5M12 12v10"/></svg>
+          NOTES · 待设置
+        </a>
+      </div>
+      <div class="connect-note">内容展示为设计稿占位，链接与文案将在正式版替换</div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <b>liudeva</b> · Data Cook, Field Observer, Meaning Surfer<br>
+  © 2026 · 一片仍在生长的生命田野
+</footer>
+
+<script>
+  const header = document.querySelector('.site-header');
+  window.addEventListener('scroll', () => {
+    header.classList.toggle('scrolled', window.scrollY > 40);
+  }, {passive:true});
+</script>
+</body>
+</html>
