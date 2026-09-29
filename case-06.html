@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 成本的田野实测：容错率决定付费意愿 — liudeva</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='26' cy='26' r='10' fill='%23e59b53'/%3E%3Ccircle cx='42' cy='40' r='14' fill='none' stroke='%23df6b4a' stroke-width='5'/%3E%3Cpath d='M8 56 L28 56 L20 44 Z' fill='%2393b8bf'/%3E%3C/svg%3E">
+<link href="https://miaoda.feishu.cn/fonts/css2?family=Noto+Sans+SC:wght@300;400;500;700&family=Noto+Serif+SC:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg-deep:#10132b;
+  --bg-mid:#151a38;
+  --bg-soft:#1c2245;
+  --ink:#f1ece2;
+  --ink-dim:#a9b1cb;
+  --ink-faint:#687095;
+  --amber:#e59b53;
+  --ember:#df6b4a;
+  --teal:#93b8bf;
+  --line:rgba(241,236,226,.14);
+  --serif:'Noto Serif SC','Songti SC','SimSun',serif;
+  --sans:'Noto Sans SC','PingFang SC','Microsoft YaHei','Helvetica Neue',Arial,sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg-deep);color:var(--ink);font-family:var(--sans);font-weight:300;line-height:1.9;-webkit-font-smoothing:antialiased}
+a{color:var(--teal);text-decoration:none;transition:color .25s}
+a:hover{color:var(--amber)}
+::selection{background:var(--amber);color:#10132b}
+
+/* ===== header ===== */
+.site-header{position:fixed;top:0;left:0;right:0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:22px 5vw;background:rgba(16,19,43,.82);backdrop-filter:blur(10px)}
+.brand{font-size:15px;letter-spacing:.22em;font-weight:500;color:var(--ink)}
+.brand span{color:var(--amber)}
+.nav{font-size:13px;letter-spacing:.12em}
+.nav a{color:var(--ink-dim)}
+.nav a:hover{color:var(--ink)}
+
+/* ===== article ===== */
+.article{max-width:720px;margin:0 auto;padding:150px 6vw 60px}
+.art-kicker{font-size:12px;letter-spacing:.4em;color:var(--amber)}
+.art-title{font-family:var(--serif);font-size:clamp(1.7rem,4.2vw,2.6rem);line-height:1.5;font-weight:600;letter-spacing:.04em;margin:20px 0 22px}
+.art-lead{font-family:var(--serif);font-size:clamp(1.05rem,2.2vw,1.25rem);color:var(--ink-dim);line-height:2;max-width:620px}
+.art-meta{display:flex;flex-wrap:wrap;gap:12px 28px;margin-top:26px;padding-top:20px;border-top:1px solid var(--line);font-size:12px;letter-spacing:.14em;color:var(--ink-faint)}
+.art-meta b{color:var(--teal);font-weight:400}
+.sec{margin-top:64px}
+.sec h2{font-family:var(--serif);font-size:clamp(1.3rem,3vw,1.7rem);font-weight:600;letter-spacing:.06em;margin-bottom:18px;color:var(--ink)}
+.sec h2::before{content:'';display:inline-block;width:22px;height:1px;background:var(--amber);margin-right:14px;vertical-align:middle}
+.sec p{color:var(--ink-dim);margin-bottom:16px}
+.sec p b{color:var(--ink);font-weight:500}
+.sec ul{list-style:none;margin:0 0 18px}
+.sec li{position:relative;padding-left:22px;color:var(--ink-dim);margin-bottom:12px}
+.sec li::before{content:'';position:absolute;left:2px;top:.85em;width:7px;height:1px;background:var(--amber)}
+.sec li b{color:var(--ink);font-weight:500}
+.art-fig{margin:34px 0;text-align:center}
+.art-fig img{max-width:100%;border:1px solid var(--line);display:block;margin:0 auto}
+.art-fig figcaption{font-size:12px;color:var(--ink-faint);letter-spacing:.2em;margin-top:14px}
+.quote-block{margin-top:76px;padding:38px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);text-align:center}
+.quote-block p{font-family:var(--serif);font-size:clamp(1.1rem,2.4vw,1.35rem);line-height:2;color:var(--ink);letter-spacing:.04em}
+.quote-block small{display:block;margin-top:16px;color:var(--amber);letter-spacing:.3em;font-size:12px}
+.back-row{margin:80px 0 0;text-align:center}
+.back-row a{font-size:13px;letter-spacing:.3em;color:var(--ink-dim)}
+.back-row a:hover{color:var(--amber)}
+
+/* ===== footer ===== */
+footer{padding:64px 5vw 56px;text-align:center;font-size:13px;color:var(--ink-faint);letter-spacing:.1em;line-height:2.2;border-top:1px solid var(--line)}
+footer b{color:var(--ink-dim);font-weight:400}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <a class="brand" href="index.html">liudeva<span>.</span></a>
+  <nav class="nav"><a href="index.html#notes">← 返回田野笔记</a></nav>
+</header>
+
+<main class="article">
+  <div class="art-kicker">FIELD STORIES · CASE 06</div>
+  <h1 class="art-title">AI 成本的田野实测：容错率决定付费意愿</h1>
+  <p class="art-lead">十年报告制作中，AI 消耗成本首次成为主要矛盾——把「额度困局」做成一场田野实测。</p>
+  <div class="art-meta">
+    <span>时间 · <b>2026.09</b></span>
+    <span>关键词 · <b>AI 成本</b> <b>额度治理</b> <b>平台选择</b></span>
+  </div>
+
+  <section class="sec">
+    <h2>我在做什么</h2>
+    <p>我在一家媒体机构里做数据与 AI 落地。最近几个月，我在做两件事：把十年内容资产结构化，再让 AI 基于它产出报告和写作素材。</p>
+    <p>过去遇到的瓶颈，几乎都是「能力不够」：模型不会、答得不对。但这次不一样——第一次，<b>成本</b>压过了能力：AI 消耗的额度，成了最大的卡点。我决定把这场额度困局，当成一次田野实测来做。</p>
+  </section>
+
+  <section class="sec">
+    <h2>成本首次成为主要矛盾</h2>
+    <p>做十年内容变迁报告时，token 消耗开始肉眼可见地侵蚀进度。更麻烦的是「成本盲区」：编队跑在平台的限免期里，测不出真实 token 成本——质量、成本、用时三个指标，缺了一角。</p>
+    <p>限免期会过去，账迟早要算。与其等到被账单吓到，不如提前把成本当成一等公民来测量。</p>
+  </section>
+
+  <section class="sec">
+    <h2>连轴转被限流：可以主动，但不可以失控</h2>
+    <p>建叙事素材库时，我让 AI 连轴转批量处理，结果触发了平台限流。改成 15 分钟一次的定时任务后，问题消失。</p>
+    <p>这成了我跨平台验证的一个共识：<b>可以主动，但不可以失控</b>——主动服务的节奏，要和平台的承受能力对齐。</p>
+  </section>
+
+  <section class="sec">
+    <h2>工具矩阵：选型逻辑变了</h2>
+    <p>跑下来的工具矩阵是「双工具」：身份隔离 + 批量专司。有意思的是，这两家的额度套餐都不能单独加购——要扩容，只能整个套餐升级。</p>
+    <p>于是选型逻辑悄悄变了：从「哪个模型能力强」，变成「额度可采购性 + 身份隔离」。平台之间的差异点，正在从模型能力，转向额度供给的灵活性。</p>
+  </section>
+
+  <section class="sec">
+    <h2>省钱实测：两条路都走不通</h2>
+    <p>我试了两条省钱路线：凌晨免费窗口——额度极其有限，白嫖失败；多账号轮换——实测下来，一个账号一上午就烧光了 7 天额度。</p>
+    <p>轮换还有一个隐藏代价：不同账号的标注口径会漂移。对冲法是固定一份「标注标准示例 + 反例」文档，每个账号开跑前先喂一遍。</p>
+    <figure class="art-fig">
+      <img src="https://media.doubao.com/space/api/box/stream/download/all_by_mount_point/FynKb3P39oSnzAxUcMYcfLx0nUg" alt="容错率 × 付费意愿">
+      <figcaption>容错率 × 付费意愿：四象限判据</figcaption>
+    </figure>
+  </section>
+
+  <section class="sec">
+    <h2>判据成形：容错率决定付费意愿</h2>
+    <p>几次实测之后，判据终于清晰：<b>容错率决定付费意愿</b>。</p>
+    <ul>
+      <li>任务容错率高（错了也无妨）→ 省钱策略可接受：等免费窗口、用低配额度</li>
+      <li>任务容错率低（错了就是事故）→ 多账号轮换的隐性成本（时间 + 质量风险）很可能超过付费本身</li>
+      <li>而无论怎么付费，都买不到完全一致性——模型的不确定性是这代模型的地板，凡 AI 建库，都要抽检兜底</li>
+    </ul>
+    <p>结论是反直觉的：不是「穷」才用多账号，而是「容错率高」才适合省；容错率低的场景，付费反而是更便宜的选择。</p>
+  </section>
+
+  <section class="sec">
+    <h2>经验沉淀</h2>
+    <p><b>做对的：</b></p>
+    <ul>
+      <li>把成本当成一等公民测量：限免期也要想办法摸清真实 token 成本</li>
+      <li>节奏对齐：15 分钟定时代替连轴转，「可以主动，但不可以失控」</li>
+      <li>选型逻辑升级：额度可采购性 + 身份隔离，和模型能力同等重要</li>
+      <li>口径漂移对冲：标准示例 + 反例文档，每个账号开跑先喂</li>
+    </ul>
+    <p><b>踩的坑：</b></p>
+    <ul>
+      <li>连轴转触发限流：主动不等于失控，节奏要可被平台承受</li>
+      <li>凌晨免费窗口白嫖失败：免费额度的量级，撑不起真实生产</li>
+      <li>多账号轮换烧额度还烧一致性：省钱可能省出事故</li>
+    </ul>
+    <p><b>一句话方法论：</b>容错率决定付费意愿；花钱也买不到完全一致性——凡 AI 建库，都要抽检兜底。</p>
+  </section>
+
+  <div class="quote-block">
+    <p>花钱也买不到完全一致性。</p>
+    <small>— 这场田野实测留下的结论</small>
+  </div>
+
+  <div class="back-row"><a href="index.html#notes">← 返回田野笔记</a></div>
+</main>
+
+<footer>
+  <b>liudeva</b> · Data Cook, Field Observer, Meaning Surfer<br>
+  © 2026 · 一片仍在生长的生命田野
+</footer>
+
+</body>
+</html>
