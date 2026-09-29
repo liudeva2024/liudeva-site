@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>复盘体系 — liudeva</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='26' cy='26' r='10' fill='%23e59b53'/%3E%3Ccircle cx='42' cy='40' r='14' fill='none' stroke='%23df6b4a' stroke-width='5'/%3E%3Cpath d='M8 56 L28 56 L20 44 Z' fill='%2393b8bf'/%3E%3C/svg%3E">
+<link href="https://miaoda.feishu.cn/fonts/css2?family=Noto+Sans+SC:wght@300;400;500;700&family=Noto+Serif+SC:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg-deep:#10132b;
+  --bg-mid:#151a38;
+  --bg-soft:#1c2245;
+  --ink:#f1ece2;
+  --ink-dim:#a9b1cb;
+  --ink-faint:#687095;
+  --amber:#e59b53;
+  --ember:#df6b4a;
+  --teal:#93b8bf;
+  --line:rgba(241,236,226,.14);
+  --serif:'Noto Serif SC','Songti SC','SimSun',serif;
+  --sans:'Noto Sans SC','PingFang SC','Microsoft YaHei','Helvetica Neue',Arial,sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg-deep);color:var(--ink);font-family:var(--sans);font-weight:300;line-height:1.9;-webkit-font-smoothing:antialiased}
+a{color:var(--teal);text-decoration:none;transition:color .25s}
+a:hover{color:var(--amber)}
+::selection{background:var(--amber);color:#10132b}
+
+/* ===== header ===== */
+.site-header{position:fixed;top:0;left:0;right:0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:22px 5vw;background:rgba(16,19,43,.82);backdrop-filter:blur(10px)}
+.brand{font-size:15px;letter-spacing:.22em;font-weight:500;color:var(--ink)}
+.brand span{color:var(--amber)}
+.nav{font-size:13px;letter-spacing:.12em}
+.nav a{color:var(--ink-dim)}
+.nav a:hover{color:var(--ink)}
+
+/* ===== article ===== */
+.article{max-width:720px;margin:0 auto;padding:150px 6vw 60px}
+.art-kicker{font-size:12px;letter-spacing:.4em;color:var(--amber)}
+.art-title{font-family:var(--serif);font-size:clamp(1.7rem,4.2vw,2.6rem);line-height:1.5;font-weight:600;letter-spacing:.04em;margin:20px 0 22px}
+.art-lead{font-family:var(--serif);font-size:clamp(1.05rem,2.2vw,1.25rem);color:var(--ink-dim);line-height:2;max-width:620px}
+.art-meta{display:flex;flex-wrap:wrap;gap:12px 28px;margin-top:26px;padding-top:20px;border-top:1px solid var(--line);font-size:12px;letter-spacing:.14em;color:var(--ink-faint)}
+.art-meta b{color:var(--teal);font-weight:400}
+.sec{margin-top:64px}
+.sec h2{font-family:var(--serif);font-size:clamp(1.3rem,3vw,1.7rem);font-weight:600;letter-spacing:.06em;margin-bottom:18px;color:var(--ink)}
+.sec h2::before{content:'';display:inline-block;width:22px;height:1px;background:var(--amber);margin-right:14px;vertical-align:middle}
+.sec p{color:var(--ink-dim);margin-bottom:16px}
+.sec p b{color:var(--ink);font-weight:500}
+.sec ul{list-style:none;margin:0 0 18px}
+.sec li{position:relative;padding-left:22px;color:var(--ink-dim);margin-bottom:12px}
+.sec li::before{content:'';position:absolute;left:2px;top:.85em;width:7px;height:1px;background:var(--amber)}
+.sec li b{color:var(--ink);font-weight:500}
+.flow{display:flex;flex-wrap:wrap;align-items:center;gap:10px 6px;margin:22px 0 8px;padding:26px 22px;background:var(--bg-soft);border:1px solid var(--line)}
+.flow span{font-size:13px;letter-spacing:.06em;color:var(--ink-dim);white-space:nowrap}
+.flow b{font-family:var(--serif);font-weight:600;color:var(--ink)}
+.flow .arrow{color:var(--amber);letter-spacing:0}
+.riftable{width:100%;table-layout:fixed;border-collapse:collapse;margin:22px 0 18px}
+.riftable th{font-family:var(--serif);font-weight:600;text-align:left;font-size:15px;color:var(--ink);padding:12px 14px;border-bottom:1px solid var(--line);letter-spacing:.1em;background:var(--bg-soft)}
+.riftable td{padding:14px;color:var(--ink-dim);font-size:14px;line-height:1.9;border-bottom:1px solid var(--line);vertical-align:top}
+.riftable td b{color:var(--ink);font-weight:500}
+.quote-block{margin-top:76px;padding:38px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);text-align:center}
+.quote-block p{font-family:var(--serif);font-size:clamp(1.1rem,2.4vw,1.35rem);line-height:2;color:var(--ink);letter-spacing:.04em}
+.quote-block small{display:block;margin-top:16px;color:var(--amber);letter-spacing:.3em;font-size:12px}
+.back-row{margin:80px 0 0;text-align:center}
+.back-row a{font-size:13px;letter-spacing:.3em;color:var(--ink-dim)}
+.back-row a:hover{color:var(--amber)}
+
+/* ===== footer ===== */
+footer{padding:64px 5vw 56px;text-align:center;font-size:13px;color:var(--ink-faint);letter-spacing:.1em;line-height:2.2;border-top:1px solid var(--line)}
+footer b{color:var(--ink-dim);font-weight:400}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <a class="brand" href="index.html">liudeva<span>.</span></a>
+  <nav class="nav"><a href="index.html#systems">← 返回系统与方法</a></nav>
+</header>
+
+<main class="article">
+  <div class="art-kicker">SYSTEM · REFLECTION RITUALS</div>
+  <h1 class="art-title">复盘体系</h1>
+  <p class="art-lead">日、周、月、季、年五维度的复盘节奏：把数据沉淀为洞察，把洞察迭代成行动——AI 负责模式挖掘，人负责认知和行动更新。</p>
+  <div class="art-meta">
+    <span>状态 · <b>每日运转中</b></span>
+    <span>关键词 · <b>复盘节奏</b> <b>AI 协作</b> <b>自我迭代</b></span>
+  </div>
+
+  <section class="sec">
+    <h2>我在搭什么：给生活装一个复盘节奏</h2>
+    <p>数据本身不会产生价值，是复盘让它活起来。这套体系是数据体系的另一半：<b>每个时间维度都有对应的复盘动作</b>，数据从记录流进洞察，洞察再回到行动——形成持续的迭代闭环。</p>
+    <div class="flow">
+      <span>日</span><b class="arrow">→</b><span>周</span><b class="arrow">→</b><span>月</span><b class="arrow">→</b><span>季</span><b class="arrow">→</b><span>年</span>
+    </div>
+  </section>
+
+  <section class="sec">
+    <h2>五个维度，各管一段</h2>
+    <table class="riftable">
+      <thead>
+        <tr><th style="width:14%">维度</th><th style="width:86%">复盘动作</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><b>日</b></td>
+          <td><b>早上</b>：任务日程与优先级复盘规划、习惯打卡；<b>下午</b>：每日复盘（固定 9 问，纯手动）、感恩日志、AI 田野笔记（AI 延伸总结当日关于 AI 进业务的思考）</td>
+        </tr>
+        <tr>
+          <td><b>周</b></td>
+          <td><b>周一</b>：固定模板周复盘；<b>周一、周二</b>：工作产出、工作日志、项目规划、反思回顾、正向反馈、阅读统计——全部是对上周的复盘</td>
+        </tr>
+        <tr>
+          <td><b>月</b></td>
+          <td><b>月度复盘 v4 框架</b>（28 问，所有复盘中最重的环节）、月度时间预算与支出预算——AI 出报告，人读+评论+补图</td>
+        </tr>
+        <tr>
+          <td><b>季</b></td>
+          <td><b>季度复盘</b>（参照 v4 设计，聚焦本季度的田野数据洞察）、工作评估（职业倦怠风险监测）</td>
+        </tr>
+        <tr>
+          <td><b>年</b></td>
+          <td><b>年度复盘</b>、年度问题（人生方向锚点）、关键作品、夫妻跨年复盘（与伴侣的深度交流）</td>
+        </tr>
+      </tbody>
+    </table>
+    <p>时间跨度越大，关注点越不同：日复盘管觉察，月复盘管趋势，年复盘管方向——固定问题框架保证跨期可比，持续的数据积累让变化轨迹可见。</p>
+  </section>
+
+  <section class="sec">
+    <h2>AI 如何参与：分工而非替代</h2>
+    <p>复盘从手写逐步演进到 AI 协作：<b>AI 负责模式挖掘，人负责认知和行动更新</b>。定时任务自动从用时、每日复盘、感恩日志、反思回顾等表中取数，生成完整的 AI 洞察报告（每周简报、月度 v4、季度复盘），存入 Base 存档；人读报告、留评论、补图片，然后让 AI 读取评论、更新个人模型等下游数据。</p>
+    <p>这套分工已经跑成固定工作流，也被沉淀为可复用的技能——换个环境，同样的复盘节奏可以重新长出来。</p>
+  </section>
+
+  <section class="sec">
+    <h2>独特价值</h2>
+    <ul>
+      <li><b>固定问题框架</b>：每轮复盘问同样的问题，答案才可比较——能看到自己在不同时间维度上的真实轨迹</li>
+      <li><b>数据 → 洞察 → 行动闭环</b>：复盘消费数据，数据因复盘产生价值；洞察转化为行动，行动又变成新的数据</li>
+      <li><b>AI 深度参与但不代做判断</b>：模式挖掘交给 AI（快、全、不带情绪），认知和行动更新留给人（慢、深、需要意志）</li>
+      <li><b>最重的环节在月维度</b>：月度 v4 框架是年度以内的复盘主轴，日周是它的原料，季年是它的延伸</li>
+    </ul>
+  </section>
+
+  <div class="quote-block">
+    <p>让 AI 成为复盘伙伴——<br>AI 负责模式挖掘，人负责认知和行动更新。</p>
+    <small>— 复盘体系 · 协作分工</small>
+  </div>
+
+  <div class="back-row"><a href="index.html#systems">← 返回系统与方法</a></div>
+</main>
+
+<footer>
+  <b>liudeva</b> · Data Cook, Field Observer, Meaning Surfer<br>
+  © 2026 · 一片仍在生长的生命田野
+</footer>
+
+</body>
+</html>
