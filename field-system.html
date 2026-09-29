@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>生命田野系统 — liudeva</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='26' cy='26' r='10' fill='%23e59b53'/%3E%3Ccircle cx='42' cy='40' r='14' fill='none' stroke='%23df6b4a' stroke-width='5'/%3E%3Cpath d='M8 56 L28 56 L20 44 Z' fill='%2393b8bf'/%3E%3C/svg%3E">
+<link href="https://miaoda.feishu.cn/fonts/css2?family=Noto+Sans+SC:wght@300;400;500;700&family=Noto+Serif+SC:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg-deep:#10132b;
+  --bg-mid:#151a38;
+  --bg-soft:#1c2245;
+  --ink:#f1ece2;
+  --ink-dim:#a9b1cb;
+  --ink-faint:#687095;
+  --amber:#e59b53;
+  --ember:#df6b4a;
+  --teal:#93b8bf;
+  --line:rgba(241,236,226,.14);
+  --serif:'Noto Serif SC','Songti SC','SimSun',serif;
+  --sans:'Noto Sans SC','PingFang SC','Microsoft YaHei','Helvetica Neue',Arial,sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg-deep);color:var(--ink);font-family:var(--sans);font-weight:300;line-height:1.9;-webkit-font-smoothing:antialiased}
+a{color:var(--teal);text-decoration:none;transition:color .25s}
+a:hover{color:var(--amber)}
+::selection{background:var(--amber);color:#10132b}
+
+/* ===== header ===== */
+.site-header{position:fixed;top:0;left:0;right:0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:22px 5vw;background:rgba(16,19,43,.82);backdrop-filter:blur(10px)}
+.brand{font-size:15px;letter-spacing:.22em;font-weight:500;color:var(--ink)}
+.brand span{color:var(--amber)}
+.nav{font-size:13px;letter-spacing:.12em}
+.nav a{color:var(--ink-dim)}
+.nav a:hover{color:var(--ink)}
+
+/* ===== article ===== */
+.article{max-width:720px;margin:0 auto;padding:150px 6vw 60px}
+.art-kicker{font-size:12px;letter-spacing:.4em;color:var(--amber)}
+.art-title{font-family:var(--serif);font-size:clamp(1.7rem,4.2vw,2.6rem);line-height:1.5;font-weight:600;letter-spacing:.04em;margin:20px 0 22px}
+.art-lead{font-family:var(--serif);font-size:clamp(1.05rem,2.2vw,1.25rem);color:var(--ink-dim);line-height:2;max-width:620px}
+.art-meta{display:flex;flex-wrap:wrap;gap:12px 28px;margin-top:26px;padding-top:20px;border-top:1px solid var(--line);font-size:12px;letter-spacing:.14em;color:var(--ink-faint)}
+.art-meta b{color:var(--teal);font-weight:400}
+.sec{margin-top:64px}
+.sec h2{font-family:var(--serif);font-size:clamp(1.3rem,3vw,1.7rem);font-weight:600;letter-spacing:.06em;margin-bottom:18px;color:var(--ink)}
+.sec h2::before{content:'';display:inline-block;width:22px;height:1px;background:var(--amber);margin-right:14px;vertical-align:middle}
+.sec p{color:var(--ink-dim);margin-bottom:16px}
+.sec p b{color:var(--ink);font-weight:500}
+.sec ul{list-style:none;margin:0 0 18px}
+.sec li{position:relative;padding-left:22px;color:var(--ink-dim);margin-bottom:12px}
+.sec li::before{content:'';position:absolute;left:2px;top:.85em;width:7px;height:1px;background:var(--amber)}
+.sec li b{color:var(--ink);font-weight:500}
+.flow{display:flex;flex-wrap:wrap;align-items:center;gap:10px 6px;margin:22px 0 8px;padding:26px 22px;background:var(--bg-soft);border:1px solid var(--line)}
+.flow span{font-size:13px;letter-spacing:.06em;color:var(--ink-dim);white-space:nowrap}
+.flow b{font-family:var(--serif);font-weight:600;color:var(--ink)}
+.flow .arrow{color:var(--amber);letter-spacing:0}
+.quote-block{margin-top:76px;padding:38px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);text-align:center}
+.quote-block p{font-family:var(--serif);font-size:clamp(1.1rem,2.4vw,1.35rem);line-height:2;color:var(--ink);letter-spacing:.04em}
+.quote-block small{display:block;margin-top:16px;color:var(--amber);letter-spacing:.3em;font-size:12px}
+.back-row{margin:80px 0 0;text-align:center}
+.back-row a{font-size:13px;letter-spacing:.3em;color:var(--ink-dim)}
+.back-row a:hover{color:var(--amber)}
+
+/* ===== footer ===== */
+footer{padding:64px 5vw 56px;text-align:center;font-size:13px;color:var(--ink-faint);letter-spacing:.1em;line-height:2.2;border-top:1px solid var(--line)}
+footer b{color:var(--ink-dim);font-weight:400}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <a class="brand" href="index.html">liudeva<span>.</span></a>
+  <nav class="nav"><a href="index.html#systems">← 返回系统与方法</a></nav>
+</header>
+
+<main class="article">
+  <div class="art-kicker">SYSTEM · PERSONAL DATA SYSTEM</div>
+  <h1 class="art-title">生命田野系统</h1>
+  <p class="art-lead">用两年多、两百多次迭代，搭建的一套个人数据系统：记录时间、情绪、关系与思考，再把它们烹饪成对自我的理解——用数据理解自己，用复盘迭代自己。</p>
+  <div class="art-meta">
+    <span>状态 · <b>持续迭代中</b></span>
+    <span>关键词 · <b>个人数据</b> <b>能量管理</b> <b>时间哲学</b> <b>个人模型</b></span>
+  </div>
+
+  <section class="sec">
+    <h2>我在搭什么：把生活变成一片可耕耘的田野</h2>
+    <p>很多自我认知停留在「感觉」：这段时间状态好不好、时间花去了哪里、关系有没有在滋养自己——凭印象，说不清。我想把这些模糊的问题变成可检查、可迭代的数据。</p>
+    <p>于是有了这套系统：<b>两年多、两百多次迭代</b>，52 张业务表构成的数据体系 + 日周月季年的复盘体系。它不是记录流水账，而是把生活当作一片田野，数据是土壤，复盘是耕耘。</p>
+  </section>
+
+  <section class="sec">
+    <h2>数据体系：记录，是理解自己的起点</h2>
+    <p>52 张表按场景分层组织：<b>核心记录表</b>（用时明细、深度时光、任务日程、反思回顾、感恩日志、情绪事件等，高频稳定记录）→ <b>辅助表</b>（字典、打卡、关联标签，支撑主记录）→ <b>聚合分析表</b>（能量管理、看板、个人模型，被复盘的各个维度消费）。</p>
+    <div class="flow">
+      <span>记录</span><b class="arrow">→</b><span>聚合</span><b class="arrow">→</b><span>洞察</span><b class="arrow">→</b><span>行动</span><b class="arrow">→</b><span>复盘迭代</span>
+    </div>
+    <ul>
+      <li><b>记录密度是调节器</b>：某段时间记录变少，大概率是进入了休假模式——不需要指责自己，它本身就是信号</li>
+      <li><b>字段该空就空</b>：很多字段是公式或非必填，空白不代表缺失，是设计上的留白</li>
+      <li><b>记录成本决定习惯</b>：只有高频（记时、记账）和固定（任务、反思）两类场景能养成习惯，其余场景想不起来记——所以系统只对这两类做重投入</li>
+    </ul>
+  </section>
+
+  <section class="sec">
+    <h2>时间哲学：平衡与深度</h2>
+    <p>我的时间效能观有两个维度：<b>五色时间（平衡）</b>与 <b>TD 率（深度）</b>。前者看生活各板块是否均衡，后者看高质量心流时间在一天的占比——两者共同定义「时间花得好不好」。</p>
+    <p>高质量心流活动往往同时出现在深度时光、感恩日志、反思回顾等多个表里，交叉印证；TD 率直接在用时明细上计算，作为核心指标被周、月、季、年复盘持续消费。</p>
+  </section>
+
+  <section class="sec">
+    <h2>能量管理：五维状态</h2>
+    <p>长期的记录让我看清自己的能量来源：<b>人际、创造、学习、复盘</b>是核心产出项，<b>身体与睡眠</b>是约束项——它们决定上限，不直接产出但限制一切。</p>
+    <ul>
+      <li><b>人际是主引擎，也是最大的漏点</b>：充电方式和耗竭方式是同一个东西，所以单独监测人际状态（急性过载 / 急性欠账 / 连续欠账）</li>
+      <li><b>身体储值</b>：每日基线 100 分，吸烟、咖啡饮料扣分，跑步锻炼加分，每天在身体记录打卡自动汇入</li>
+      <li><b>创造不限于写作</b>：搭建系统、设计流程、输出知识都算，价值按能量事件分级（SS/S/A/B）</li>
+    </ul>
+  </section>
+
+  <section class="sec">
+    <h2>个人模型：从数据里提炼「我」</h2>
+    <p>复盘积累到一定程度，模式会浮现。个人模型表把这些模式沉淀下来：<b>模型 + 场景 + 验证状态 + 依赖数据源</b>，让 AI 在辅助决策时直接调用——比如「我容易兴奋驱动而非节奏驱动」「系统复杂度增长快于录入习惯」这类自我认知，不再依赖临时总结。</p>
+    <p>决策辅助系统基于它运转：每周自动生成决策参考包（当前状态快照、长期方向锚点、在途项目、时间分配、历史决策模式、关系资产、余力判断），在做重要决定前给 AI 一个完整的「我」。</p>
+  </section>
+
+  <section class="sec">
+    <h2>独特价值</h2>
+    <ul>
+      <li><b>数据为桥，关系为镜</b>：不是把生活量化成指标，而是用数据理解自己、照见关系</li>
+      <li><b>反 AI 味靠素材，不靠技巧</b>：把十年内容资产变成数据库、把复盘沉淀成语料——生成的文本有自己的底料，而不是模板腔</li>
+      <li><b>可迁移的方法论</b>：表结构、复盘问题框架、AI 协作工作流都在持续整理为开源方法论（personal-data-system），别人可以借鉴，不必从零开始</li>
+    </ul>
+  </section>
+
+  <div class="quote-block">
+    <p>把自己当作方法，<br>是认识这个世界最诚实的起点。</p>
+    <small>— 生命田野 · 系统宣言</small>
+  </div>
+
+  <div class="back-row"><a href="index.html#systems">← 返回系统与方法</a></div>
+</main>
+
+<footer>
+  <b>liudeva</b> · Data Cook, Field Observer, Meaning Surfer<br>
+  © 2026 · 一片仍在生长的生命田野
+</footer>
+
+</body>
+</html>
