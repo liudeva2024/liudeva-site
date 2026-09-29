@@ -47,11 +47,14 @@ a:hover{color:var(--amber)}
 .hero-title em{font-style:normal;color:var(--amber)}
 .hero-sub{font-size:clamp(1rem,2.2vw,1.35rem);letter-spacing:.3em;color:var(--ink-dim);font-weight:300}
 .hero-sub b{font-weight:500;color:var(--ink)}
+.hero-motto{font-family:var(--serif);font-size:clamp(1.05rem,2.4vw,1.45rem);letter-spacing:.12em;line-height:1.9;color:var(--ink-dim);margin-top:30px;max-width:640px}
+.hero-motto .accent{color:var(--amber)}
 .hero-hint{position:absolute;bottom:34px;left:50%;transform:translateX(-50%);font-size:12px;letter-spacing:.3em;color:var(--ink-faint);display:flex;flex-direction:column;align-items:center;gap:10px}
 .hero-hint svg{animation:float 2.6s ease-in-out infinite}
 @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(6px)}}
 .hero-fade{opacity:0;transform:translateY(18px);animation:heroIn 1s .15s ease forwards}
 .hero-fade:nth-child(2){animation-delay:.4s}
+.hero-fade:nth-child(4){animation-delay:.8s}
 @keyframes heroIn{to{opacity:1;transform:none}}
 @media (prefers-reduced-motion:reduce){.hero-fade{animation:none;opacity:1;transform:none}.hero-hint svg{animation:none}}
 
@@ -160,6 +163,7 @@ footer b{color:var(--ink-dim);font-weight:500}
     <div class="hero-kicker hero-fade">DATA COOK · FIELD OBSERVER · MEANING SURFER</div>
     <h1 class="hero-title hero-fade">Hello, this is <em>liudeva</em>.</h1>
     <div class="hero-sub hero-fade"><b>数据烹饪师</b> · <b>田野观察员</b> · <b>意义冲浪手</b></div>
+    <div class="hero-motto hero-fade">通过不断改变解释框架，<span class="accent">重新理解人、组织和时代</span></div>
   </div>
   <div class="hero-hint">
     <svg width="16" height="22" viewBox="0 0 16 22" fill="none"><path d="M8 2v18M8 20l-6-6M8 20l6-6" stroke="currentColor" stroke-width="1.2"/></svg>
@@ -172,11 +176,11 @@ footer b{color:var(--ink-dim);font-weight:500}
   <div class="wrap">
     <div class="sec-head">
       <span class="sec-no">01 · MANIFESTO</span>
-      <h2 class="sec-title">通过不断改变解释框架，<br>重新理解人、组织和时代</h2>
+      <h2 class="sec-title">数据为桥、关系为镜。</h2>
       <div class="sec-rule"></div>
     </div>
     <p class="manifesto-text">
-      <b>数据为桥、关系为镜。</b> 我把生活当作一片可以持续耕耘的<span class="accent">田野</span>，用两年多、两百多次迭代，搭建了一套个人数据系统：
+      我把生活当作一片可以持续耕耘的<span class="accent">田野</span>，用两年多、两百多次迭代，搭建了一套个人数据系统：
       记录时间、情绪、关系与思考，再把它们<span class="accent">烹饪</span>成对自我的理解。
       我在这片田野里观察，在数据与意义之间<span class="accent">冲浪</span>——
       并相信，把自己当作方法，是认识这个世界最诚实的起点。
@@ -261,7 +265,7 @@ footer b{color:var(--ink-dim);font-weight:500}
 <section class="systems" id="systems">
   <div class="wrap">
     <div class="sec-head">
-      <span class="sec-no">04 · SYSTEMS &amp; METHODS</span>
+      <span class="sec-no">04 · SYSTEMS & METHODS</span>
       <h2 class="sec-title">系统与方法 · 我沉淀的东西</h2>
       <p class="sec-desc">创造不一定是发布，也可以是可用的系统与流程。以下是我在田野中沉淀出来的方法与模式。</p>
       <div class="sec-rule"></div>
