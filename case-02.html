@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>授权给 AI，就是授权全部视野 — liudeva</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='26' cy='26' r='10' fill='%23e59b53'/%3E%3Ccircle cx='42' cy='40' r='14' fill='none' stroke='%23df6b4a' stroke-width='5'/%3E%3Cpath d='M8 56 L28 56 L20 44 Z' fill='%2393b8bf'/%3E%3C/svg%3E">
+<link href="https://miaoda.feishu.cn/fonts/css2?family=Noto+Sans+SC:wght@300;400;500;700&family=Noto+Serif+SC:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg-deep:#10132b;
+  --bg-mid:#151a38;
+  --bg-soft:#1c2245;
+  --ink:#f1ece2;
+  --ink-dim:#a9b1cb;
+  --ink-faint:#687095;
+  --amber:#e59b53;
+  --ember:#df6b4a;
+  --teal:#93b8bf;
+  --line:rgba(241,236,226,.14);
+  --serif:'Noto Serif SC','Songti SC','SimSun',serif;
+  --sans:'Noto Sans SC','PingFang SC','Microsoft YaHei','Helvetica Neue',Arial,sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg-deep);color:var(--ink);font-family:var(--sans);font-weight:300;line-height:1.9;-webkit-font-smoothing:antialiased}
+a{color:var(--teal);text-decoration:none;transition:color .25s}
+a:hover{color:var(--amber)}
+::selection{background:var(--amber);color:#10132b}
+
+/* ===== header ===== */
+.site-header{position:fixed;top:0;left:0;right:0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:22px 5vw;background:rgba(16,19,43,.82);backdrop-filter:blur(10px)}
+.brand{font-size:15px;letter-spacing:.22em;font-weight:500;color:var(--ink)}
+.brand span{color:var(--amber)}
+.nav{font-size:13px;letter-spacing:.12em}
+.nav a{color:var(--ink-dim)}
+.nav a:hover{color:var(--ink)}
+
+/* ===== article ===== */
+.article{max-width:720px;margin:0 auto;padding:150px 6vw 60px}
+.art-kicker{font-size:12px;letter-spacing:.4em;color:var(--amber)}
+.art-title{font-family:var(--serif);font-size:clamp(1.7rem,4.2vw,2.6rem);line-height:1.5;font-weight:600;letter-spacing:.04em;margin:20px 0 22px}
+.art-lead{font-family:var(--serif);font-size:clamp(1.05rem,2.2vw,1.25rem);color:var(--ink-dim);line-height:2;max-width:620px}
+.art-meta{display:flex;flex-wrap:wrap;gap:12px 28px;margin-top:26px;padding-top:20px;border-top:1px solid var(--line);font-size:12px;letter-spacing:.14em;color:var(--ink-faint)}
+.art-meta b{color:var(--teal);font-weight:400}
+.sec{margin-top:64px}
+.sec h2{font-family:var(--serif);font-size:clamp(1.3rem,3vw,1.7rem);font-weight:600;letter-spacing:.06em;margin-bottom:18px;color:var(--ink)}
+.sec h2::before{content:'';display:inline-block;width:22px;height:1px;background:var(--amber);margin-right:14px;vertical-align:middle}
+.sec p{color:var(--ink-dim);margin-bottom:16px}
+.sec p b{color:var(--ink);font-weight:500}
+.sec ul{list-style:none;margin:0 0 18px}
+.sec li{position:relative;padding-left:22px;color:var(--ink-dim);margin-bottom:12px}
+.sec li::before{content:'';position:absolute;left:2px;top:.85em;width:7px;height:1px;background:var(--amber)}
+.sec li b{color:var(--ink);font-weight:500}
+.art-fig{margin:34px 0;text-align:center}
+.art-fig img{max-width:100%;border:1px solid var(--line);display:block;margin:0 auto}
+.art-fig figcaption{font-size:12px;color:var(--ink-faint);letter-spacing:.2em;margin-top:14px}
+.quote-block{margin-top:76px;padding:38px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);text-align:center}
+.quote-block p{font-family:var(--serif);font-size:clamp(1.1rem,2.4vw,1.35rem);line-height:2;color:var(--ink);letter-spacing:.04em}
+.quote-block small{display:block;margin-top:16px;color:var(--amber);letter-spacing:.3em;font-size:12px}
+.back-row{margin:80px 0 0;text-align:center}
+.back-row a{font-size:13px;letter-spacing:.3em;color:var(--ink-dim)}
+.back-row a:hover{color:var(--amber)}
+
+/* ===== footer ===== */
+footer{padding:64px 5vw 56px;text-align:center;font-size:13px;color:var(--ink-faint);letter-spacing:.1em;line-height:2.2;border-top:1px solid var(--line)}
+footer b{color:var(--ink-dim);font-weight:400}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <a class="brand" href="index.html">liudeva<span>.</span></a>
+  <nav class="nav"><a href="index.html#notes">← 返回田野笔记</a></nav>
+</header>
+
+<main class="article">
+  <div class="art-kicker">FIELD STORIES · CASE 02</div>
+  <h1 class="art-title">授权给 AI，就是授权全部视野</h1>
+  <p class="art-lead">客户拜访助手的一次越权泄露，逼出一个平台级安全结论——授权给 agent，即授权全部视野。</p>
+  <div class="art-meta">
+    <span>时间 · <b>2026.09</b></span>
+    <span>关键词 · <b>AI 安全</b> <b>权限治理</b> <b>事故复盘</b></span>
+  </div>
+
+  <section class="sec">
+    <h2>我在做什么</h2>
+    <p>我在一家企业里做经营分析与客户管理，这两年一直尝试把 AI 真正带进业务流，而不只是试用。这次出事的，是一个「客户拜访助手」——商务在拜访客户前，用它快速了解客户的基本情况与历史往来，用最少的时间把拜访准备做好。</p>
+    <p>它出问题了，而且不是小问题。</p>
+  </section>
+
+  <section class="sec">
+    <h2>事故现场</h2>
+    <p>一次拜访前，商务向助手询问客户资料，助手却把不该给的也给了：该客户名下的其他商务、历史订单与金额——绝对保密的经营数据，被一句普通提问带了出来。</p>
+    <p>这不是 bug。助手在设计之初，针对「拜访准备」这一特定场景做过权限约束——但真实使用中，用户不会乖乖待在场景里：一句超出场景的提问，就把它带出了围栏。</p>
+  </section>
+
+  <section class="sec">
+    <h2>破题时刻</h2>
+    <p>第一反应不是「下次提示词写严一点」。靠约束一个 agent 的自律，治不了这类问题。</p>
+    <p>我开始想人和 AI 的安全边界为什么不一样：人知道自己该看什么、不该看什么；agent 不知道——它只知道「读」和「不读」，而默认答案永远是「读」。权限按场景设计，但真实使用永远会超出场景。</p>
+    <p>所以结论不是教育 agent，而是重新设计它的权限。</p>
+  </section>
+
+  <section class="sec">
+    <h2>两个根因</h2>
+    <p><b>根因一（数据层）：</b>助手可以读盘客系统全部 19 张表，没有任何按人隔离——执行身份权限过宽。读一次拜访表，就拿到了全表。</p>
+    <p><b>根因二（规则层）：</b>权限约束绑定在「设计时的场景」上——场景内有效、场景外失效。设计到的场景有围栏，没设计的全敞开；而实际使用，永远会超出设计场景。</p>
+  </section>
+
+  <section class="sec">
+    <h2>分层修复</h2>
+    <p><b>软围栏止血</b>（立即生效）：指令红线全局化 + 回复规则全局化——先挡住继续泄露。</p>
+    <p><b>硬围栏除根</b>（重构落地）：最小权限重构，物理隔离敏感表——让「读不到」取代「不该读」。</p>
+    <p>安全治理的结论是：从「个体 agent 自律」升级为「平台级、制度级设计」。真正的安全不指望任何单个 agent 守规矩，而是让越权的可能从一开始就不存在。</p>
+    <figure class="art-fig">
+      <img src="https://media.doubao.com/space/api/box/stream/download/all_by_mount_point/PsuKbuDCZoM2H5xZDjXcq1qcnDf" alt="软围栏 vs 硬围栏：止血与除根">
+      <figcaption>软围栏 vs 硬围栏：止血与除根</figcaption>
+    </figure>
+  </section>
+
+  <section class="sec">
+    <h2>经验沉淀</h2>
+    <p><b>做对的：</b></p>
+    <ul>
+      <li>响应闭环完整：自查 → 冻结待修 → 坦白限制 → 分层方案 → 待确认，一步没乱</li>
+      <li>先止血后除根：软围栏当天生效，硬围栏从容重构</li>
+    </ul>
+    <p><b>踩的坑：</b></p>
+    <ul>
+      <li>软围栏挡得住设计的场景，挡不住没设计的提问——补丁永远追不上想象力</li>
+      <li>「触发≠处理」：消息送达只说明内容进了上下文，处理规则还必须在收消息的会话里存在</li>
+      <li>写表可以授权给 AI，对外披露必须人把关——写权限和披露权必须分开设计</li>
+    </ul>
+    <p><b>一句话方法论：</b>授权给 agent，就是授权全部视野；Agent 只在被明确约束的地方守规矩，权限只在被明确收紧的地方设限，其余默认全开。</p>
+  </section>
+
+  <div class="quote-block">
+    <p>授权给 agent，即授权全部视野。</p>
+    <small>— 这次事故留下的结论</small>
+  </div>
+
+  <div class="back-row"><a href="index.html#notes">← 返回田野笔记</a></div>
+</main>
+
+<footer>
+  <b>liudeva</b> · Data Cook, Field Observer, Meaning Surfer<br>
+  © 2026 · 一片仍在生长的生命田野
+</footer>
+
+</body>
+</html>
