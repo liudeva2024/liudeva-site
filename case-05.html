@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>十年媒体资产，变 AI 生产资料 — liudeva</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='26' cy='26' r='10' fill='%23e59b53'/%3E%3Ccircle cx='42' cy='40' r='14' fill='none' stroke='%23df6b4a' stroke-width='5'/%3E%3Cpath d='M8 56 L28 56 L20 44 Z' fill='%2393b8bf'/%3E%3C/svg%3E">
+<link href="https://miaoda.feishu.cn/fonts/css2?family=Noto+Sans+SC:wght@300;400;500;700&family=Noto+Serif+SC:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg-deep:#10132b;
+  --bg-mid:#151a38;
+  --bg-soft:#1c2245;
+  --ink:#f1ece2;
+  --ink-dim:#a9b1cb;
+  --ink-faint:#687095;
+  --amber:#e59b53;
+  --ember:#df6b4a;
+  --teal:#93b8bf;
+  --line:rgba(241,236,226,.14);
+  --serif:'Noto Serif SC','Songti SC','SimSun',serif;
+  --sans:'Noto Sans SC','PingFang SC','Microsoft YaHei','Helvetica Neue',Arial,sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg-deep);color:var(--ink);font-family:var(--sans);font-weight:300;line-height:1.9;-webkit-font-smoothing:antialiased}
+a{color:var(--teal);text-decoration:none;transition:color .25s}
+a:hover{color:var(--amber)}
+::selection{background:var(--amber);color:#10132b}
+
+/* ===== header ===== */
+.site-header{position:fixed;top:0;left:0;right:0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:22px 5vw;background:rgba(16,19,43,.82);backdrop-filter:blur(10px)}
+.brand{font-size:15px;letter-spacing:.22em;font-weight:500;color:var(--ink)}
+.brand span{color:var(--amber)}
+.nav{font-size:13px;letter-spacing:.12em}
+.nav a{color:var(--ink-dim)}
+.nav a:hover{color:var(--ink)}
+
+/* ===== article ===== */
+.article{max-width:720px;margin:0 auto;padding:150px 6vw 60px}
+.art-kicker{font-size:12px;letter-spacing:.4em;color:var(--amber)}
+.art-title{font-family:var(--serif);font-size:clamp(1.7rem,4.2vw,2.6rem);line-height:1.5;font-weight:600;letter-spacing:.04em;margin:20px 0 22px}
+.art-lead{font-family:var(--serif);font-size:clamp(1.05rem,2.2vw,1.25rem);color:var(--ink-dim);line-height:2;max-width:620px}
+.art-meta{display:flex;flex-wrap:wrap;gap:12px 28px;margin-top:26px;padding-top:20px;border-top:1px solid var(--line);font-size:12px;letter-spacing:.14em;color:var(--ink-faint)}
+.art-meta b{color:var(--teal);font-weight:400}
+.sec{margin-top:64px}
+.sec h2{font-family:var(--serif);font-size:clamp(1.3rem,3vw,1.7rem);font-weight:600;letter-spacing:.06em;margin-bottom:18px;color:var(--ink)}
+.sec h2::before{content:'';display:inline-block;width:22px;height:1px;background:var(--amber);margin-right:14px;vertical-align:middle}
+.sec p{color:var(--ink-dim);margin-bottom:16px}
+.sec p b{color:var(--ink);font-weight:500}
+.sec ul{list-style:none;margin:0 0 18px}
+.sec li{position:relative;padding-left:22px;color:var(--ink-dim);margin-bottom:12px}
+.sec li::before{content:'';position:absolute;left:2px;top:.85em;width:7px;height:1px;background:var(--amber)}
+.sec li b{color:var(--ink);font-weight:500}
+.art-fig{margin:34px 0;text-align:center}
+.art-fig img{max-width:100%;border:1px solid var(--line);display:block;margin:0 auto}
+.art-fig figcaption{font-size:12px;color:var(--ink-faint);letter-spacing:.2em;margin-top:14px}
+.quote-block{margin-top:76px;padding:38px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);text-align:center}
+.quote-block p{font-family:var(--serif);font-size:clamp(1.1rem,2.4vw,1.35rem);line-height:2;color:var(--ink);letter-spacing:.04em}
+.quote-block small{display:block;margin-top:16px;color:var(--amber);letter-spacing:.3em;font-size:12px}
+.back-row{margin:80px 0 0;text-align:center}
+.back-row a{font-size:13px;letter-spacing:.3em;color:var(--ink-dim)}
+.back-row a:hover{color:var(--amber)}
+
+/* ===== footer ===== */
+footer{padding:64px 5vw 56px;text-align:center;font-size:13px;color:var(--ink-faint);letter-spacing:.1em;line-height:2.2;border-top:1px solid var(--line)}
+footer b{color:var(--ink-dim);font-weight:400}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <a class="brand" href="index.html">liudeva<span>.</span></a>
+  <nav class="nav"><a href="index.html#notes">← 返回田野笔记</a></nav>
+</header>
+
+<main class="article">
+  <div class="art-kicker">FIELD STORIES · CASE 05</div>
+  <h1 class="art-title">十年媒体资产，变 AI 生产资料</h1>
+  <p class="art-lead">十年的媒体内容沉淀成结构化数据库，再变成可被 AI 再创作的生产资料——媒体资产变生产资料。</p>
+  <div class="art-meta">
+    <span>时间 · <b>2026.09</b></span>
+    <span>关键词 · <b>内容资产化</b> <b>数据基础设施</b> <b>去 AI 味</b></span>
+  </div>
+
+  <section class="sec">
+    <h2>我在做什么</h2>
+    <p>我在一家媒体机构里做经营分析与数据 / AI 落地。这家机构手里有一份特别的家底：过去十年积累的内容资产——几千篇深度报道与个人故事，散落在旧系统里，没有被结构化管理。</p>
+    <p>内容是媒体的资产，但如果它只是躺在旧系统里的文件，资产就无法被使用。我想做的，是把这份家底变成「AI 的基础设施」。</p>
+  </section>
+
+  <section class="sec">
+    <h2>地基：把十年内容变成数据库</h2>
+    <p>第一步是盖地基：把十年内容结构化。常规选题 2800 条 + 商业合作 400 条，覆盖约十年 80% 的内容；每条记录带元数据 6 字段 + 评价标签 51 字段。</p>
+    <p>这个工程最值钱的产出，不是数量，而是流程：500+ 条链接批量解析（311 条有效），字段级对齐；写库格式定成「档｜依据」——把「判断」和「记录」两步绑死，从机制上避免脏数据。</p>
+    <p>它走完用了近一个月，情绪与身体像坐了过山车——基础设施型项目，几乎都是这个路径：无人鼓掌、看不到尽头，直到某天突然完成。</p>
+  </section>
+
+  <section class="sec">
+    <h2>一鱼两吃：回头看 + 向前用</h2>
+    <p>数据库完成之后，我没有急着定义它「应该」怎么用。同一份数据，自然长出了两条线：</p>
+    <ul>
+      <li><b>回头看</b>：一份「十年内容变迁报告」，交付给一位主编——看这十年内容关注的东西如何迁移，获正面反馈</li>
+      <li><b>向前用</b>：一个叙事素材库，让 AI 写作时有「人味」素材可依——编辑部的下一步创作直接消费它</li>
+    </ul>
+    <p>底座搭好后，不同的人涌出不同的场景——这就是基础设施的样子。</p>
+    <figure class="art-fig">
+      <img src="https://media.doubao.com/space/api/box/stream/download/all_by_mount_point/RXtQb3CgkoyCIJxzH67c7q9onAg" alt="一鱼两吃">
+      <figcaption>一鱼两吃：十年内容的数据流</figcaption>
+    </figure>
+  </section>
+
+  <section class="sec">
+    <h2>交付瓶颈：能力端全通，交付端全卡</h2>
+    <p>能力端几乎没有障碍——数据、模型、流程都跑通了。真正的坎在交付端：分享给谁、怎么集成、成本谁出。技术不再是主要矛盾，分享、集成、成本才是。</p>
+  </section>
+
+  <section class="sec">
+    <h2>闭环：交付前加一道真机测试</h2>
+    <p>这次我给自己定了一条规矩：对外送出的 AI 产物，交付前必须过一道「第三方真机测试」——找一个真实用户、真实场景、真实跑一遍，而不是自己觉得好了就送。</p>
+    <p>报告送出去后，收礼方反馈「挺惊喜」。这让我重新理解了闭环：「做完」「送出」「被看见」是三件事，前两件做得再好，也代替不了第三件。</p>
+  </section>
+
+  <section class="sec">
+    <h2>质量验证：AI 味变淡</h2>
+    <p>叙事素材库在编辑部实际创作中试了一轮：AI 产出的稿子「AI 味」明显变淡。这个结果印证了一个判断——<b>去 AI 味靠素材质量，不靠生成技巧</b>。模型再会写，没有好素材喂给它，写出来还是空。</p>
+  </section>
+
+  <section class="sec">
+    <h2>经验沉淀</h2>
+    <p><b>做对的：</b></p>
+    <ul>
+      <li>把资产先结构化：内容变成数据，AI 才有东西可放大——AI 放大的始终是原有资产</li>
+      <li>不预设用途：数据库做完先「一鱼两吃」，让场景自己长出来</li>
+      <li>「档｜依据」写库格式：判断与记录绑死，机制上杜绝脏数据</li>
+      <li>第三方真机测试：对外送出 AI 产物前的标准动作</li>
+    </ul>
+    <p><b>踩的坑：</b></p>
+    <ul>
+      <li>低估了交付端：能力全通后，分享、集成、成本成了新的主要矛盾</li>
+      <li>基础设施型项目容易怀疑人生：近一个月无人鼓掌，要提前给自己设里程碑</li>
+      <li>「做完」不等于「被看见」：闭环缺了最后一段，价值就没有完成传递</li>
+    </ul>
+    <p><b>一句话方法论：</b>内容数据库 = AI 基础设施 = 长期复利；去 AI 味靠素材质量，不靠生成技巧。</p>
+  </section>
+
+  <div class="quote-block">
+    <p>媒体资产变生产资料。</p>
+    <small>— 这次资产化留下的结论</small>
+  </div>
+
+  <div class="back-row"><a href="index.html#notes">← 返回田野笔记</a></div>
+</main>
+
+<footer>
+  <b>liudeva</b> · Data Cook, Field Observer, Meaning Surfer<br>
+  © 2026 · 一片仍在生长的生命田野
+</footer>
+
+</body>
+</html>
