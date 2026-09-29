@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>从人找工具，到工具找人：一次主动式服务的设计 — liudeva</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='26' cy='26' r='10' fill='%23e59b53'/%3E%3Ccircle cx='42' cy='40' r='14' fill='none' stroke='%23df6b4a' stroke-width='5'/%3E%3Cpath d='M8 56 L28 56 L20 44 Z' fill='%2393b8bf'/%3E%3C/svg%3E">
+<link href="https://miaoda.feishu.cn/fonts/css2?family=Noto+Sans+SC:wght@300;400;500;700&family=Noto+Serif+SC:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg-deep:#10132b;
+  --bg-mid:#151a38;
+  --bg-soft:#1c2245;
+  --ink:#f1ece2;
+  --ink-dim:#a9b1cb;
+  --ink-faint:#687095;
+  --amber:#e59b53;
+  --ember:#df6b4a;
+  --teal:#93b8bf;
+  --line:rgba(241,236,226,.14);
+  --serif:'Noto Serif SC','Songti SC','SimSun',serif;
+  --sans:'Noto Sans SC','PingFang SC','Microsoft YaHei','Helvetica Neue',Arial,sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg-deep);color:var(--ink);font-family:var(--sans);font-weight:300;line-height:1.9;-webkit-font-smoothing:antialiased}
+a{color:var(--teal);text-decoration:none;transition:color .25s}
+a:hover{color:var(--amber)}
+::selection{background:var(--amber);color:#10132b}
+
+/* ===== header ===== */
+.site-header{position:fixed;top:0;left:0;right:0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:22px 5vw;background:rgba(16,19,43,.82);backdrop-filter:blur(10px)}
+.brand{font-size:15px;letter-spacing:.22em;font-weight:500;color:var(--ink)}
+.brand span{color:var(--amber)}
+.nav{font-size:13px;letter-spacing:.12em}
+.nav a{color:var(--ink-dim)}
+.nav a:hover{color:var(--ink)}
+
+/* ===== article ===== */
+.article{max-width:720px;margin:0 auto;padding:150px 6vw 60px}
+.art-kicker{font-size:12px;letter-spacing:.4em;color:var(--amber)}
+.art-title{font-family:var(--serif);font-size:clamp(1.7rem,4.2vw,2.6rem);line-height:1.5;font-weight:600;letter-spacing:.04em;margin:20px 0 22px}
+.art-lead{font-family:var(--serif);font-size:clamp(1.05rem,2.2vw,1.25rem);color:var(--ink-dim);line-height:2;max-width:620px}
+.art-meta{display:flex;flex-wrap:wrap;gap:12px 28px;margin-top:26px;padding-top:20px;border-top:1px solid var(--line);font-size:12px;letter-spacing:.14em;color:var(--ink-faint)}
+.art-meta b{color:var(--teal);font-weight:400}
+.sec{margin-top:64px}
+.sec h2{font-family:var(--serif);font-size:clamp(1.3rem,3vw,1.7rem);font-weight:600;letter-spacing:.06em;margin-bottom:18px;color:var(--ink)}
+.sec h2::before{content:'';display:inline-block;width:22px;height:1px;background:var(--amber);margin-right:14px;vertical-align:middle}
+.sec p{color:var(--ink-dim);margin-bottom:16px}
+.sec p b{color:var(--ink);font-weight:500}
+.sec ul{list-style:none;margin:0 0 18px}
+.sec li{position:relative;padding-left:22px;color:var(--ink-dim);margin-bottom:12px}
+.sec li::before{content:'';position:absolute;left:2px;top:.85em;width:7px;height:1px;background:var(--amber)}
+.sec li b{color:var(--ink);font-weight:500}
+.art-fig{margin:34px 0;text-align:center}
+.art-fig img{max-width:100%;border:1px solid var(--line);display:block;margin:0 auto}
+.art-fig figcaption{font-size:12px;color:var(--ink-faint);letter-spacing:.2em;margin-top:14px}
+.quote-block{margin-top:76px;padding:38px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);text-align:center}
+.quote-block p{font-family:var(--serif);font-size:clamp(1.1rem,2.4vw,1.35rem);line-height:2;color:var(--ink);letter-spacing:.04em}
+.quote-block small{display:block;margin-top:16px;color:var(--amber);letter-spacing:.3em;font-size:12px}
+.back-row{margin:80px 0 0;text-align:center}
+.back-row a{font-size:13px;letter-spacing:.3em;color:var(--ink-dim)}
+.back-row a:hover{color:var(--amber)}
+
+/* ===== footer ===== */
+footer{padding:64px 5vw 56px;text-align:center;font-size:13px;color:var(--ink-faint);letter-spacing:.1em;line-height:2.2;border-top:1px solid var(--line)}
+footer b{color:var(--ink-dim);font-weight:400}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <a class="brand" href="index.html">liudeva<span>.</span></a>
+  <nav class="nav"><a href="index.html#notes">← 返回田野笔记</a></nav>
+</header>
+
+<main class="article">
+  <div class="art-kicker">FIELD STORIES · CASE 03</div>
+  <h1 class="art-title">从人找工具，到工具找人：一次主动式服务的设计</h1>
+  <p class="art-lead">让 AI 从「等人来问」变成「追着业务流程跑」——从任务找数据，到数据找任务。</p>
+  <div class="art-meta">
+    <span>时间 · <b>2026.09</b></span>
+    <span>关键词 · <b>主动式服务</b> <b>意图信号</b> <b>消息驱动架构</b></span>
+  </div>
+
+  <section class="sec">
+    <h2>我在做什么</h2>
+    <p>我在一家企业里做经营分析与客户管理。这套「盘客系统」管理着客户与商务的关系——商务靠它了解客户、跟进客户。过去系统里的 AI 都是「等人来问」：你问我答，被动、安静、不添乱。</p>
+    <p>我想换一种方式：让 AI 从「等人来问」变成「追着业务流程跑」——不是任务去找数据，而是数据自己找上任务。</p>
+  </section>
+
+  <section class="sec">
+    <h2>落地：五个自动化任务</h2>
+    <p>第一批落地了五个自动化任务：客户营销动作分级抓取、每周优先级盘点、每月待定复评。这里的「营销动作」指客户自己的市场营销动作——客户的商机来源，也是商务最关注的客户市场情报。</p>
+    <p>分级是为了平衡成本：客户按跟进级别分成高优、中优、待定三档——高优每天扫描抓取市场营销动作，中优每周，待定每月。级别不是死的：每两周，AI 按优先级评定规则自动评估一次，级别动态调整。</p>
+    <p>AI 不再等商务开口，而是按业务节奏，把该看的主动送到面前。</p>
+  </section>
+
+  <section class="sec">
+    <h2>第一个难题：情报该推给谁</h2>
+    <p>推送撞上第一个难题：情报（营销动作、优先级）都是按客户维度设计的，但商务跟进客户时会细化到条线 / 品牌维度——多个商务跟进同一个客户的不同条线 / 品牌，粒度对不上。</p>
+    <p>把客户维度升回条线 / 品牌？那不是我们数据该有的粒度，会污染太多人；单独推给某个商务？又不知道给谁——一个客户背后有好几个商务。</p>
+    <p>解法不是追着粒度算，而是放弃单独推送：建一个统一的市场情报群，客户情报推到群里，所有相关商务都能看到。精准送达让位给共同可见——粒度错位，不该用「放大」解决，用「群」解决。</p>
+  </section>
+
+  <section class="sec">
+    <h2>意图信号：出差审批流</h2>
+    <p>主动服务最怕两件事：猜错意图、打扰到人。我找到的第一个信号源，是出差 / 外勤审批流——它天然表达了「我要离开工位」。AI 不需要预测意图，只需要监听意图的副产品：审批通过的那一刻，服务就知道该把客户动态打包好，等商务回来再看。</p>
+    <p>这也定了主动服务的分寸：帮忙还是监视？透明大于神秘——让用户清楚知道它为什么来。</p>
+  </section>
+
+  <section class="sec">
+    <h2>首跑撞墙：写回三路全失败</h2>
+    <p>主动询问跑通了，但真正的坎在「写回」——AI 要把商务的反馈写回系统。三条路全撞墙：直接读历史被权限拦下；搭中转站过于复杂；卡片回调按钮没人用。</p>
+    <p>那一刻很挫败：明明主动推得动，反馈却收不回来。</p>
+  </section>
+
+  <section class="sec">
+    <h2>顿悟：拉模式改推模式</h2>
+    <p>我停下来想，问题不在「写回」这个动作，而在时机：写回被设计成「定时翻聊天记录找反馈」——拉模式。但聊天会话根本不适合当数据管道：反馈散落在对话里，翻历史永远是滞后的、脆弱的。</p>
+    <p>改法是把时机倒过来：反馈消息到达，立刻写表——推模式。同一件事，拉模式里是死路，推模式里是坦途。</p>
+    <figure class="art-fig">
+      <img src="https://media.doubao.com/space/api/box/stream/download/all_by_mount_point/Kc4YbHrLiozulRxU1VEcYWsXnHf" alt="拉模式 vs 推模式">
+      <figcaption>拉模式 vs 推模式：同一动作，一边死路一边坦途</figcaption>
+    </figure>
+  </section>
+
+  <section class="sec">
+    <h2>验证：新链路跑起来了</h2>
+    <p>某头部 3C 客户按新链路运行：发卡 → 收反馈 → 收到即写表。12:12 发卡、19:00 收反馈、收到即写——写回从「翻历史」变成「等消息」。旧的粗粒度任务停用。</p>
+    <p>更让我意外的是场景复活：半年前几乎无价值的查询助手，现在基本解决——「AI 做不了」从来只是带时间戳的结论。</p>
+  </section>
+
+  <section class="sec">
+    <h2>经验沉淀</h2>
+    <p><b>做对的：</b></p>
+    <ul>
+      <li>用审批流当意图信号：不预测意图，只监听副产品，主动但不越界</li>
+      <li>粒度错位不靠放大：放弃单独推送，市场情报群共同可见优于精准点名</li>
+      <li>同一动作换时机就是换生死：拉改推，翻历史改等消息</li>
+    </ul>
+    <p><b>踩的坑：</b></p>
+    <ul>
+      <li>聊天会话不适合当数据管道：翻历史写回永远是滞后脆弱的</li>
+      <li>写回三路设计（权限 / 中转 / 卡片回调）都想复杂了，本质是时机错了</li>
+      <li>主动服务第一变量是「打扰许可」：看起来是帮忙还是监视，透明大于神秘</li>
+    </ul>
+    <p><b>一句话方法论：</b>从任务找数据，到数据找任务；AI 做不了，只是带时间戳的结论。</p>
+  </section>
+
+  <div class="quote-block">
+    <p>从任务找数据，到数据找任务。</p>
+    <small>— 这次设计留下的结论</small>
+  </div>
+
+  <div class="back-row"><a href="index.html#notes">← 返回田野笔记</a></div>
+</main>
+
+<footer>
+  <b>liudeva</b> · Data Cook, Field Observer, Meaning Surfer<br>
+  © 2026 · 一片仍在生长的生命田野
+</footer>
+
+</body>
+</html>
