@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>把 500 篇案例和 400 份文件，变成 AI 能读的数据 — liudeva</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='26' cy='26' r='10' fill='%23e59b53'/%3E%3Ccircle cx='42' cy='40' r='14' fill='none' stroke='%23df6b4a' stroke-width='5'/%3E%3Cpath d='M8 56 L28 56 L20 44 Z' fill='%2393b8bf'/%3E%3C/svg%3E">
+<link href="https://miaoda.feishu.cn/fonts/css2?family=Noto+Sans+SC:wght@300;400;500;700&family=Noto+Serif+SC:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg-deep:#10132b;
+  --bg-mid:#151a38;
+  --bg-soft:#1c2245;
+  --ink:#f1ece2;
+  --ink-dim:#a9b1cb;
+  --ink-faint:#687095;
+  --amber:#e59b53;
+  --ember:#df6b4a;
+  --teal:#93b8bf;
+  --line:rgba(241,236,226,.14);
+  --serif:'Noto Serif SC','Songti SC','SimSun',serif;
+  --sans:'Noto Sans SC','PingFang SC','Microsoft YaHei','Helvetica Neue',Arial,sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg-deep);color:var(--ink);font-family:var(--sans);font-weight:300;line-height:1.9;-webkit-font-smoothing:antialiased}
+a{color:var(--teal);text-decoration:none;transition:color .25s}
+a:hover{color:var(--amber)}
+::selection{background:var(--amber);color:#10132b}
+
+/* ===== header ===== */
+.site-header{position:fixed;top:0;left:0;right:0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:22px 5vw;background:rgba(16,19,43,.82);backdrop-filter:blur(10px)}
+.brand{font-size:15px;letter-spacing:.22em;font-weight:500;color:var(--ink)}
+.brand span{color:var(--amber)}
+.nav{font-size:13px;letter-spacing:.12em}
+.nav a{color:var(--ink-dim)}
+.nav a:hover{color:var(--ink)}
+
+/* ===== article ===== */
+.article{max-width:720px;margin:0 auto;padding:150px 6vw 60px}
+.art-kicker{font-size:12px;letter-spacing:.4em;color:var(--amber)}
+.art-title{font-family:var(--serif);font-size:clamp(1.7rem,4.2vw,2.6rem);line-height:1.5;font-weight:600;letter-spacing:.04em;margin:20px 0 22px}
+.art-lead{font-family:var(--serif);font-size:clamp(1.05rem,2.2vw,1.25rem);color:var(--ink-dim);line-height:2;max-width:620px}
+.art-meta{display:flex;flex-wrap:wrap;gap:12px 28px;margin-top:26px;padding-top:20px;border-top:1px solid var(--line);font-size:12px;letter-spacing:.14em;color:var(--ink-faint)}
+.art-meta b{color:var(--teal);font-weight:400}
+.sec{margin-top:64px}
+.sec h2{font-family:var(--serif);font-size:clamp(1.3rem,3vw,1.7rem);font-weight:600;letter-spacing:.06em;margin-bottom:18px;color:var(--ink)}
+.sec h2::before{content:'';display:inline-block;width:22px;height:1px;background:var(--amber);margin-right:14px;vertical-align:middle}
+.sec p{color:var(--ink-dim);margin-bottom:16px}
+.sec p b{color:var(--ink);font-weight:500}
+.sec ul{list-style:none;margin:0 0 18px}
+.sec li{position:relative;padding-left:22px;color:var(--ink-dim);margin-bottom:12px}
+.sec li::before{content:'';position:absolute;left:2px;top:.85em;width:7px;height:1px;background:var(--amber)}
+.sec li b{color:var(--ink);font-weight:500}
+.art-fig{margin:34px 0;text-align:center}
+.art-fig img{max-width:100%;border:1px solid var(--line);display:block;margin:0 auto}
+.art-fig figcaption{font-size:12px;color:var(--ink-faint);letter-spacing:.2em;margin-top:14px}
+.quote-block{margin-top:76px;padding:38px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);text-align:center}
+.quote-block p{font-family:var(--serif);font-size:clamp(1.1rem,2.4vw,1.35rem);line-height:2;color:var(--ink);letter-spacing:.04em}
+.quote-block small{display:block;margin-top:16px;color:var(--amber);letter-spacing:.3em;font-size:12px}
+.back-row{margin:80px 0 0;text-align:center}
+.back-row a{font-size:13px;letter-spacing:.3em;color:var(--ink-dim)}
+.back-row a:hover{color:var(--amber)}
+
+/* ===== footer ===== */
+footer{padding:64px 5vw 56px;text-align:center;font-size:13px;color:var(--ink-faint);letter-spacing:.1em;line-height:2.2;border-top:1px solid var(--line)}
+footer b{color:var(--ink-dim);font-weight:400}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <a class="brand" href="index.html">liudeva<span>.</span></a>
+  <nav class="nav"><a href="index.html#notes">← 返回田野笔记</a></nav>
+</header>
+
+<main class="article">
+  <div class="art-kicker">FIELD STORIES · CASE 10</div>
+  <h1 class="art-title">把 500 篇案例和 400 份文件，变成 AI 能读的数据</h1>
+  <p class="art-lead">两件「一直被工作量吓退」的事，怎么被 AI 一次跑完——从逐个喂，到批量就能跑。</p>
+  <div class="art-meta">
+    <span>时间 · <b>2026.08</b></span>
+    <span>关键词 · <b>批量解析</b> <b>数据底座</b> <b>存量资产结构化</b></span>
+  </div>
+
+  <section class="sec">
+    <h2>我在做什么</h2>
+    <p>我供职于一家媒体机构，日常做经营分析与 AI 落地。这个案例讲的是两件「一直被工作量吓退」的事，怎么被 AI 一次跑完的：一是把过去几百篇客户合作案例变成结构化数据，二是把几百份混杂格式的客户策划需求文件变成可检索的文本。它们最后合并成两个数据库，成为后续 AI 应用的底座。</p>
+  </section>
+
+  <section class="sec">
+    <h2>困局：一直想做，一直被吓退</h2>
+    <p>客户合作案例这件事，团队想做很久了。它们是谈客户时最有力的证明——「我们为什么值得被选」。但材料散在公众号文章、视频号、各种历史文档里，要靠人工一篇篇读、一篇篇总结成结构化字段，工作量大到没人愿意开头；早年的 AI 效果也差，读长文总结出来都是空话。</p>
+    <p>一句话：<b>不是不想做，是「需要人逐个喂」这件事本身把项目杀死了。</b></p>
+  </section>
+
+  <section class="sec">
+    <h2>破题：把「逐个喂」变成「批量跑」</h2>
+    <p>转机来自一次工具尝试：我拿到一批历史合作文章链接，交给批量分析工具，按「为什么选我们 / 客户需求 / 我们提供什么」三问框架跑。第一次跑通之后，我意识到这件事的形态变了——</p>
+    <p><b>过去要一个一个喂，现在给表格链接＋文章链接，批量就能跑。</b></p>
+  </section>
+
+  <section class="sec">
+    <h2>落地一：500 篇案例，4-5 小时变成 311 条结构化数据</h2>
+    <p>第一批规模是约 500 个历史合作文章链接。AI 按三问框架批量分析，产出 <b>311 条结构化数据 + 311 份文档版分析报告</b>，大约 4-5 小时跑完。剩余约 200 条是原始链接失效（视频号迁移、公众号改版）——不是分析失败，是源头没了。</p>
+    <p>几个超出预期的细节：</p>
+    <ul>
+      <li><b>报告结构稳定</b>：311 份报告的分析框架保持一致，质量没有随着批量放大而稀释；</li>
+      <li><b>断了还能续跑</b>：中途额度耗尽、切模型报错，任务居然不丢进度，恢复后继续跑完；</li>
+      <li><b>AI 自己标成败</b>：它自动做「原始链接 vs 分析结果」对比，给每条结果标上成功或失败——验收都自动化了。</li>
+    </ul>
+    <figure class="art-fig">
+      <img src="https://media.doubao.com/space/api/box/stream/download/all_by_mount_point/Weksb0JkWoLaz2xWPjscbIPfnsf" alt="批量解析数据流：散落资产到两个数据库">
+      <figcaption>从散落资产到两个数据库 · 批量解析数据流</figcaption>
+    </figure>
+  </section>
+
+  <section class="sec">
+    <h2>落地二：400 份混杂文件，2 小时、约 30 元</h2>
+    <p>第二件事是客户策划需求：约 400 份文件，截图、PDF、Word、WPS、Excel 什么格式都有，目标是批量解析成结构化文本。用多维表格的 AI 能力跑，<b>约 2 小时、约 30 元</b>完成——成本和耗时都远低于预期。</p>
+  </section>
+
+  <section class="sec">
+    <h2>踩的坑：模型「罢工」，却没有提示</h2>
+    <p>这次也踩了一个真坑：AI 给出的预估时间不准，实际模型已经停止工作了，界面却还显示「正在跑」——我一度以为还在正常执行。后来跟产品方确认，是多维表格 AI 存在「罢工」现象且<b>没有明确提示</b>，需要对模型说「继续」才能恢复。</p>
+    <p>这是产品级体验问题，不是我的配置问题。但它给我一个提醒：<b>跑批处理，进度显示会骗人；真正要紧的是能发现「停滞」——而不是相信「正在跑」。</b></p>
+  </section>
+
+  <section class="sec">
+    <h2>下一步：两个库合起来，喂给销售</h2>
+    <p>两个数据库（311 条案例 + 400 份需求）建完后，「非常贴合业务」。下一步计划基于两个库一起做销售 Agent：销售输入客户需求 → Agent 同时查需求库和案例库 → 自动出提案。库的价值不在建起来，在被消费。</p>
+  </section>
+
+  <section class="sec">
+    <h2>经验沉淀</h2>
+    <p><b>做对的：</b></p>
+    <ul>
+      <li>换工具形态，不硬扛工作量：把「逐个喂」改成「批量跑」，被工作量吓退的事才可能开始；</li>
+      <li>让 AI 自己验收：原始链接 vs 结果对比、自动标成败，把验收也自动化；</li>
+      <li>两个库合并规划：案例库回答「凭什么选我们」，需求库回答「他们想要什么」，合起来才是提案的原料。</li>
+    </ul>
+    <p><b>踩的坑：</b></p>
+    <ul>
+      <li>别信「正在跑」：批量任务的进度显示可能失效，要设计发现停滞的机制；</li>
+      <li>原始链接会过期：视频号迁移、公众号改版会让存量链接失效——能跑通 311/500 已经是好结果；</li>
+      <li>预估时间不可靠：AI 给的时间估算仅供参考，别拿它当排期依据。</li>
+    </ul>
+    <p><b>一句话方法论：</b>历史资产结构化的关键不是「AI 能不能读」，而是「人愿不愿意开始」——把单次成本压到可接受，存量才有机会被唤醒。</p>
+  </section>
+
+  <div class="quote-block">
+    <p>过去要一个一个喂，现在给表格链接＋文章链接，批量就能跑。<br>库的价值不在建起来，在被消费。</p>
+    <small>— 这次批量解析留下的两句话</small>
+  </div>
+
+  <div class="back-row"><a href="index.html#notes">← 返回田野笔记</a></div>
+</main>
+
+<footer>
+  <b>liudeva</b> · Data Cook, Field Observer, Meaning Surfer<br>
+  © 2026 · 一片仍在生长的生命田野
+</footer>
+
+</body>
+</html>
