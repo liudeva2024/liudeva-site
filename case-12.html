@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 含量超标的一天：当我的系统比我更懂我 — liudeva</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='26' cy='26' r='10' fill='%23e59b53'/%3E%3Ccircle cx='42' cy='40' r='14' fill='none' stroke='%23df6b4a' stroke-width='5'/%3E%3Cpath d='M8 56 L28 56 L20 44 Z' fill='%2393b8bf'/%3E%3C/svg%3E">
+<link href="https://miaoda.feishu.cn/fonts/css2?family=Noto+Sans+SC:wght@300;400;500;700&family=Noto+Serif+SC:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg-deep:#10132b;
+  --bg-mid:#151a38;
+  --bg-soft:#1c2245;
+  --ink:#f1ece2;
+  --ink-dim:#a9b1cb;
+  --ink-faint:#687095;
+  --amber:#e59b53;
+  --ember:#df6b4a;
+  --teal:#93b8bf;
+  --line:rgba(241,236,226,.14);
+  --serif:'Noto Serif SC','Songti SC','SimSun',serif;
+  --sans:'Noto Sans SC','PingFang SC','Microsoft YaHei','Helvetica Neue',Arial,sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg-deep);color:var(--ink);font-family:var(--sans);font-weight:300;line-height:1.9;-webkit-font-smoothing:antialiased}
+a{color:var(--teal);text-decoration:none;transition:color .25s}
+a:hover{color:var(--amber)}
+::selection{background:var(--amber);color:#10132b}
+
+/* ===== header ===== */
+.site-header{position:fixed;top:0;left:0;right:0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:22px 5vw;background:rgba(16,19,43,.82);backdrop-filter:blur(10px)}
+.brand{font-size:15px;letter-spacing:.22em;font-weight:500;color:var(--ink)}
+.brand span{color:var(--amber)}
+.nav{font-size:13px;letter-spacing:.12em}
+.nav a{color:var(--ink-dim)}
+.nav a:hover{color:var(--ink)}
+
+/* ===== article ===== */
+.article{max-width:720px;margin:0 auto;padding:150px 6vw 60px}
+.art-kicker{font-size:12px;letter-spacing:.4em;color:var(--amber)}
+.art-title{font-family:var(--serif);font-size:clamp(1.7rem,4.2vw,2.6rem);line-height:1.5;font-weight:600;letter-spacing:.04em;margin:20px 0 22px}
+.art-lead{font-family:var(--serif);font-size:clamp(1.05rem,2.2vw,1.25rem);color:var(--ink-dim);line-height:2;max-width:620px}
+.art-meta{display:flex;flex-wrap:wrap;gap:12px 28px;margin-top:26px;padding-top:20px;border-top:1px solid var(--line);font-size:12px;letter-spacing:.14em;color:var(--ink-faint)}
+.art-meta b{color:var(--teal);font-weight:400}
+.sec{margin-top:64px}
+.sec h2{font-family:var(--serif);font-size:clamp(1.3rem,3vw,1.7rem);font-weight:600;letter-spacing:.06em;margin-bottom:18px;color:var(--ink)}
+.sec h2::before{content:'';display:inline-block;width:22px;height:1px;background:var(--amber);margin-right:14px;vertical-align:middle}
+.sec p{color:var(--ink-dim);margin-bottom:16px}
+.sec p b{color:var(--ink);font-weight:500}
+.sec ul{list-style:none;margin:0 0 18px}
+.sec li{position:relative;padding-left:22px;color:var(--ink-dim);margin-bottom:12px}
+.sec li::before{content:'';position:absolute;left:2px;top:.85em;width:7px;height:1px;background:var(--amber)}
+.sec li b{color:var(--ink);font-weight:500}
+.art-fig{margin:34px 0;text-align:center}
+.art-fig img{max-width:100%;border:1px solid var(--line);display:block;margin:0 auto}
+.art-fig figcaption{font-size:12px;color:var(--ink-faint);letter-spacing:.2em;margin-top:14px}
+.quote-block{margin-top:76px;padding:38px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);text-align:center}
+.quote-block p{font-family:var(--serif);font-size:clamp(1.1rem,2.4vw,1.35rem);line-height:2;color:var(--ink);letter-spacing:.04em}
+.quote-block small{display:block;margin-top:16px;color:var(--amber);letter-spacing:.3em;font-size:12px}
+.back-row{margin:80px 0 0;text-align:center}
+.back-row a{font-size:13px;letter-spacing:.3em;color:var(--ink-dim)}
+.back-row a:hover{color:var(--amber)}
+
+/* ===== footer ===== */
+footer{padding:64px 5vw 56px;text-align:center;font-size:13px;color:var(--ink-faint);letter-spacing:.1em;line-height:2.2;border-top:1px solid var(--line)}
+footer b{color:var(--ink-dim);font-weight:400}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <a class="brand" href="index.html">liudeva<span>.</span></a>
+  <nav class="nav"><a href="index.html#notes">← 返回田野笔记</a></nav>
+</header>
+
+<main class="article">
+  <div class="art-kicker">FIELD STORIES · CASE 12</div>
+  <h1 class="art-title">AI 含量超标的一天：当我的系统比我更懂我</h1>
+  <p class="art-lead">一个 AI 浓度爆表的日子——早听播客、午看同事自建应用、晚上发现：我的系统已经复杂到超过我自己了。</p>
+  <div class="art-meta">
+    <span>时间 · <b>2026.09</b></span>
+    <span>关键词 · <b>个人系统</b> <b>系统复杂度</b> <b>AI 迭代</b> <b>人类上下文悖论</b></span>
+  </div>
+
+  <section class="sec">
+    <h2>我在做什么</h2>
+    <p>我搭了一套个人数据系统，记录时间、情绪、关系与思考——两年多、两百多次迭代，它已经成了我理解自己的一件工具。这个案例讲一个 AI 浓度爆表的日子，以及那天晚上我终于意识到的一件事：<b>我的系统，已经复杂到超过我自己了。</b></p>
+  </section>
+
+  <section class="sec">
+    <h2>这一天发生了什么：早、午、晚三条线</h2>
+    <p><b>早晨</b>，我听到一位经济学家的播客，他讲了五个 AI 实践：用 AI 分析学生档案融入教学、给绘本配 AI 插图、先让 AI 写书再自己去读书、用 AI 生成一部经济史世界观的小说、把体检和基因数据做成个人健康知识库。</p>
+    <p>五个实践看似各不相同，却共享同一个结构：<b>都是把 AI 塞进自己已有的知识资产里，再循环回来。</b>AI 没有凭空变出什么，它放大的是这些学者本来就有的东西。</p>
+    <p><b>中午</b>，一位完全没有技术背景的同事，给我看了他自己搭的三个应用：正向情绪记录（带语音）、梦境记录、孩子成长记录。没有技术背景的人，也能自建应用了——「搭工具」这件事的准入门槛，正在肉眼可见地消失。</p>
+    <p><b>晚上</b>，轮到我自己的系统了。两年的迭代让我那套系统复杂到，有些部分我已经无法完全理解。那天晚上我把它交给 AI 去迭代——</p>
+    <ul>
+      <li>20 分钟，它完成了我以为要花很久的复杂公式和工作流设计，还主动加了一层「延时设计」（防止误触的缓冲）；</li>
+      <li>我让它分析另一套复杂系统，它全文标注唯一一处「极为精妙的设计」，恰好是当年最难的那个环节；</li>
+      <li>它读懂的不仅是结构，还有我当时的设计意图。</li>
+    </ul>
+    <figure class="art-fig">
+      <img src="https://media.doubao.com/space/api/box/stream/download/all_by_mount_point/AGnlbfGAWo7ZxbxttPVctcugnse" alt="一天三条线与系统所有权临界点">
+      <figcaption>一天三条线（早播客 · 午同事自建 · 晚交给 AI）· 系统复杂度超过创建者的临界点 · 当晚三个洞察</figcaption>
+    </figure>
+  </section>
+
+  <section class="sec">
+    <h2>破题时刻：三个洞察，在同一天汇齐</h2>
+    <p><b>洞察一：AI 放大的是你原有的资产。</b></p>
+    <p>早上五个实践的同构结构，和我自己系统的遭遇是一回事：AI 从来不凭空创造，它只放大你已经拥有的——知识、资产、设计意图。这验证了我一个多月前的判断：<b>AI 是杠杆，不是引擎。</b>其中「先写书再读书」最戳我：把学习从供给驱动翻转为需求驱动——你带着问题去读，筛选成本从阅读时挪到了生成前。</p>
+    <p><b>洞察二：系统所有权有一个临界点。</b></p>
+    <p>当系统复杂度超过创建者，「健康」的定义就变了：不再是「我完全理解每一个角落」，而是「<b>AI 能解释，我能验证</b>」。那天晚上 AI 读懂我的设计意图——这是「设计意图 vs 技术意图」最正面的验证：它理解的不只是我写了什么，还有我为什么这么写。</p>
+    <p><b>洞察三：深度靠流程，不靠意志。</b></p>
+    <p>我们回不到没有 AI 的时代了。深度加工这件事，从「个人习惯问题」变成了「系统设计问题」——你要主动把减速带设计进工作流里，让系统逼你慢下来；同时，深度从阅读侧移到了提问侧：<b>提出好问题的能力，正在成为 AI 时代最稀缺的资产。</b></p>
+  </section>
+
+  <section class="sec">
+    <h2>经验沉淀</h2>
+    <p><b>做对的：</b></p>
+    <ul>
+      <li>把「我完全理解」换成「AI 能解释 + 我能验证」：敢于承认系统超过自己，把所有权标准换成可验证的，而不是假装都懂；</li>
+      <li>让 AI 参与系统迭代并验证它的判断：它点出的「精妙设计」和我当年最难的地方对上了——这是信任建立的过程；</li>
+      <li>保留「减速带」：深度不靠意志靠流程，把慢的设计进系统里。</li>
+    </ul>
+    <p><b>踩的坑：</b></p>
+    <ul>
+      <li>系统复杂度的增长长期没有上限管理：两年两百多次迭代，直到某天才发现「我理解不了自己的系统了」——复杂度该有意识地去核对，而不是等它越线；</li>
+      <li>差点把「AI 能解释」误当成「我理解了」：AI 能讲清楚 ≠ 我已经内化，这条边界要一直守着。</li>
+    </ul>
+    <p><b>一句话方法论：</b>AI 放大的始终是你原有的资产；当系统比你更懂你，健康的标准不是「我全懂」，而是「AI 能解释，我能验证」——深度不靠意志靠流程，好问题比好答案稀缺。</p>
+  </section>
+
+  <div class="quote-block">
+    <p>系统复杂到超过我之后，健康标准就换了：从「我完全理解」，到「AI 能解释，我能验证」。<br>AI 放大的是你原有的资产——它不是引擎，是杠杆；引擎从零发动，杠杆只放大你已经拥有的。</p>
+    <small>— AI 含量超标的那天，留下的两句话</small>
+  </div>
+
+  <div class="back-row"><a href="index.html#notes">← 返回田野笔记</a></div>
+</main>
+
+<footer>
+  <b>liudeva</b> · Data Cook, Field Observer, Meaning Surfer<br>
+  © 2026 · 一片仍在生长的生命田野
+</footer>
+
+</body>
+</html>
