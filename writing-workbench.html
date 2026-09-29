@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>写作工作台 — liudeva</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='26' cy='26' r='10' fill='%23e59b53'/%3E%3Ccircle cx='42' cy='40' r='14' fill='none' stroke='%23df6b4a' stroke-width='5'/%3E%3Cpath d='M8 56 L28 56 L20 44 Z' fill='%2393b8bf'/%3E%3C/svg%3E">
+<link href="https://miaoda.feishu.cn/fonts/css2?family=Noto+Sans+SC:wght@300;400;500;700&family=Noto+Serif+SC:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg-deep:#10132b;
+  --bg-mid:#151a38;
+  --bg-soft:#1c2245;
+  --ink:#f1ece2;
+  --ink-dim:#a9b1cb;
+  --ink-faint:#687095;
+  --amber:#e59b53;
+  --ember:#df6b4a;
+  --teal:#93b8bf;
+  --line:rgba(241,236,226,.14);
+  --serif:'Noto Serif SC','Songti SC','SimSun',serif;
+  --sans:'Noto Sans SC','PingFang SC','Microsoft YaHei','Helvetica Neue',Arial,sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg-deep);color:var(--ink);font-family:var(--sans);font-weight:300;line-height:1.9;-webkit-font-smoothing:antialiased}
+a{color:var(--teal);text-decoration:none;transition:color .25s}
+a:hover{color:var(--amber)}
+::selection{background:var(--amber);color:#10132b}
+
+/* ===== header ===== */
+.site-header{position:fixed;top:0;left:0;right:0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:22px 5vw;background:rgba(16,19,43,.82);backdrop-filter:blur(10px)}
+.brand{font-size:15px;letter-spacing:.22em;font-weight:500;color:var(--ink)}
+.brand span{color:var(--amber)}
+.nav{font-size:13px;letter-spacing:.12em}
+.nav a{color:var(--ink-dim)}
+.nav a:hover{color:var(--ink)}
+
+/* ===== article ===== */
+.article{max-width:720px;margin:0 auto;padding:150px 6vw 60px}
+.art-kicker{font-size:12px;letter-spacing:.4em;color:var(--amber)}
+.art-title{font-family:var(--serif);font-size:clamp(1.7rem,4.2vw,2.6rem);line-height:1.5;font-weight:600;letter-spacing:.04em;margin:20px 0 22px}
+.art-lead{font-family:var(--serif);font-size:clamp(1.05rem,2.2vw,1.25rem);color:var(--ink-dim);line-height:2;max-width:620px}
+.art-meta{display:flex;flex-wrap:wrap;gap:12px 28px;margin-top:26px;padding-top:20px;border-top:1px solid var(--line);font-size:12px;letter-spacing:.14em;color:var(--ink-faint)}
+.art-meta b{color:var(--teal);font-weight:400}
+.sec{margin-top:64px}
+.sec h2{font-family:var(--serif);font-size:clamp(1.3rem,3vw,1.7rem);font-weight:600;letter-spacing:.06em;margin-bottom:18px;color:var(--ink)}
+.sec h2::before{content:'';display:inline-block;width:22px;height:1px;background:var(--amber);margin-right:14px;vertical-align:middle}
+.sec p{color:var(--ink-dim);margin-bottom:16px}
+.sec p b{color:var(--ink);font-weight:500}
+.sec ul{list-style:none;margin:0 0 18px}
+.sec li{position:relative;padding-left:22px;color:var(--ink-dim);margin-bottom:12px}
+.sec li::before{content:'';position:absolute;left:2px;top:.85em;width:7px;height:1px;background:var(--amber)}
+.sec li b{color:var(--ink);font-weight:500}
+.art-fig{margin:34px 0;text-align:center}
+.art-fig img{max-width:100%;border:1px solid var(--line);display:block;margin:0 auto}
+.art-fig figcaption{font-size:12px;color:var(--ink-faint);letter-spacing:.2em;margin-top:14px}
+.flow{display:flex;flex-wrap:wrap;align-items:center;gap:10px 6px;margin:22px 0 8px;padding:26px 22px;background:var(--bg-soft);border:1px solid var(--line)}
+.flow span{font-size:13px;letter-spacing:.06em;color:var(--ink-dim);white-space:nowrap}
+.flow b{font-family:var(--serif);font-weight:600;color:var(--ink)}
+.flow .arrow{color:var(--amber);letter-spacing:0}
+.quote-block{margin-top:76px;padding:38px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);text-align:center}
+.quote-block p{font-family:var(--serif);font-size:clamp(1.1rem,2.4vw,1.35rem);line-height:2;color:var(--ink);letter-spacing:.04em}
+.quote-block small{display:block;margin-top:16px;color:var(--amber);letter-spacing:.3em;font-size:12px}
+.back-row{margin:80px 0 0;text-align:center}
+.back-row a{font-size:13px;letter-spacing:.3em;color:var(--ink-dim)}
+.back-row a:hover{color:var(--amber)}
+
+/* ===== footer ===== */
+footer{padding:64px 5vw 56px;text-align:center;font-size:13px;color:var(--ink-faint);letter-spacing:.1em;line-height:2.2;border-top:1px solid var(--line)}
+footer b{color:var(--ink-dim);font-weight:400}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <a class="brand" href="index.html">liudeva<span>.</span></a>
+  <nav class="nav"><a href="index.html#lab">← 返回试验田</a></nav>
+</header>
+
+<main class="article">
+  <div class="art-kicker">FIELD LAB · DEMO</div>
+  <h1 class="art-title">写作工作台</h1>
+  <p class="art-lead">生命田野系统的创造出口——写作时，AI 从你的项目素材与个人知识库里实时取料，在旁边给出可溯源的提示与启发。</p>
+  <div class="art-meta">
+    <span>版本 · <b>v1.16+</b></span>
+    <span>关键词 · <b>写作工具</b> <b>AI 实时取料</b> <b>堆肥 → 创作闭环</b></span>
+  </div>
+
+  <section class="sec">
+    <h2>为什么做：堆肥的下一站是创作</h2>
+    <p>生命田野系统把两年多的日常输入堆肥成四种沉淀——概念工具、反直觉、好奇之事、有机语言。但沉淀本身不是终点：<b>只有当它们重新进入表达与创造，知识才真正活过来。</b>写作工作台就是这条链路的最后一环，一个把「过去沉淀」和「当下写作」接通的创作工具。</p>
+    <p>它不是一个通用 AI 写作助手。它的知识只来自你自己：当前写作项目的素材 + 两年多积累的个人知识库。AI 只负责在两者之间找线索、做碰撞，不给空泛的通用建议。</p>
+  </section>
+
+  <section class="sec">
+    <h2>它是什么：一条创作流水线</h2>
+    <ul>
+      <li><b>写作编辑器</b>：左侧主区，多篇文档持久化保存，可新建、继续写</li>
+      <li><b>Agent 侧栏</b>：右侧实时陪伴——停顿或换段触发轻提示，手动触发深度分析；建议逐条带引用来源</li>
+      <li><b>素材库</b>：以写作项目为单位归集素材：手动录入、文件上传、拖拽、粘贴链接自动抓取</li>
+      <li><b>个人知识库</b>：实时同步飞书多维表格·生命田野四桶，只读展示，按主题筛选，来源可溯源</li>
+    </ul>
+    <figure class="art-fig">
+      <img src="https://media.doubao.com/space/api/box/stream/download/all_by_mount_point/WtazbXPcto8TDAxPf2acsNV1nHh" alt="写作界面：中间写作，右侧 AI 实时取料">
+      <figcaption>写作界面：中间写作，右侧 AI 实时取料</figcaption>
+    </figure>
+  </section>
+
+  <section class="sec">
+    <h2>三个独特设计</h2>
+    <p><b>轻提示：停顿时即时取料。</b>写作停顿或换段时，右侧自动从当前项目素材里检索相关段落贴在旁边——只查素材、不给建议，像一位熟悉材料的同事在你卡住时递来一段原文。</p>
+    <p><b>深度分析：私人灵感火柴。</b>全文或整段完成后手动触发：素材 × 知识库跨材料碰撞，每条建议至少引用两条不同来源，并禁止使用公网知识。灵感只从你自己的积累里擦出来。</p>
+    <p><b>建议可溯源：不空谈。</b>每条 AI 建议都标注引用来源——哪条素材、哪个知识条目，可展开核对。AI 说出的每句话都有出处。</p>
+    <figure class="art-fig">
+      <img src="https://media.doubao.com/space/api/box/stream/download/all_by_mount_point/Q5tibOJhWoZeqvxJ6B8cECh6n0b" alt="深度分析：素材与知识库条目互相引用">
+      <figcaption>深度分析：素材与知识库条目互相引用</figcaption>
+    </figure>
+  </section>
+
+  <section class="sec">
+    <h2>素材库：写作项目制</h2>
+    <p>素材按写作项目归集：访谈稿、文章、网页链接，粘贴链接可自动抓取正文（公众号、飞书文档都支持）。项目结束后可整体归档，AI 检索默认排除已归档素材。</p>
+    <figure class="art-fig">
+      <img src="https://media.doubao.com/space/api/box/stream/download/all_by_mount_point/UuTCbH3z3oDdFuxWlJ6ctm2PnMd" alt="素材库：项目制管理 + 四种上传方式">
+      <figcaption>素材库：项目制管理 + 四种上传方式</figcaption>
+    </figure>
+  </section>
+
+  <section class="sec">
+    <h2>数据底盘：实时同步生命田野</h2>
+    <p>个人知识库实时读取生命田野多维表格的概念工具、反直觉、好奇之事、有机语言四张表，随表更新，页面只读，六类主题可筛选。</p>
+    <figure class="art-fig">
+      <img src="https://media.doubao.com/space/api/box/stream/download/all_by_mount_point/WUxIbI72so893pxsohKcV5dcnJf" alt="个人知识库：四类知识标签页，实时同步自生命田野">
+      <figcaption>个人知识库：四类知识标签页，实时同步自生命田野</figcaption>
+    </figure>
+  </section>
+
+  <section class="sec">
+    <h2>数据流：从堆肥到创作</h2>
+    <p>写作工作台是堆肥板块的「消费端」：启发流入的素材经堆肥提炼成四桶知识，写作工作台在创作当下实时调用，形成「输入 → 沉淀 → 创作」的完整闭环。</p>
+    <div class="flow">
+      <b>启发流入</b><span class="arrow">→</span>
+      <b>堆肥提炼</b><span class="arrow">→</span>
+      <span>四桶知识（概念工具 · 反直觉 · 好奇之事 · 有机语言）</span><span class="arrow">→</span>
+      <b>写作工作台实时取料</b><span class="arrow">→</span>
+      <b>文章输出</b>
+    </div>
+  </section>
+
+  <section class="sec">
+    <h2>当前状态</h2>
+    <p>第一版已迭代至 v1.16+：接入 DeepSeek 大模型（轻提示与深度分析）、语义 + 关键词双路混合检索、移动端适配、粘贴链接自动抓取正文。当前为网页应用，暂无法直接体验——本页即是入口。</p>
+  </section>
+
+  <div class="quote-block">
+    <p>沉淀只有重新进入表达，<br>知识才真正活过来。</p>
+    <small>— 写作工作台 · 一句话</small>
+  </div>
+
+  <div class="back-row"><a href="index.html#lab">← 返回试验田</a></div>
+</main>
+
+<footer>
+  <b>liudeva</b> · Data Cook, Field Observer, Meaning Surfer<br>
+  © 2026 · 一片仍在生长的生命田野
+</footer>
+
+</body>
+</html>
