@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>写作工作台 — liudeva</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='26' cy='26' r='10' fill='%23e59b53'/%3E%3Ccircle cx='42' cy='40' r='14' fill='none' stroke='%23df6b4a' stroke-width='5'/%3E%3Cpath d='M8 56 L28 56 L20 44 Z' fill='%2393b8bf'/%3E%3C/svg%3E">
+<link href="https://miaoda.feishu.cn/fonts/css2?family=Noto+Sans+SC:wght@300;400;500;700&family=Noto+Serif+SC:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg-deep:#10132b;
+  --bg-mid:#151a38;
+  --bg-soft:#1c2245;
+  --ink:#f1ece2;
+  --ink-dim:#a9b1cb;
+  --ink-faint:#687095;
+  --amber:#e59b53;
+  --ember:#df6b4a;
+  --teal:#93b8bf;
+  --line:rgba(241,236,226,.14);
+  --serif:'Noto Serif SC','Songti SC','SimSun',serif;
+  --sans:'Noto Sans SC','PingFang SC','Microsoft YaHei','Helvetica Neue',Arial,sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg-deep);color:var(--ink);font-family:var(--sans);font-weight:300;line-height:1.9;-webkit-font-smoothing:antialiased}
+a{color:var(--teal);text-decoration:none;transition:color .25s}
+a:hover{color:var(--amber)}
+::selection{background:var(--amber);color:#10132b}
+
+/* ===== header ===== */
+.site-header{position:fixed;top:0;left:0;right:0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:22px 5vw;background:rgba(16,19,43,.82);backdrop-filter:blur(10px)}
+.brand{font-size:15px;letter-spacing:.22em;font-weight:500;color:var(--ink)}
+.brand span{color:var(--amber)}
+.nav{font-size:13px;letter-spacing:.12em}
+.nav a{color:var(--ink-dim)}
+.nav a:hover{color:var(--ink)}
+
+/* ===== article ===== */
+.article{max-width:720px;margin:0 auto;padding:150px 6vw 60px}
+.art-kicker{font-size:12px;letter-spacing:.4em;color:var(--amber)}
+.art-title{font-family:var(--serif);font-size:clamp(1.7rem,4.2vw,2.6rem);line-height:1.5;font-weight:600;letter-spacing:.04em;margin:20px 0 22px}
+.art-lead{font-family:var(--serif);font-size:clamp(1.05rem,2.2vw,1.25rem);color:var(--ink-dim);line-height:2;max-width:620px}
+.art-meta{display:flex;flex-wrap:wrap;gap:12px 28px;margin-top:26px;padding-top:20px;border-top:1px solid var(--line);font-size:12px;letter-spacing:.14em;color:var(--ink-faint)}
+.art-meta b{color:var(--teal);font-weight:400}
+.sec{margin-top:64px}
+.sec h2{font-family:var(--serif);font-size:clamp(1.3rem,3vw,1.7rem);font-weight:600;letter-spacing:.06em;margin-bottom:18px;color:var(--ink)}
+.sec h2::before{content:'';display:inline-block;width:22px;height:1px;background:var(--amber);margin-right:14px;vertical-align:middle}
+.sec p{color:var(--ink-dim);margin-bottom:16px}
+.sec p b{color:var(--ink);font-weight:500}
+.sec ul{list-style:none;margin:0 0 18px}
+.sec li{position:relative;padding-left:22px;color:var(--ink-dim);margin-bottom:12px}
+.sec li::before{content:'';position:absolute;left:2px;top:.85em;width:7px;height:1px;background:var(--amber)}
+.sec li b{color:var(--ink);font-weight:500}
+.art-fig{margin:34px 0;text-align:center}
+.art-fig img{max-width:100%;border:1px solid var(--line);display:block;margin:0 auto}
+.art-fig figcaption{font-size:12px;color:var(--ink-faint);letter-spacing:.2em;margin-top:14px}
+.flow{display:flex;flex-wrap:wrap;align-items:center;gap:10px 6px;margin:22px 0 8px;padding:26px 22px;background:var(--bg-soft);border:1px solid var(--line)}
+.flow span{font-size:13px;letter-spacing:.06em;color:var(--ink-dim);white-space:nowrap}
+.flow b{font-family:var(--serif);font-weight:600;color:var(--ink)}
+.flow .arrow{color:var(--amber);letter-spacing:0}
+.quote-block{margin-top:76px;padding:38px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);text-align:center}
+.quote-block p{font-family:var(--serif);font-size:clamp(1.1rem,2.4vw,1.35rem);line-height:2;color:var(--ink);letter-spacing:.04em}
+.quote-block small{display:block;margin-top:16px;color:var(--amber);letter-spacing:.3em;font-size:12px}
+.back-row{margin:80px 0 0;text-align:center}
+.back-row a{font-size:13px;letter-spacing:.3em;color:var(--ink-dim)}
+.back-row a:hover{color:var(--amber)}
+
+/* ===== footer ===== */
+footer{padding:64px 5vw 56px;text-align:center;font-size:13px;color:var(--ink-faint);letter-spacing:.1em;line-height:2.2;border-top:1px solid var(--line)}
+footer b{color:var(--ink-dim);font-weight:400}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <a class="brand" href="index.html">liudeva<span>.</span></a>
+  <nav class="nav"><a href="index.html#lab">← 返回试验田</a></nav>
+</header>
+
+<main class="article">
+  <div class="art-kicker">FIELD LAB · WORK SYSTEM</div>
+  <h1 class="art-title">经营数据分析 Agent 小队</h1>
+  <p class="art-lead">一套七角色 AI 编队的经营分析流水线方案：从数据源治理到复盘沉淀的八步闭环，把经营分析从「人肉流水线」变成「越跑越顺的 Agent 流水线」。</p>
+  <div class="art-meta">
+    <span>版本 · <b>方案 v3.6</b></span>
+    <span>关键词 · <b>多 Agent 协作</b> <b>分析流水线</b> <b>提示词工程</b></span>
+  </div>
+
+  <section class="sec">
+    <h2>我在搭什么：把分析做成体系</h2>
+    <p>经营分析原本是一条人肉流水线：拉数、清洗、算指标、写结论、做图表，全靠一个人在不同工具间切换，质量靠细心，进度靠加班。</p>
+    <p>这套方案把整条流水线拆成<b>七角色 AI 编队</b>：每个 Agent 只做一件事、有明确的输出物与质量门，由「调度 Agent」当总导演统一派活。人从执行者变成验收者——只在关键节点确认口径、拍板结论。</p>
+  </section>
+
+  <section class="sec">
+    <h2>七角色体系</h2>
+    <ul>
+      <li><b>调度 Agent（总导演）</b>：用户唯一入口，对齐需求、分发任务、把关质量门、交付任务卡</li>
+      <li><b>数据预处理 Agent（地基）</b>：从数据源拉取、清洗、口径标准化，输出下游可直接使用的分析数据集</li>
+      <li><b>经营分析 Agent（分析师）</b>：按「整体→人员→客户→问题→建议」五段框架做归因分析，只写文字不画图</li>
+      <li><b>核查 Agent（守门员）</b>：数据交叉核验、口径检查，有差异就打回重算</li>
+      <li><b>客户速览 Agent（业务专家）</b>：对 Top 重点客户做深度洞察补充</li>
+      <li><b>可视化 Agent（设计师）</b>：按内置标准图表库出图，画板 SVG 可再编辑，自动规避历史踩坑</li>
+      <li><b>复盘与知识沉淀 Agent（教练）</b>：任务复盘、沉淀规则、优化各 Agent 提示词，让体系持续进化</li>
+    </ul>
+  </section>
+
+  <section class="sec">
+    <h2>八步流水线</h2>
+    <p>所有任务严格按八步流转，上一环节质量门不通过绝不进入下一环节：需求对齐 → 数据预处理 → 经营分析 → 数据核查（未过则打回迭代，通常 1-3 轮）→ 客户深挖 → 可视化 → 交付（附极简任务卡：总耗时、环节耗时占比、人工介入次数）→ 复盘沉淀。</p>
+    <figure class="art-fig">
+      <img src="https://media.doubao.com/space/api/box/stream/download/all_by_mount_point/UPLuba8mNo6NVZxqFP7c1il9nnd" alt="八步流水线：七角色协作">
+      <figcaption>八步流水线：七角色协作 · 核查打回迭代 · 复盘反馈进化（与方案文档画板一致）</figcaption>
+    </figure>
+  </section>
+
+  <section class="sec">
+    <h2>三个设计要点</h2>
+    <p><b>核查是质量门，不是装饰。</b>核查 Agent 与分析师分离，利用生成方与检查方天然的不对称；「通过/不通过」标准明确，不通过就打回，直到核查通过才进下一环节。</p>
+    <p><b>评估是副产品，不是 KPI。</b>各环节自动采集指标（数据完整率、错误数及类型分布、环节耗时），复盘 Agent 汇总——不额外填表、不打分，攒够三次同类任务自动出趋势与优化清单。</p>
+    <p><b>持续进化。</b>每次任务完成触发复盘：新口径写进预处理规则库、新踩坑写进可视化自检清单、新分析逻辑写进分析师提示词——体系自己越跑越顺。</p>
+  </section>
+
+  <section class="sec">
+    <h2>提示词工程：角色 + 铁律</h2>
+    <p>方案最有参考价值的部分是每个 Agent 的完整提示词框架。它不写「你要好好分析」这种空话，而是把业务规则固化成铁律：<b>「所有数字必须来自标准化数据集，不自行累加」「客户按集团口径合并，不拆零散小品牌」「只说业务语言，不说环比上升 XX% 这种空话」</b>——每一条铁律都来自真实踩过的坑。</p>
+  </section>
+
+  <section class="sec">
+    <h2>可复用的部分</h2>
+    <ul>
+      <li><b>角色分工</b>：生成方与检查方分离、调度单一入口——任何有质量要求的 AI 流水线都可借鉴</li>
+      <li><b>流程控制点</b>：八步每一环的输入/输出/质量门定义清楚，可整体迁移到其他分析场景</li>
+      <li><b>口径管理</b>：财年口径、客户归一、同期对比等规则写成铁律，沉淀为长期有效的规则库</li>
+      <li><b>评估闭环</b>：指标随流程自动采集，不增加额外工作量</li>
+    </ul>
+    <p>完整方案（七角色提示词框架、数据预处理工作流、标准图表库、复盘流程）见：<a href="https://larkcommunity.feishu.cn/docx/PNVWd2in0oGWjfx0XU4cfWUgn7b" target="_blank" rel="noopener">经营数据分析 Agent 小队方案设计 v3.6 →</a></p>
+  </section>
+
+  <div class="quote-block">
+    <p>评估是副产品，不是 KPI——<br>用数据找瓶颈，不用考核吓人。</p>
+    <small>— Agent 小队 · 设计原则</small>
+  </div>
+
+  <div class="back-row"><a href="index.html#lab">← 返回试验田</a></div>
+</main>
+
+<footer>
+  <b>liudeva</b> · Data Cook, Field Observer, Meaning Surfer<br>
+  © 2026 · 一片仍在生长的生命田野
+</footer>
+
+</body>
+</html>
