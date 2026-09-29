@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>耐心才是 AI 进业务的瓶颈：错误孕育的多 agent 编队 — liudeva</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='26' cy='26' r='10' fill='%23e59b53'/%3E%3Ccircle cx='42' cy='40' r='14' fill='none' stroke='%23df6b4a' stroke-width='5'/%3E%3Cpath d='M8 56 L28 56 L20 44 Z' fill='%2393b8bf'/%3E%3C/svg%3E">
+<link href="https://miaoda.feishu.cn/fonts/css2?family=Noto+Sans+SC:wght@300;400;500;700&family=Noto+Serif+SC:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg-deep:#10132b;
+  --bg-mid:#151a38;
+  --bg-soft:#1c2245;
+  --ink:#f1ece2;
+  --ink-dim:#a9b1cb;
+  --ink-faint:#687095;
+  --amber:#e59b53;
+  --ember:#df6b4a;
+  --teal:#93b8bf;
+  --line:rgba(241,236,226,.14);
+  --serif:'Noto Serif SC','Songti SC','SimSun',serif;
+  --sans:'Noto Sans SC','PingFang SC','Microsoft YaHei','Helvetica Neue',Arial,sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg-deep);color:var(--ink);font-family:var(--sans);font-weight:300;line-height:1.9;-webkit-font-smoothing:antialiased}
+a{color:var(--teal);text-decoration:none;transition:color .25s}
+a:hover{color:var(--amber)}
+::selection{background:var(--amber);color:#10132b}
+
+/* ===== header ===== */
+.site-header{position:fixed;top:0;left:0;right:0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:22px 5vw;background:rgba(16,19,43,.82);backdrop-filter:blur(10px)}
+.brand{font-size:15px;letter-spacing:.22em;font-weight:500;color:var(--ink)}
+.brand span{color:var(--amber)}
+.nav{font-size:13px;letter-spacing:.12em}
+.nav a{color:var(--ink-dim)}
+.nav a:hover{color:var(--ink)}
+
+/* ===== article ===== */
+.article{max-width:720px;margin:0 auto;padding:150px 6vw 60px}
+.art-kicker{font-size:12px;letter-spacing:.4em;color:var(--amber)}
+.art-title{font-family:var(--serif);font-size:clamp(1.7rem,4.2vw,2.6rem);line-height:1.5;font-weight:600;letter-spacing:.04em;margin:20px 0 22px}
+.art-lead{font-family:var(--serif);font-size:clamp(1.05rem,2.2vw,1.25rem);color:var(--ink-dim);line-height:2;max-width:620px}
+.art-meta{display:flex;flex-wrap:wrap;gap:12px 28px;margin-top:26px;padding-top:20px;border-top:1px solid var(--line);font-size:12px;letter-spacing:.14em;color:var(--ink-faint)}
+.art-meta b{color:var(--teal);font-weight:400}
+.sec{margin-top:64px}
+.sec h2{font-family:var(--serif);font-size:clamp(1.3rem,3vw,1.7rem);font-weight:600;letter-spacing:.06em;margin-bottom:18px;color:var(--ink)}
+.sec h2::before{content:'';display:inline-block;width:22px;height:1px;background:var(--amber);margin-right:14px;vertical-align:middle}
+.sec p{color:var(--ink-dim);margin-bottom:16px}
+.sec p b{color:var(--ink);font-weight:500}
+.sec ul{list-style:none;margin:0 0 18px}
+.sec li{position:relative;padding-left:22px;color:var(--ink-dim);margin-bottom:12px}
+.sec li::before{content:'';position:absolute;left:2px;top:.85em;width:7px;height:1px;background:var(--amber)}
+.sec li b{color:var(--ink);font-weight:500}
+.art-fig{margin:34px 0;text-align:center}
+.art-fig img{max-width:100%;border:1px solid var(--line);display:block;margin:0 auto}
+.art-fig figcaption{font-size:12px;color:var(--ink-faint);letter-spacing:.2em;margin-top:14px}
+.quote-block{margin-top:76px;padding:38px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);text-align:center}
+.quote-block p{font-family:var(--serif);font-size:clamp(1.1rem,2.4vw,1.35rem);line-height:2;color:var(--ink);letter-spacing:.04em}
+.quote-block small{display:block;margin-top:16px;color:var(--amber);letter-spacing:.3em;font-size:12px}
+.back-row{margin:80px 0 0;text-align:center}
+.back-row a{font-size:13px;letter-spacing:.3em;color:var(--ink-dim)}
+.back-row a:hover{color:var(--amber)}
+
+/* ===== footer ===== */
+footer{padding:64px 5vw 56px;text-align:center;font-size:13px;color:var(--ink-faint);letter-spacing:.1em;line-height:2.2;border-top:1px solid var(--line)}
+footer b{color:var(--ink-dim);font-weight:400}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <a class="brand" href="index.html">liudeva<span>.</span></a>
+  <nav class="nav"><a href="index.html#notes">← 返回田野笔记</a></nav>
+</header>
+
+<main class="article">
+  <div class="art-kicker">FIELD STORIES · CASE 01</div>
+  <h1 class="art-title">耐心才是 AI 进业务的瓶颈：错误孕育的多 agent 编队</h1>
+  <p class="art-lead">一次差点带着错误交付的经营分析报告，最终长成一支由 AI 组成的七角色编队。</p>
+  <div class="art-meta">
+    <span>时间 · <b>2026.09</b></span>
+    <span>关键词 · <b>质量保障</b> <b>多 Agent 协作</b> <b>组织自我进化</b></span>
+  </div>
+
+  <section class="sec">
+    <h2>我在做什么</h2>
+    <p>我在一家企业里做经营分析——把业务数据变成能支撑决策的报告。这两年，我一直尝试把 AI 真正带进工作流，而不只是试用。这个案例是其中一次「差点出事」的实战：一份报告差点带着错误交付，最终却长出一支七角色 AI 编队。</p>
+  </section>
+
+  <section class="sec">
+    <h2>事故现场</h2>
+    <p>今年 9 月，一份经营分析报告在交付前被拦下：客户排名与金额对调——A 客户的排名配上了 B 客户的金额。第一遍人工核对没有发现，是同事复核时才拦下来。</p>
+    <p>那一刻我想的不是「下次仔细点」，而是一个更扎心的事实：<b>核对耐心，正在成为最稀缺的资源。</b>报告越做越多、越做越长，人工核对的耐心却有限。靠自律解决不了这类问题——它不可持续。</p>
+  </section>
+
+  <section class="sec">
+    <h2>破题时刻</h2>
+    <p>于是我不打算靠「人更认真」，而是靠机制：设计一个「核查 Agent」，让 AI 给 AI 挑错。</p>
+    <p>思路很简单：生成报告的是一个 AI，检查报告的是另一个 AI。生成方对自己的输出天然有盲区——它不觉得自己错；而检查方带着「找出问题」的任务去看，反而更容易发现对调、错位这类藏在细节里的错误。从设计说明到实战只用了 2 天，双 AI 对抗闭环首战就拦下了真实错误。</p>
+  </section>
+
+  <section class="sec">
+    <h2>从双 AI 到七角色</h2>
+    <p>双 AI 跑通之后，我意识到一个完整流程需要的分工，远不止「生成 + 检查」。一天之内，我把双 AI 升级成七角色编队，并当天首跑：</p>
+    <ul>
+      <li><b>调度 Agent</b>：接需求、对齐口径、派活，最后交付报告</li>
+      <li><b>数据预处理 Agent</b>：把原始数据清洗成标准化数据集</li>
+      <li><b>经营分析 Agent</b>：基于数据集产出分析初稿</li>
+      <li><b>核查 Agent</b>：核验数据，有差异就打回重算</li>
+      <li><b>客户速览 Agent</b>：需要客户深度分析时，输出重点客户洞察</li>
+      <li><b>可视化 Agent</b>：把结论做成看板</li>
+      <li><b>复盘与知识沉淀 Agent</b>：每轮跑完更新知识库、优化提示词，让整个编队越跑越好</li>
+    </ul>
+    <p>七个角色像一支小团队：有派活的、有干活的、有挑错的、有事后总结的。</p>
+    <figure class="art-fig">
+      <img src="https://media.doubao.com/space/api/box/stream/download/all_by_mount_point/W391bRqw3oSmo2x7PWXcyfYVnLe" alt="七角色编队协作流程">
+      <figcaption>七角色编队协作流程</figcaption>
+    </figure>
+  </section>
+
+  <section class="sec">
+    <h2>两次实战</h2>
+    <p><b>首跑</b>（单个部门半年度经营盘点）：总耗时 102 分钟，29 次运行，3 轮核查拦下 8 处错误——1 处计算、3 处口径关联、4 处表述。</p>
+    <p><b>二跑</b>（某事业部客户三财年分析）：20 次运行零停滞，分析结果超预期，内外对比定目标获得认可。</p>
+    <p>但首跑也暴露了代价：调度占了 15/29 次运行——协调成本第一次有了实测数字；一次失效停滞了 24 分钟，靠人催才发现，编队缺一个「观察者」和「熔断机制」。</p>
+  </section>
+
+  <section class="sec">
+    <h2>经验沉淀</h2>
+    <p><b>做对的：</b></p>
+    <ul>
+      <li>不跟人性较劲：把「核对耐心」这种靠不住的资源，换成机制</li>
+      <li>让 AI 给 AI 挑错：利用生成方与检查方天然的不对称</li>
+      <li>复盘闭环：把每次犯的错提炼成「硬规则」，写入团队共享记忆，全队生效</li>
+    </ul>
+    <p><b>踩的坑：</b></p>
+    <ul>
+      <li>协调本身成为新成本：调度占了一半运行量，组织开销比想象中大</li>
+      <li>停滞无人发现：缺观察者和熔断，24 分钟靠人催——自动化系统需要自带的「哨兵」</li>
+      <li>可读性是可信度的伪装：报告越流畅，警觉越松，对调类错误恰藏在细节里</li>
+    </ul>
+    <p><b>一句话方法论：</b>校准源错位——任何自己生成过的中间产物，都可能被当成真理源。AI 只在被明确约束的地方守规矩；修法同构于「AI 管判断、代码管执行」。</p>
+  </section>
+
+  <div class="quote-block">
+    <p>AI 只在被明确约束的地方守规矩；<br>记忆是缓存，缓存必须能被源数据强制失效。</p>
+    <small>— 这次事故留下的两句话</small>
+  </div>
+
+  <div class="back-row"><a href="index.html#notes">← 返回田野笔记</a></div>
+</main>
+
+<footer>
+  <b>liudeva</b> · Data Cook, Field Observer, Meaning Surfer<br>
+  © 2026 · 一片仍在生长的生命田野
+</footer>
+
+</body>
+</html>
