@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 进组织的行为工程学 — liudeva</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='26' cy='26' r='10' fill='%23e59b53'/%3E%3Ccircle cx='42' cy='40' r='14' fill='none' stroke='%23df6b4a' stroke-width='5'/%3E%3Cpath d='M8 56 L28 56 L20 44 Z' fill='%2393b8bf'/%3E%3C/svg%3E">
+<link href="https://miaoda.feishu.cn/fonts/css2?family=Noto+Sans+SC:wght@300;400;500;700&family=Noto+Serif+SC:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg-deep:#10132b;
+  --bg-mid:#151a38;
+  --bg-soft:#1c2245;
+  --ink:#f1ece2;
+  --ink-dim:#a9b1cb;
+  --ink-faint:#687095;
+  --amber:#e59b53;
+  --ember:#df6b4a;
+  --teal:#93b8bf;
+  --line:rgba(241,236,226,.14);
+  --serif:'Noto Serif SC','Songti SC','SimSun',serif;
+  --sans:'Noto Sans SC','PingFang SC','Microsoft YaHei','Helvetica Neue',Arial,sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg-deep);color:var(--ink);font-family:var(--sans);font-weight:300;line-height:1.9;-webkit-font-smoothing:antialiased}
+a{color:var(--teal);text-decoration:none;transition:color .25s}
+a:hover{color:var(--amber)}
+::selection{background:var(--amber);color:#10132b}
+
+/* ===== header ===== */
+.site-header{position:fixed;top:0;left:0;right:0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:22px 5vw;background:rgba(16,19,43,.82);backdrop-filter:blur(10px)}
+.brand{font-size:15px;letter-spacing:.22em;font-weight:500;color:var(--ink)}
+.brand span{color:var(--amber)}
+.nav{font-size:13px;letter-spacing:.12em}
+.nav a{color:var(--ink-dim)}
+.nav a:hover{color:var(--ink)}
+
+/* ===== article ===== */
+.article{max-width:720px;margin:0 auto;padding:150px 6vw 60px}
+.art-kicker{font-size:12px;letter-spacing:.4em;color:var(--amber)}
+.art-title{font-family:var(--serif);font-size:clamp(1.7rem,4.2vw,2.6rem);line-height:1.5;font-weight:600;letter-spacing:.04em;margin:20px 0 22px}
+.art-lead{font-family:var(--serif);font-size:clamp(1.05rem,2.2vw,1.25rem);color:var(--ink-dim);line-height:2;max-width:620px}
+.art-meta{display:flex;flex-wrap:wrap;gap:12px 28px;margin-top:26px;padding-top:20px;border-top:1px solid var(--line);font-size:12px;letter-spacing:.14em;color:var(--ink-faint)}
+.art-meta b{color:var(--teal);font-weight:400}
+.sec{margin-top:64px}
+.sec h2{font-family:var(--serif);font-size:clamp(1.3rem,3vw,1.7rem);font-weight:600;letter-spacing:.06em;margin-bottom:18px;color:var(--ink)}
+.sec h2::before{content:'';display:inline-block;width:22px;height:1px;background:var(--amber);margin-right:14px;vertical-align:middle}
+.sec p{color:var(--ink-dim);margin-bottom:16px}
+.sec p b{color:var(--ink);font-weight:500}
+.sec ul{list-style:none;margin:0 0 18px}
+.sec li{position:relative;padding-left:22px;color:var(--ink-dim);margin-bottom:12px}
+.sec li::before{content:'';position:absolute;left:2px;top:.85em;width:7px;height:1px;background:var(--amber)}
+.sec li b{color:var(--ink);font-weight:500}
+.art-fig{margin:34px 0;text-align:center}
+.art-fig img{max-width:100%;border:1px solid var(--line);display:block;margin:0 auto}
+.art-fig figcaption{font-size:12px;color:var(--ink-faint);letter-spacing:.2em;margin-top:14px}
+.quote-block{margin-top:76px;padding:38px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);text-align:center}
+.quote-block p{font-family:var(--serif);font-size:clamp(1.1rem,2.4vw,1.35rem);line-height:2;color:var(--ink);letter-spacing:.04em}
+.quote-block small{display:block;margin-top:16px;color:var(--amber);letter-spacing:.3em;font-size:12px}
+.back-row{margin:80px 0 0;text-align:center}
+.back-row a{font-size:13px;letter-spacing:.3em;color:var(--ink-dim)}
+.back-row a:hover{color:var(--amber)}
+
+/* ===== footer ===== */
+footer{padding:64px 5vw 56px;text-align:center;font-size:13px;color:var(--ink-faint);letter-spacing:.1em;line-height:2.2;border-top:1px solid var(--line)}
+footer b{color:var(--ink-dim);font-weight:400}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <a class="brand" href="index.html">liudeva<span>.</span></a>
+  <nav class="nav"><a href="index.html#notes">← 返回田野笔记</a></nav>
+</header>
+
+<main class="article">
+  <div class="art-kicker">METHOD NOTES · CASE 07</div>
+  <h1 class="art-title">AI 进组织的行为工程学</h1>
+  <p class="art-lead">六个田野案例背后的 meta 线：AI 进组织，往下挖一层是行为工程学。</p>
+  <div class="art-meta">
+    <span>时间 · <b>2026.07 — 09</b></span>
+    <span>关键词 · <b>方法论</b> <b>行为设计</b> <b>观察框架</b></span>
+  </div>
+
+  <section class="sec">
+    <h2>导语</h2>
+    <p>过去两个月，我把 AI 落进组织的六个现场写成了六篇案例。但回看这些案例，真正贯穿的 meta 线不是某个工具，而是一层更深的观察——<b>AI 进组织，往下挖一层是行为工程学</b>。</p>
+  </section>
+
+  <section class="sec">
+    <h2>观察框架：三个迁移</h2>
+    <p><b>稀缺性迁移：</b>当加工能力不再稀缺，判断力、深度、内化、价值观成为新稀缺。AI 把「会做」变得廉价，于是「值得做、为什么做、为谁做」变成了更贵的部分。</p>
+    <p><b>瓶颈迁移：</b>技术进步不消灭瓶颈，而是把瓶颈推向更稀缺、更高阶的地方。一个案例里，瓶颈从操作能力迁到授权与信任——工具越强，卡点越往上走。</p>
+    <p><b>认知分工：</b>组织正在走向「人的判断网络 + Agent 执行网络」的双层结构。判断留在人，执行交给 Agent——分工的边界由信任决定，而不是由技术决定。</p>
+  </section>
+
+  <section class="sec">
+    <h2>四个核心命题</h2>
+    <p><b>AI 是放大器：</b>AI = 杠杆，放大倍数 = 你自己的认知深度。但它放大的不只有能力，也有约束——放大你原有的资产，也放大你未设防的边界：数据里的脏、权限上的洞、你依赖却未内化的上下文，都会被一并放大。它忠实于你，包括你的盲区。</p>
+    <p><b>上下文外包悖论：</b>AI 越能替人保存上下文，人越没动力内化。信息可调用 ≠ 经验已内化。一项 26811 名学生的实证研究显示：作业外包短期成绩上升，长期却下降——被惩罚的恰恰是集中分析的能力。</p>
+    <p><b>触发 ≠ 处理：</b>Agent 的存活判据：被触发的活着，被想起的死掉。它不会像人一样「想起来」自己该干活——有没有被挂进某个高频循环里，决定了它是助手还是收藏品。</p>
+    <p><b>GUI 即 API：</b>Agent 模拟人操作，是对 RPA 的降维打击。过去要为企业系统专门写接口，现在 Agent 直接接管界面——把界面摩擦转移给一个不在意摩擦的 Agent。</p>
+    <figure class="art-fig">
+      <img src="https://media.doubao.com/space/api/box/stream/download/all_by_mount_point/UEiob737aoS0t0xE37hca5P7nOg" alt="四主题概念卡片墙">
+      <figcaption>四主题概念卡片墙</figcaption>
+    </figure>
+  </section>
+
+  <section class="sec">
+    <h2>行为工程学收口</h2>
+    <p>福格行为公式 B=MAP（行为 = 动机 × 能力 × 提示）在我的田野实践里反复浮现。AI 落进组织的真实抓手，往往不是更聪明的模型，而是更聪明的行为设计。</p>
+    <p>有效提示的两条路径，本质是同一条——<b>寄生</b>：不新建循环，把自己挂到动机已经富集的地方。「提示是借来的，不是发明的」。</p>
+  </section>
+
+  <section class="sec">
+    <h2>金句池</h2>
+    <ul>
+      <li><b>稀缺性：</b>当加工能力不再稀缺，判断力、深度、内化、价值观成为新稀缺</li>
+      <li><b>放大器：</b>AI 既放大能力，也放大约束；放大倍数=你自己的认知深度</li>
+      <li><b>行为设计：</b>被触发的活着，被想起的死掉；提示是借来的，不是发明的</li>
+      <li><b>组织：</b>表是给 Agent 看的，不是给人看的；数据关联治理就是核心基础设施本身</li>
+    </ul>
+  </section>
+
+  <div class="quote-block">
+    <p>AI 真正改变的不是某个工具的效率，而是「什么东西稀缺、什么成为瓶颈、什么需要被记住、什么值得人亲自思考」。</p>
+    <small>— 这套方法论留下的核心</small>
+  </div>
+
+  <div class="back-row"><a href="index.html#notes">← 返回田野笔记</a></div>
+</main>
+
+<footer>
+  <b>liudeva</b> · Data Cook, Field Observer, Meaning Surfer<br>
+  © 2026 · 一片仍在生长的生命田野
+</footer>
+
+</body>
+</html>
