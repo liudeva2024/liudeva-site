@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 出客户提案，四层反馈依次失败 — liudeva</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='26' cy='26' r='10' fill='%23e59b53'/%3E%3Ccircle cx='42' cy='40' r='14' fill='none' stroke='%23df6b4a' stroke-width='5'/%3E%3Cpath d='M8 56 L28 56 L20 44 Z' fill='%2393b8bf'/%3E%3C/svg%3E">
+<link href="https://miaoda.feishu.cn/fonts/css2?family=Noto+Sans+SC:wght@300;400;500;700&family=Noto+Serif+SC:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg-deep:#10132b;
+  --bg-mid:#151a38;
+  --bg-soft:#1c2245;
+  --ink:#f1ece2;
+  --ink-dim:#a9b1cb;
+  --ink-faint:#687095;
+  --amber:#e59b53;
+  --ember:#df6b4a;
+  --teal:#93b8bf;
+  --line:rgba(241,236,226,.14);
+  --serif:'Noto Serif SC','Songti SC','SimSun',serif;
+  --sans:'Noto Sans SC','PingFang SC','Microsoft YaHei','Helvetica Neue',Arial,sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg-deep);color:var(--ink);font-family:var(--sans);font-weight:300;line-height:1.9;-webkit-font-smoothing:antialiased}
+a{color:var(--teal);text-decoration:none;transition:color .25s}
+a:hover{color:var(--amber)}
+::selection{background:var(--amber);color:#10132b}
+
+/* ===== header ===== */
+.site-header{position:fixed;top:0;left:0;right:0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:22px 5vw;background:rgba(16,19,43,.82);backdrop-filter:blur(10px)}
+.brand{font-size:15px;letter-spacing:.22em;font-weight:500;color:var(--ink)}
+.brand span{color:var(--amber)}
+.nav{font-size:13px;letter-spacing:.12em}
+.nav a{color:var(--ink-dim)}
+.nav a:hover{color:var(--ink)}
+
+/* ===== article ===== */
+.article{max-width:720px;margin:0 auto;padding:150px 6vw 60px}
+.art-kicker{font-size:12px;letter-spacing:.4em;color:var(--amber)}
+.art-title{font-family:var(--serif);font-size:clamp(1.7rem,4.2vw,2.6rem);line-height:1.5;font-weight:600;letter-spacing:.04em;margin:20px 0 22px}
+.art-lead{font-family:var(--serif);font-size:clamp(1.05rem,2.2vw,1.25rem);color:var(--ink-dim);line-height:2;max-width:620px}
+.art-meta{display:flex;flex-wrap:wrap;gap:12px 28px;margin-top:26px;padding-top:20px;border-top:1px solid var(--line);font-size:12px;letter-spacing:.14em;color:var(--ink-faint)}
+.art-meta b{color:var(--teal);font-weight:400}
+.sec{margin-top:64px}
+.sec h2{font-family:var(--serif);font-size:clamp(1.3rem,3vw,1.7rem);font-weight:600;letter-spacing:.06em;margin-bottom:18px;color:var(--ink)}
+.sec h2::before{content:'';display:inline-block;width:22px;height:1px;background:var(--amber);margin-right:14px;vertical-align:middle}
+.sec p{color:var(--ink-dim);margin-bottom:16px}
+.sec p b{color:var(--ink);font-weight:500}
+.sec ul{list-style:none;margin:0 0 18px}
+.sec li{position:relative;padding-left:22px;color:var(--ink-dim);margin-bottom:12px}
+.sec li::before{content:'';position:absolute;left:2px;top:.85em;width:7px;height:1px;background:var(--amber)}
+.sec li b{color:var(--ink);font-weight:500}
+.art-fig{margin:34px 0;text-align:center}
+.art-fig img{max-width:100%;border:1px solid var(--line);display:block;margin:0 auto}
+.art-fig figcaption{font-size:12px;color:var(--ink-faint);letter-spacing:.2em;margin-top:14px}
+.quote-block{margin-top:76px;padding:38px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);text-align:center}
+.quote-block p{font-family:var(--serif);font-size:clamp(1.1rem,2.4vw,1.35rem);line-height:2;color:var(--ink);letter-spacing:.04em}
+.quote-block small{display:block;margin-top:16px;color:var(--amber);letter-spacing:.3em;font-size:12px}
+.back-row{margin:80px 0 0;text-align:center}
+.back-row a{font-size:13px;letter-spacing:.3em;color:var(--ink-dim)}
+.back-row a:hover{color:var(--amber)}
+
+/* ===== footer ===== */
+footer{padding:64px 5vw 56px;text-align:center;font-size:13px;color:var(--ink-faint);letter-spacing:.1em;line-height:2.2;border-top:1px solid var(--line)}
+footer b{color:var(--ink-dim);font-weight:400}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <a class="brand" href="index.html">liudeva<span>.</span></a>
+  <nav class="nav"><a href="index.html#notes">← 返回田野笔记</a></nav>
+</header>
+
+<main class="article">
+  <div class="art-kicker">FIELD STORIES · CASE 11</div>
+  <h1 class="art-title">AI 出客户提案，四层反馈依次失败：底座有了，还缺什么？</h1>
+  <p class="art-lead">数据底座跑通了「客户需求 → AI 出定制化提案」的全链路，信心满满交出去，四层反馈一层层全部失败。</p>
+  <div class="art-meta">
+    <span>时间 · <b>2026.08</b></span>
+    <span>关键词 · <b>数据底座</b> <b>专家知识</b> <b>AI 进生产</b></span>
+  </div>
+
+  <section class="sec">
+    <h2>我在做什么</h2>
+    <p>我供职于一家媒体机构，日常做经营分析与 AI 落地。这个案例讲一次「本应水到渠成、结果全线挫败」的尝试：我手上有一个刚建好的内容数据库，<b>3200 条内容、51 个评价标签</b>，覆盖机构十年的内容资产。我基于它跑通了「客户需求 → AI 出定制化提案」的全链路，信心满满地交出去，然后四层反馈一层层全部失败。</p>
+  </section>
+
+  <section class="sec">
+    <h2>事故现场：四层反馈，依次失败</h2>
+    <p>第一层，市场同事 A：「不想看 AI 内容。」</p>
+    <p>第二层，市场同事 B：没有回复。</p>
+    <p>第三层，老板（此前最期待这个方案的人）：「结构完整，但创意平庸，只能做辅助材料。」</p>
+    <p>第四层，一位资深主编：「颗粒度太粗，样本量太小。」</p>
+    <p>全链路是跑通了——输入客户需求，AI 能从库里调内容、组结构、出提案。技术上一环没断。但交出去之后，没有人被它打动。</p>
+  </section>
+
+  <section class="sec">
+    <h2>破题时刻：不是链路坏了，是「底座 → 产出」这一层垮了</h2>
+    <p>挫败之后我没有急着修 prompt，而是先承认一个事实：内容数据库本身是「可用的底座」，但「底座 → 产出」这一层，远低于预期。</p>
+    <p>用做菜来想这件事就清楚了：<b>数据是入口（用什么料做菜），但我缺了配方、判断和迭代。</b></p>
+    <ul>
+      <li><b>数据是入口</b>——「用什么料做菜」：这块我有了，3200 条就是料；</li>
+      <li><b>know-how 是配方</b>——「这些料怎么组合」：AI 不知道什么料配什么客户、什么场合用什么组合；</li>
+      <li><b>专家知识是判断</b>——「这菜做得对不对、好不好」：没有专家把关，AI 分不清哪些料是压箱底的宝贝、哪些是凑数的；</li>
+      <li><b>数据闭环是迭代引擎</b>——「下次怎么做得更好」：提案交出去之后，反馈没有回流成下次的改进。</li>
+    </ul>
+    <p>今天暴露的是：<b>料够了，「配方 + 判断 + 迭代」不够。单一层的数据底座，远不足以撑起生产。</b></p>
+    <figure class="art-fig">
+      <img src="https://media.doubao.com/space/api/box/stream/download/all_by_mount_point/JYGqbZJmPoIvF3xDdb1ctV9FnMb" alt="四层反馈失败与 AI 进生产的完整条件">
+      <figcaption>四层反馈失败 · AI 进生产的完整条件：数据（有了）＋ know-how（缺）＋ 专家知识（缺）＋ 数据闭环（缺）</figcaption>
+    </figure>
+  </section>
+
+  <section class="sec">
+    <h2>再往下挖：专家不愿教，是 AI 进生产的最后一公里</h2>
+    <p>配方和判断从哪里来？只能从专家那里来。但让专家带 agent，有三重障碍：</p>
+    <ul>
+      <li><b>意愿</b>：专业骄傲——「教 AI 超越自己，有辱人格」；</li>
+      <li><b>能力</b>：带人的经验 ≠ 带 agent 的经验，大多数人没干过；</li>
+      <li><b>收益悖论</b>：教好了，取代自己；教不好，还给自己增加更多活。</li>
+    </ul>
+    <p>三重障碍合在一起，形成一个恶性循环：<b>没人愿意培养 → agent 一直不聪明 → 专家更没意愿培养。</b>这是 AI 进生产环节真正的最后一公里——技术能解决「AI 有多聪明」，但解决不了「专家愿不愿意把它教聪明」。</p>
+  </section>
+
+  <section class="sec">
+    <h2>方法论升级：先对比，再找维度</h2>
+    <p>这次挫败还纠正了我一个工作方法。以前我是「凭经验先拆维度，再拿维度去对比」——维度先入为主，容易被自己的预设带偏。这次的教训反过来：<b>先做 AI 提案 vs 人工提案的完整对比，让维度从差距里自己涌现出来，再用数据说话。</b></p>
+    <p>我的 B 计划：找历史案例做基线 → AI 出同款提案 → 找另一个 AI 做盲评 → 从差距中量化维度。</p>
+  </section>
+
+  <section class="sec">
+    <h2>经验沉淀</h2>
+    <p><b>做对的：</b></p>
+    <ul>
+      <li>承认「底座可用 ≠ 产出可用」：技术链路跑通只是起点，生产价值在「底座 → 产出」这一层；</li>
+      <li>把失败拆成结构问题而不是归咎工具：四层反馈各有各的理由，但共性是我缺了配方、判断、迭代三层；</li>
+      <li>失败之后先聊再沉淀：这次之后我定了一条工作流纪律——先把问题聊透，再让 AI 沉淀，不拿半成品式的探索直接落文档。</li>
+    </ul>
+    <p><b>踩的坑：</b></p>
+    <ul>
+      <li>高估底座的价值：有料不等于会做菜，数据底座只是入口；</li>
+      <li>低估人的环节：know-how 和判断藏在专家脑子里，不结构化、不教给 AI，产出就永远是「辅助材料」；</li>
+      <li>市场的心理前置没跑通：市场同事抵触「AI 内容」，根子在没看见「AI 能解决他的具体工作」——不是 AI 的问题，是引入方式的问题。</li>
+    </ul>
+    <p><b>一句话方法论：</b>AI 进生产 = 数据 + know-how + 专家知识 + 数据闭环，缺一环就是恶性循环——料只是入口，配方、判断、迭代一个都不能少。</p>
+  </section>
+
+  <div class="quote-block">
+    <p>底座有了，产出还是没人要——缺的不是链路，是配方、判断和迭代。<br>教好 AI 就取代自己，教不好就累死自己——专家愿不愿意被结构化，才是 AI 进生产的最后一公里。</p>
+    <small>— 这次挫败留下的两句话</small>
+  </div>
+
+  <div class="back-row"><a href="index.html#notes">← 返回田野笔记</a></div>
+</main>
+
+<footer>
+  <b>liudeva</b> · Data Cook, Field Observer, Meaning Surfer<br>
+  © 2026 · 一片仍在生长的生命田野
+</footer>
+
+</body>
+</html>
