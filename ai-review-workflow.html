@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 复盘工作流 — liudeva</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='26' cy='26' r='10' fill='%23e59b53'/%3E%3Ccircle cx='42' cy='40' r='14' fill='none' stroke='%23df6b4a' stroke-width='5'/%3E%3Cpath d='M8 56 L28 56 L20 44 Z' fill='%2393b8bf'/%3E%3C/svg%3E">
+<link href="https://miaoda.feishu.cn/fonts/css2?family=Noto+Sans+SC:wght@300;400;500;700&family=Noto+Serif+SC:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg-deep:#10132b;
+  --bg-mid:#151a38;
+  --bg-soft:#1c2245;
+  --ink:#f1ece2;
+  --ink-dim:#a9b1cb;
+  --ink-faint:#687095;
+  --amber:#e59b53;
+  --ember:#df6b4a;
+  --teal:#93b8bf;
+  --line:rgba(241,236,226,.14);
+  --serif:'Noto Serif SC','Songti SC','SimSun',serif;
+  --sans:'Noto Sans SC','PingFang SC','Microsoft YaHei','Helvetica Neue',Arial,sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg-deep);color:var(--ink);font-family:var(--sans);font-weight:300;line-height:1.9;-webkit-font-smoothing:antialiased}
+a{color:var(--teal);text-decoration:none;transition:color .25s}
+a:hover{color:var(--amber)}
+::selection{background:var(--amber);color:#10132b}
+
+/* ===== header ===== */
+.site-header{position:fixed;top:0;left:0;right:0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:22px 5vw;background:rgba(16,19,43,.82);backdrop-filter:blur(10px)}
+.brand{font-size:15px;letter-spacing:.22em;font-weight:500;color:var(--ink);display:inline-flex;align-items:center;min-height:44px}
+.brand span{color:var(--amber)}
+.nav{font-size:13px;letter-spacing:.12em}
+.nav a{color:var(--ink-dim)}
+.nav a:hover{color:var(--ink)}
+
+/* ===== article ===== */
+.article{max-width:720px;margin:0 auto;padding:150px 6vw 60px}
+.art-kicker{font-size:12px;letter-spacing:.4em;color:var(--amber)}
+.art-title{font-family:var(--serif);font-size:clamp(1.7rem,4.2vw,2.6rem);line-height:1.5;font-weight:600;letter-spacing:.04em;margin:20px 0 22px}
+.art-lead{font-family:var(--serif);font-size:clamp(1.05rem,2.2vw,1.25rem);color:var(--ink-dim);line-height:2;max-width:620px}
+.art-lead b{color:var(--ink);font-weight:500}
+.art-meta{display:flex;flex-wrap:wrap;gap:12px 28px;margin-top:26px;padding-top:20px;border-top:1px solid var(--line);font-size:12px;letter-spacing:.14em;color:var(--ink-faint)}
+.art-meta b{color:var(--teal);font-weight:400}
+.sec{margin-top:64px}
+.sec h2{font-family:var(--serif);font-size:clamp(1.3rem,3vw,1.7rem);font-weight:600;letter-spacing:.06em;margin-bottom:18px;color:var(--ink)}
+.sec h2::before{content:'';display:inline-block;width:22px;height:1px;background:var(--amber);margin-right:14px;vertical-align:middle}
+.sec p{color:var(--ink-dim);margin-bottom:16px}
+.sec p b{color:var(--ink);font-weight:500}
+.sec ul{list-style:none;margin:0 0 18px}
+.sec li{position:relative;padding-left:22px;color:var(--ink-dim);margin-bottom:12px}
+.sec li::before{content:'';position:absolute;left:2px;top:.85em;width:7px;height:1px;background:var(--amber)}
+.sec li b{color:var(--ink);font-weight:500}
+.flowtable{width:100%;table-layout:fixed;border-collapse:collapse;margin:22px 0 18px}
+.flowtable th{font-family:var(--serif);font-weight:600;text-align:left;font-size:15px;color:var(--ink);padding:12px 14px;border-bottom:1px solid var(--line);letter-spacing:.1em;background:var(--bg-soft)}
+.flowtable td{padding:14px;color:var(--ink-dim);font-size:14px;line-height:1.9;border-bottom:1px solid var(--line);vertical-align:top}
+.flowtable td b{color:var(--ink);font-weight:500}
+.table-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:22px 0 18px;padding-bottom:4px}
+.table-scroll .flowtable{margin:0;min-width:600px}
+
+/* ===== 流水线 ===== */
+.pipeline{display:flex;gap:0;margin:24px 0 20px;border:1px solid var(--line);background:var(--bg-soft)}
+.pstep{flex:1;padding:16px 14px;border-right:1px solid var(--line);position:relative}
+.pstep:last-child{border-right:none}
+.pstep .pn{font-family:var(--serif);font-size:13px;color:var(--amber);letter-spacing:.12em;margin-bottom:6px}
+.pstep h4{font-family:var(--serif);font-size:15px;color:var(--ink);letter-spacing:.06em;margin-bottom:6px}
+.pstep p{font-size:12.5px;color:var(--ink-faint);line-height:1.75;margin:0}
+.pstep .pf{display:block;margin-top:8px;font-size:11px;letter-spacing:.16em;color:var(--teal)}
+
+/* ===== 洞察分级 ===== */
+.levels{display:flex;flex-direction:column;gap:10px;margin:18px 0 8px}
+.level{display:flex;align-items:flex-start;gap:14px;border:1px solid var(--line);background:var(--bg-soft);padding:12px 16px}
+.level .lv{flex:none;width:52px;font-family:var(--serif);font-size:13px;color:var(--amber);letter-spacing:.1em;padding-top:2px}
+.level .lv small{display:block;font-family:var(--sans);font-size:10px;color:var(--ink-faint);letter-spacing:.12em}
+.level .tx{font-size:14px;color:var(--ink-dim);line-height:1.8}
+.level .tx b{color:var(--ink);font-weight:500}
+
+/* ===== 读取协议 ===== */
+.rdgrp{border:1px solid var(--line);background:var(--bg-soft);padding:14px 18px;margin-bottom:12px}
+.rdgrp .gh{display:flex;align-items:baseline;gap:12px;margin-bottom:8px}
+.rdgrp .gno{font-family:var(--serif);font-size:12px;color:var(--amber);letter-spacing:.1em}
+.rdgrp .gn{font-family:var(--serif);font-size:15px;color:var(--ink);letter-spacing:.06em}
+.rdgrp .gp{font-size:12.5px;color:var(--ink-faint);line-height:1.8;margin:0}
+.rdgrp .gt{display:block;margin-top:6px;font-size:12px;color:var(--ink-dim)}
+.rdgrp .gt b{color:var(--teal);font-weight:400}
+
+.quote-block{margin-top:76px;padding:38px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);text-align:center}
+.quote-block p{font-family:var(--serif);font-size:clamp(1.1rem,2.4vw,1.35rem);line-height:2;color:var(--ink);letter-spacing:.04em}
+.quote-block small{display:block;margin-top:16px;color:var(--amber);letter-spacing:.3em;font-size:12px}
+.back-row{margin:80px 0 0;text-align:center}
+.back-row a{font-size:13px;letter-spacing:.3em;color:var(--ink-dim)}
+.back-row a:hover{color:var(--amber)}
+
+/* ===== footer ===== */
+footer{padding:64px 5vw 56px;text-align:center;font-size:13px;color:var(--ink-faint);letter-spacing:.1em;line-height:2.2;border-top:1px solid var(--line)}
+footer b{color:var(--ink-dim);font-weight:400}
+
+@media (max-width:720px){
+  .pipeline{flex-direction:column}
+  .pstep{border-right:none;border-bottom:1px solid var(--line)}
+  .pstep:last-child{border-bottom:none}
+  .pstep p{font-size:13.5px}
+  .pstep .pf{font-size:12px}
+  .rdgrp .gp{font-size:13.5px}
+}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <a class="brand" href="index.html">liudeva<span>.</span></a>
+  <nav class="nav"><a href="index.html#systems">← 返回系统与方法</a></nav>
+</header>
+
+<main class="article">
+  <div class="art-kicker">WORKFLOW · AI REVIEW PIPELINE</div>
+  <h1 class="art-title">AI 复盘工作流：让 AI 负责模式挖掘，人负责认知和行动更新</h1>
+  <p class="art-lead">复盘不是任务，是一条数据消化系统。AI 在固定时间触发、读全数据、生成分级洞察、双份交付，再把洞察回流成个人模型——<b>人只做三件事：审阅、确认、行动。</b>这是一条跑了近一年的流水线，下面每一环都是真实配置。</p>
+  <div class="art-meta">
+    <span>状态 · <b>五级复盘 · 持续运转</b></span>
+    <span>关键词 · <b>定时触发</b> <b>数据驱动</b> <b>人在回路</b> <b>模型回流</b></span>
+  </div>
+
+  <section class="sec">
+    <h2>总览：一条工作流怎么跑</h2>
+    <p>整条流水线五个环节，环环相扣。触发靠定时任务，不靠人的记忆；读取靠固定协议，不靠临场发挥；洞察靠分级标准，不靠自由发挥；交付分双份，各司其职；最后所有洞察回流成模型，反哺下一个周期的决策。</p>
+    <div class="pipeline">
+      <div class="pstep"><span class="pn">STEP 01</span><h4>定时触发</h4><p>固定时间自动启动，复盘周期永远取最近一个完整自然周期。</p><span class="pf">不补旧账</span></div>
+      <div class="pstep"><span class="pn">STEP 02</span><h4>数据读取</h4><p>按固定顺序读全 6 组核心表，记录读取范围，保证可审计。</p><span class="pf">先核心后外围</span></div>
+      <div class="pstep"><span class="pn">STEP 03</span><h4>分析流水线</h4><p>概览 → 算指标 → 识别模式 → 对比，先算数后归因。</p><span class="pf">严禁拿着结论找数据</span></div>
+      <div class="pstep"><span class="pn">STEP 04</span><h4>双份交付</h4><p>Base 存档供机器消费，云文档简报供人阅读，内容一致。</p><span class="pf">一份回测 · 一份阅读</span></div>
+      <div class="pstep"><span class="pn">STEP 05</span><h4>模型回流</h4><p>洞察提炼成候选模型，回测验证，反哺下个周期的决策。</p><span class="pf">复盘越跑越懂你</span></div>
+    </div>
+    <p>这条链路的关键不是"AI 会写报告"，而是<b>每一环都有防退化机制</b>：固定触发防遗忘、读取协议防偏倚、分级标准防空话、双份交付防断裂、模型回流防原地打转。</p>
+  </section>
+
+  <section class="sec">
+    <h2>壹 · 触发与节奏：固定时间，不靠记忆</h2>
+    <p>复盘的第一个设计决策是<b>定时任务</b>。为什么不用"想起来了再复盘"？因为记忆是最不可靠的触发器——忙起来最先牺牲的一定是复盘。固定时间触发，让复盘成为和吃饭睡觉一样自动发生的节奏。</p>
+    <div class="table-scroll">
+    <table class="flowtable">
+      <colgroup><col style="width:14%"><col style="width:26%"><col style="width:32%"><col style="width:28%"></colgroup>
+      <thead>
+        <tr><th>维度</th><th>触发与规模</th><th>执行方式</th><th>设计意图</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><b>周</b></td>
+          <td>每周三 10:00 · 9 维度 17 问</td>
+          <td>复盘上周一至周日（最近完整自然周），AI 自动</td>
+          <td>节奏最短的完整循环：定位、身体、时间、关系、创作全部过一遍</td>
+        </tr>
+        <tr>
+          <td><b>月</b></td>
+          <td>每月 1 日 10:00 · 28 问 + V4 框架</td>
+          <td>复盘上一个完整自然月，AI 自动</td>
+          <td>所有复盘里最重的一环，V4 框架覆盖主题、经营、工作、学习、情绪、健康等 12 板块</td>
+        </tr>
+        <tr>
+          <td><b>季</b></td>
+          <td>每季首月 1 日 10:00 · 参照 V4 设计</td>
+          <td>跨月趋势 + 季度目标对齐 + 工作评估，AI 自动</td>
+          <td>看趋势不看单点：这个季度在往哪个方向走，倦怠风险如何</td>
+        </tr>
+        <tr>
+          <td><b>年</b></td>
+          <td>每年 · 40 问（16 维度）</td>
+          <td>AI 自动 + 人工深度参与</td>
+          <td>最高的宏观层：年度叙事、身份进化、关系生态的长期演化</td>
+        </tr>
+        <tr>
+          <td><b>模型维护</b></td>
+          <td>每月 2 日 10:00 · 独立于复盘</td>
+          <td>从当月复盘提炼候选模型 + 回测已有模型</td>
+          <td>复盘的产出不留在报告里，沉淀成可复用的个人模型</td>
+        </tr>
+      </tbody>
+    </table>
+    </div>
+    <p><b>三条节奏规则：</b>复盘周期永远取"最近一个完整自然周期"，不补旧账；触发时间固定（周三/1 日/首月 1 日），错过就等下个周期，绝不积压；时间跨度越大，触发越低频、洞察越宏观——日复盘看细节，年复盘看方向。</p>
+  </section>
+
+  <section class="sec">
+    <h2>贰 · 数据读取协议：读全，才有资格下结论</h2>
+    <p>AI 收到触发后，按固定顺序读取 6 组核心表。顺序不是随意的——<b>先读核心状态，再读外围信息</b>，防止洞察被次要数据带偏；同时记录读取的时间范围与记录数，让"读了什么"本身可审计。</p>
+    <div class="rdgrp">
+      <div class="gh"><span class="gno">GROUP 01</span><span class="gn">核心数据表</span></div>
+      <p class="gp">用时明细（时间使用与五色）、深度时光（深度工作时段）、身体记录、感恩日志、反思回顾（周度案例式反思）、情绪事件</p>
+      <span class="gt">意图 · <b>一切洞察的地基，先看这里</b></span>
+    </div>
+    <div class="rdgrp">
+      <div class="gh"><span class="gno">GROUP 02</span><span class="gn">规划与执行表</span></div>
+      <p class="gp">任务日程（完成情况）、定优先级（优先级与实际用时）、项目规划（中长期进展）</p>
+      <span class="gt">意图 · <b>计划了什么、执行到什么程度</b></span>
+    </div>
+    <div class="rdgrp">
+      <div class="gh"><span class="gno">GROUP 03</span><span class="gn">能量与状态表</span></div>
+      <p class="gp">能量管理（六维度能量状态）、每日指标（核心指标快照）</p>
+      <span class="gt">意图 · <b>状态好不好，是判断一切的前提</b></span>
+    </div>
+    <div class="rdgrp">
+      <div class="gh"><span class="gno">GROUP 04</span><span class="gn">工作与产出表</span></div>
+      <p class="gp">工作产出（成果）、工作日志（过程）、发布记录（创作产出）</p>
+      <span class="gt">意图 · <b>成果与过程的对照</b></span>
+    </div>
+    <div class="rdgrp">
+      <div class="gh"><span class="gno">GROUP 05</span><span class="gn">知识与学习表</span></div>
+      <p class="gp">阅读统计、启发流入、好奇之事、概念工具、反直觉呀、有机语言</p>
+      <span class="gt">意图 · <b>输入了多少、好奇在哪里</b></span>
+    </div>
+    <div class="rdgrp">
+      <div class="gh"><span class="gno">GROUP 06</span><span class="gn">系统与关系表</span></div>
+      <p class="gp">系统迭代、社交网络、正向反馈、情感账户</p>
+      <span class="gt">意图 · <b>系统本身在进化什么，关系网络在变化什么</b></span>
+    </div>
+    <p>读取规则同样固定：按「年月」或「年周」公式字段筛选复盘周期；分页读取直到 has_more=false；记录本次读取的时间范围和记录数。这些规则的作用是防一件事——<b>读不全就下结论</b>。</p>
+  </section>
+
+  <section class="sec">
+    <h2>叁 · 分析流水线：先算数，后归因</h2>
+    <p>数据读进来之后，分析分四步走，顺序固定。倒过来就会出错：先有结论再找数据，找到的全是支持自己的证据。</p>
+    <ul>
+      <li><b>数据概览：</b>本周期总记录数、与上周期环比、数据完整度评估——先知道"这周数据靠不靠谱"。</li>
+      <li><b>指标计算：</b>TD 率（深度在场率）、五色时间分布、能量六维度评分、各主题时间占比——把散点记录变成可比较的指标。</li>
+      <li><b>模式识别：</b>心流时刻分布、情绪变化规律、能量来源与消耗、反复出现的坑——指标背后的人。</li>
+      <li><b>对比分析：</b>与上周/上月对比、与目标对比、与历史同期对比——单点数据没有意义，对比才有。</li>
+    </ul>
+    <p><b>为什么这个顺序不可颠倒：</b>概览防止"拿着半截数据下结论"，指标防止"凭印象判断"，模式识别防止"只算数不读人"，对比防止"只看当下不看趋势"。四步走完，才进入洞察生成。</p>
+  </section>
+
+  <section class="sec">
+    <h2>肆 · 洞察分级：防止复盘变流水账</h2>
+    <p>复盘最容易退化成的样子是"本周做了 A、做了 B、做了 C"——全是描述，没有判断。洞察分级 L0–L4 就是为了逼出判断：每一层回答不同的问题，越往上越难，也越有价值。</p>
+    <div class="levels">
+      <div class="level"><div class="lv">L0<small>描述</small></div><div class="tx"><b>发生了什么</b>——数据事实，复盘的基础层，但不是终点。</div></div>
+      <div class="level"><div class="lv">L1<small>诊断</small></div><div class="tx"><b>为什么</b>——归因，复盘的核心层，至少到这里才算复盘。</div></div>
+      <div class="level"><div class="lv">L2<small>预测</small></div><div class="tx"><b>接下来会怎样</b>——按此节奏推演，非宿命，标注可证伪。</div></div>
+      <div class="level"><div class="lv">L3<small>行动</small></div><div class="tx"><b>建议做什么</b>——给出可执行的行动选项，复盘要落地。</div></div>
+      <div class="level"><div class="lv">L4<small>生成</small></div><div class="tx"><b>新视角 / 跨域联结</b>——每月至少 1 条，复盘的创新层。</div></div>
+    </div>
+    <p>每条洞察都带<b>三件套</b>：发现（一句话 + 对比）、证据强度（强/中/弱）、行动选项（2-3 个）。加上三条红线：</p>
+    <ul>
+      <li><b>结论先行，数据支撑。</b>每条回答遵循【AI洞察·L1~L4 分级】格式，先给判断，再给证据。</li>
+      <li><b>诚实标注，严禁脑补。</b>数据缺失或口径变化时明确写"字段为空，用替代口径重建·待核实"，数据不足就明说不足。</li>
+      <li><b>与上周对照。</b>没有对比的洞察不是洞察，只是感想。</li>
+    </ul>
+  </section>
+
+  <section class="sec">
+    <h2>伍 · 双份交付：一份给机器，一份给人</h2>
+    <p>每次复盘产出两份东西，内容一致、用途不同。这是复盘工作流里最容易被忽略的设计——<b>存档不是为了存档，是为了未来可回测；简报不是为了交差，是为了当下可阅读。</b></p>
+    <ul>
+      <li><b>Base 存档（结构化）：</b>每个问题新增一条记录——复盘日期、维度、问题原文、AI 回答。写入后回读验证 17 条记录齐全、日期与内容正确。这份数据的消费者是未来的 AI：月、季、年复盘会二次消费它，个人模型提炼会回测它。</li>
+      <li><b>云文档简报（人读主载体）：</b>一句话结论 + 数字速览表 + 完整 AI 洞察（逐题展示问题原文与完整回答，不放摘要）+ 行动清单 + 数据口径说明。这份文档的消费者是人：审阅、评论、补充图片、决定下一步。</li>
+    </ul>
+    <p><b>为什么必须双份：</b>结构化的存档是"数据资产"，会被未来的复盘反复调用；叙事化的简报是"阅读体验"，让人愿意每周读完。只做简报，数据散落在文档里无法回测；只做存档，人根本不会去读。双份交付是复盘体系能持续运转的物理基础。</p>
+  </section>
+
+  <section class="sec">
+    <h2>陆 · 人在回路：AI 是助手，不是决策者</h2>
+    <p>复盘工作流最容易翻车的方向是"AI 全包了，人只负责收报告"——那样复盘会退化成流水账，因为没有人参与，就没有人发生认知更新。这条工作流把人和 AI 的边界划得很清楚。</p>
+    <div class="table-scroll">
+    <table class="flowtable">
+      <colgroup><col style="width:22%"><col style="width:42%"><col style="width:36%"></colgroup>
+      <thead>
+        <tr><th>环节</th><th>AI 负责</th><th>人负责</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><b>数据读取</b></td><td>自动读取 Base 数据，记录读取范围</td><td>—</td></tr>
+        <tr><td><b>数据分析</b></td><td>自动计算指标、识别模式、做对比</td><td>—</td></tr>
+        <tr><td><b>洞察生成</b></td><td>生成 AI 洞察初稿（分级 + 三件套）</td><td>—</td></tr>
+        <tr><td><b>存档与简报</b></td><td>写入 Base 存档，生成云文档初稿</td><td>—</td></tr>
+        <tr><td><b>审阅评论</b></td><td>—</td><td>审阅简报，留下评论，纠正偏差</td></tr>
+        <tr><td><b>补充图片</b></td><td>—</td><td>补充 highlight 图片，让复盘有人味</td></tr>
+        <tr><td><b>模型确认</b></td><td>提炼候选模型，补充验证设计</td><td>确认哪些模型入库，哪些驳回</td></tr>
+        <tr><td><b>迭代决策</b></td><td>提出系统优化建议</td><td>决定是否执行系统迭代</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <p>核心原则一句话：<b>AI 负责数据处理和初步分析，人负责最终的判断和提炼。</b>复盘的产出物不是那份报告，而是人读完报告之后发生的那一点认知变化。</p>
+  </section>
+
+  <section class="sec">
+    <h2>柒 · 模型回流与质量控制：防止越跑越歪</h2>
+    <p>流水线最后一步是把复盘的洞察沉淀成个人模型——这也是"AI 越用越懂你"的实现机制。每月 2 日，独立于复盘运行一次维护：</p>
+    <ul>
+      <li><b>候选提炼：</b>从当月复盘的洞察里，提炼新的候选模型（θ本质 / V状态 / C战术 三层级）。</li>
+      <li><b>补验证设计：</b>AI 自动补充「可检验预测」（观测信号 → 预期结果）和「验证方式」（依赖的数据源 + 判定方法）。</li>
+      <li><b>回测已有模型：</b>对"待验证"状态的模型，用当月数据做回测。</li>
+      <li><b>状态更新：</b>根据回测结果，模型升级为「已回测」，或被证伪，或补充边界条件后升级。</li>
+      <li><b>汇总确认：</b>输出候选模型汇总表，供人选取入库——入库是人的权力。</li>
+    </ul>
+    <p>质量控制贯穿全程，三层检查：<b>数据质量</b>（记录数与预期对比、完整度、异常值、口径一致性）、<b>洞察质量</b>（是否有数据支撑、是否过度推断、是否标注不确定性、是否可操作）、<b>交付质量</b>（存档记录齐全、简报完整、排版清晰、链接正确）。三种异常各有预案：数据缺失 → 标注替代口径；口径变化 → 不做跨期直接对比；复盘超时 → 先完成核心板块，次要板块标注「待补充」。</p>
+    <p><b>为什么这些机制是必要的：</b>复盘是长期工程，最怕的不是一次做差，而是<b>悄悄退化</b>——这周少读一张表没人发现，下周洞察开始注水没人质疑，三个月后复盘就只剩形式。分级、双份、回测、检查，全都是给"长期不变形"上的保险。</p>
+  </section>
+
+  <div class="quote-block">
+    <p>复盘不是写作文，是把数据消化成认知的系统——<br>AI 负责模式挖掘，人负责认知和行动更新。</p>
+    <small>— AI 复盘工作流 · 总纲</small>
+  </div>
+
+  <div class="back-row"><a href="index.html#systems">← 返回系统与方法</a></div>
+</main>
+
+<footer>
+  <b>liudeva</b> · Data Cook, Field Observer, Meaning Surfer<br>
+  © 2026 · 一片仍在生长的生命田野
+</footer>
+
+</body>
+</html>
