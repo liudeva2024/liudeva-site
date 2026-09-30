@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>决策辅助系统 — liudeva</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='26' cy='26' r='10' fill='%23e59b53'/%3E%3Ccircle cx='42' cy='40' r='14' fill='none' stroke='%23df6b4a' stroke-width='5'/%3E%3Cpath d='M8 56 L28 56 L20 44 Z' fill='%2393b8bf'/%3E%3C/svg%3E">
+<link href="https://miaoda.feishu.cn/fonts/css2?family=Noto+Sans+SC:wght@300;400;500;700&family=Noto+Serif+SC:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg-deep:#10132b;
+  --bg-mid:#151a38;
+  --bg-soft:#1c2245;
+  --ink:#f1ece2;
+  --ink-dim:#a9b1cb;
+  --ink-faint:#687095;
+  --amber:#e59b53;
+  --ember:#df6b4a;
+  --teal:#93b8bf;
+  --line:rgba(241,236,226,.14);
+  --serif:'Noto Serif SC','Songti SC','SimSun',serif;
+  --sans:'Noto Sans SC','PingFang SC','Microsoft YaHei','Helvetica Neue',Arial,sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg-deep);color:var(--ink);font-family:var(--sans);font-weight:300;line-height:1.9;-webkit-font-smoothing:antialiased}
+a{color:var(--teal);text-decoration:none;transition:color .25s}
+a:hover{color:var(--amber)}
+::selection{background:var(--amber);color:#10132b}
+
+/* ===== header ===== */
+.site-header{position:fixed;top:0;left:0;right:0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:22px 5vw;background:rgba(16,19,43,.82);backdrop-filter:blur(10px)}
+.brand{font-size:15px;letter-spacing:.22em;font-weight:500;color:var(--ink);display:inline-flex;align-items:center;min-height:44px}
+.brand span{color:var(--amber)}
+.nav{font-size:13px;letter-spacing:.12em}
+.nav a{color:var(--ink-dim)}
+.nav a:hover{color:var(--ink)}
+
+/* ===== article ===== */
+.article{max-width:720px;margin:0 auto;padding:150px 6vw 60px}
+.art-kicker{font-size:12px;letter-spacing:.4em;color:var(--amber)}
+.art-title{font-family:var(--serif);font-size:clamp(1.7rem,4.2vw,2.6rem);line-height:1.5;font-weight:600;letter-spacing:.04em;margin:20px 0 22px}
+.art-lead{font-family:var(--serif);font-size:clamp(1.05rem,2.2vw,1.25rem);color:var(--ink-dim);line-height:2;max-width:620px}
+.art-lead b{color:var(--ink);font-weight:500}
+.art-meta{display:flex;flex-wrap:wrap;gap:12px 28px;margin-top:26px;padding-top:20px;border-top:1px solid var(--line);font-size:12px;letter-spacing:.14em;color:var(--ink-faint)}
+.art-meta b{color:var(--teal);font-weight:400}
+.sec{margin-top:64px}
+.sec h2{font-family:var(--serif);font-size:clamp(1.3rem,3vw,1.7rem);font-weight:600;letter-spacing:.06em;margin-bottom:18px;color:var(--ink)}
+.sec h2::before{content:'';display:inline-block;width:22px;height:1px;background:var(--amber);margin-right:14px;vertical-align:middle}
+.sec p{color:var(--ink-dim);margin-bottom:16px}
+.sec p b{color:var(--ink);font-weight:500}
+.sec ul{list-style:none;margin:0 0 18px}
+.sec li{position:relative;padding-left:22px;color:var(--ink-dim);margin-bottom:12px}
+.sec li::before{content:'';position:absolute;left:2px;top:.85em;width:7px;height:1px;background:var(--amber)}
+.sec li b{color:var(--ink);font-weight:500}
+.flowtable{width:100%;table-layout:fixed;border-collapse:collapse;margin:22px 0 18px}
+.flowtable th{font-family:var(--serif);font-weight:600;text-align:left;font-size:15px;color:var(--ink);padding:12px 14px;border-bottom:1px solid var(--line);letter-spacing:.1em;background:var(--bg-soft)}
+.flowtable td{padding:14px;color:var(--ink-dim);font-size:14px;line-height:1.9;border-bottom:1px solid var(--line);vertical-align:top}
+.flowtable td b{color:var(--ink);font-weight:500}
+.table-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:22px 0 18px;padding-bottom:4px}
+.table-scroll .flowtable{margin:0;min-width:600px}
+
+/* ===== 四段回路 ===== */
+.loop{display:flex;gap:0;margin:24px 0 20px;border:1px solid var(--line);background:var(--bg-soft)}
+.lstep{flex:1;padding:16px 14px;border-right:1px solid var(--line);position:relative}
+.lstep:last-child{border-right:none}
+.lstep .ln{font-family:var(--serif);font-size:13px;color:var(--amber);letter-spacing:.12em;margin-bottom:6px}
+.lstep h4{font-family:var(--serif);font-size:15px;color:var(--ink);letter-spacing:.06em;margin-bottom:6px}
+.lstep p{font-size:12.5px;color:var(--ink-faint);line-height:1.75;margin:0}
+.lstep .lf{display:block;margin-top:8px;font-size:11px;letter-spacing:.16em;color:var(--teal)}
+
+/* ===== 参考包样例卡 ===== */
+.snap{border:1px solid var(--line);background:var(--bg-soft);margin:20px 0 8px}
+.snap-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 18px;border-bottom:1px solid var(--line)}
+.snap-head b{font-family:var(--serif);font-size:14px;color:var(--ink);letter-spacing:.08em}
+.snap-head span{font-size:11px;letter-spacing:.14em;color:var(--ink-faint)}
+.snap-row{display:flex;gap:14px;padding:11px 18px;border-bottom:1px solid var(--line)}
+.snap-row:last-child{border-bottom:none}
+.snap-row .sk{flex:none;width:118px;font-family:var(--serif);font-size:12.5px;color:var(--amber);letter-spacing:.08em;padding-top:3px}
+.snap-row .sv{font-size:13px;color:var(--ink-dim);line-height:1.85}
+.snap-row .sv b{color:var(--ink);font-weight:500}
+.snap-row .sv .tag{display:inline-block;margin-top:4px;font-size:11px;letter-spacing:.1em;color:var(--teal)}
+
+/* ===== 红队双栏 ===== */
+.redteam{display:flex;gap:0;margin:20px 0 8px;border:1px solid var(--line)}
+.rt-side{flex:1;padding:16px 18px}
+.rt-side.against{border-left:1px solid var(--line);background:var(--bg-soft)}
+.rt-side h4{font-family:var(--serif);font-size:14px;letter-spacing:.12em;margin-bottom:12px}
+.rt-side.for h4{color:var(--teal)}
+.rt-side.against h4{color:var(--ember)}
+.rt-row{display:flex;gap:10px;margin-bottom:10px;font-size:13px;color:var(--ink-dim);line-height:1.8}
+.rt-row:last-child{margin-bottom:0}
+.rt-row .no{flex:none;font-family:var(--serif);font-size:12px;color:var(--ink-faint);padding-top:2px}
+.rt-row .badge{flex:none;font-size:10px;letter-spacing:.1em;padding:2px 8px;margin-top:3px;height:fit-content;border:1px solid var(--line);white-space:nowrap}
+.rt-row .badge.data{color:var(--amber);border-color:rgba(229,155,83,.5)}
+.rt-row .badge.tpl{color:var(--ink-faint)}
+.rt-row b{color:var(--ink);font-weight:500}
+
+/* ===== 评分点 ===== */
+.dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:8px;vertical-align:1px}
+.dot.ok{background:var(--teal)}
+.dot.mid{background:var(--amber)}
+.dot.bad{background:var(--ember)}
+
+/* ===== 读取协议 ===== */
+.rdgrp{border:1px solid var(--line);background:var(--bg-soft);padding:14px 18px;margin-bottom:12px}
+.rdgrp .gh{display:flex;align-items:baseline;gap:12px;margin-bottom:8px}
+.rdgrp .gno{font-family:var(--serif);font-size:12px;color:var(--amber);letter-spacing:.1em}
+.rdgrp .gn{font-family:var(--serif);font-size:15px;color:var(--ink);letter-spacing:.06em}
+.rdgrp .gp{font-size:12.5px;color:var(--ink-faint);line-height:1.8;margin:0}
+.rdgrp .gt{display:block;margin-top:6px;font-size:12px;color:var(--ink-dim)}
+.rdgrp .gt b{color:var(--teal);font-weight:400}
+
+.quote-block{margin-top:76px;padding:38px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);text-align:center}
+.quote-block p{font-family:var(--serif);font-size:clamp(1.1rem,2.4vw,1.35rem);line-height:2;color:var(--ink);letter-spacing:.04em}
+.quote-block small{display:block;margin-top:16px;color:var(--amber);letter-spacing:.3em;font-size:12px}
+.back-row{margin:80px 0 0;text-align:center}
+.back-row a{font-size:13px;letter-spacing:.3em;color:var(--ink-dim)}
+.back-row a:hover{color:var(--amber)}
+
+/* ===== footer ===== */
+footer{padding:64px 5vw 56px;text-align:center;font-size:13px;color:var(--ink-faint);letter-spacing:.1em;line-height:2.2;border-top:1px solid var(--line)}
+footer b{color:var(--ink-dim);font-weight:400}
+
+@media (max-width:720px){
+  .loop{flex-direction:column}
+  .lstep{border-right:none;border-bottom:1px solid var(--line)}
+  .lstep:last-child{border-bottom:none}
+  .lstep p{font-size:13.5px}
+  .lstep .lf{font-size:12px}
+  .rdgrp .gp{font-size:13.5px}
+  .redteam{flex-direction:column}
+  .rt-side.against{border-left:none;border-top:1px solid var(--line)}
+  .snap-row{flex-direction:column;gap:4px}
+  .snap-row .sk{width:auto}
+  .snap-row .sv{font-size:13.5px}
+  .rt-row{font-size:13.5px}
+}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <a class="brand" href="index.html">liudeva<span>.</span></a>
+  <nav class="nav"><a href="index.html#systems">← 返回系统与方法</a></nav>
+</header>
+
+<main class="article">
+  <div class="art-kicker">SYSTEM · DECISION SUPPORT</div>
+  <h1 class="art-title">决策辅助系统：让 AI 的建议，从你的数据里长出来</h1>
+  <p class="art-lead">决策辅助不是"临场问一句 AI 怎么办"，而是一条<b>蓄水 → 取水 → 判断 → 回流</b>的回路。平时把身体、项目、时间、关系、模式攒成一份周更参考包；真到决策时，AI 从你的数据里给理由，而不是从通用模板里给道理；决策之后，偏差点回流成规则，下次不再犯同一个错。</p>
+  <div class="art-meta">
+    <span>状态 · <b>验证期 · 已有真实首单</b></span>
+    <span>关键词 · <b>周更参考包</b> <b>红队模式</b> <b>个性化优先</b> <b>偏差点回流</b></span>
+  </div>
+
+  <section class="sec">
+    <h2>总览：一条回路，而不是一次咨询</h2>
+    <p>单次咨询是"问一句、答一段"的两点一线——AI 对你当下没有上下文，只能用通用道理回你，这就是"AI 建议像套话"的根本原因。这套系统把决策支持设计成<b>四段回路</b>：上下文在决策之前就攒好（蓄水），决策时按需取用（取水），输出必须个性化（判断），决策后把偏差收回来（回流）。</p>
+    <div class="loop">
+      <div class="lstep"><span class="ln">LOOP 01</span><h4>蓄水</h4><p>平时不决策时，每周自动生成决策参考包：身体、项目、时间、关系、模式五路情报。</p><span class="lf">周更 · 定时任务</span></div>
+      <div class="lstep"><span class="ln">LOOP 02</span><h4>取水</h4><p>真要决策时，先读最新参考包，匹配个人模型，再按决策类型定向读表。</p><span class="lf">临场不抓瞎</span></div>
+      <div class="lstep"><span class="ln">LOOP 03</span><h4>判断</h4><p>红队模式输出支持/反对理由，硬规则至少两条来自你的数据。</p><span class="lf">个性化优先</span></div>
+      <div class="lstep"><span class="ln">LOOP 04</span><h4>回流</h4><p>决策后打分记录，偏差点回流成规则——黄金数集、个人模型、迭代表。</p><span class="lf">这次教训下次变规则</span></div>
+    </div>
+    <p>为什么必须是回路：<b>蓄水解决"临场没数据"，回流解决"用完就丢"。</b>回路闭合之后，AI 的每次判断都站在你最近的真实状态上，每次偏差都会变成下一次的规则——系统越用越懂你，靠的不是模型，是这个闭环。</p>
+  </section>
+
+  <section class="sec">
+    <h2>壹 · 蓄水：平时攒情报，决策时才有的用</h2>
+    <p>AI 决策支持最大的失败模式，是<b>临场要数据</b>——人正纠结着，AI 才开始翻你的记录，翻到哪算哪，还经常翻不全。蓄水的设计意图是：把决策需要的情报，在决策发生之前就系统性地准备好。</p>
+    <p>每周一自动生成一份决策参考包，七个字段，每个字段都有明确的数据来源：</p>
+    <div class="snap">
+      <div class="snap-head"><b>决策参考包 · 周更样例</b><span>真实数据 · 已脱敏</span></div>
+      <div class="snap-row"><span class="sk">核心矛盾</span><span class="sv"><b>吸烟失控。</b>最近 100 条身体打卡中 85 条为吸烟（85%，远超 70% 失控阈值），单日烟量 7 支升至 12 支。<b>次要：</b>身体连续 4 天急性欠账、TD 率仅 0.19。<b>好的方面：</b>创造/学习/复盘状态全绿，关系回暖，AI 项目持续推进。<span class="tag">先写最大问题 · 再写次要 · 最后写好的方面</span></span></div>
+      <div class="snap-row"><span class="sk">在途项目清单</span><span class="sv">P0 × 3（客户拜访 agent、叙事数据库、经营分析编队）· P1 × 4 · P2 × 1，每项带一句话进展。</span></div>
+      <div class="snap-row"><span class="sk">近期时间分配</span><span class="sv">上周总用时 166h：睡觉 36.5%、主动娱乐 21.7%、家人陪伴 8.6%；五色分布绿色 64.4%、事业仅 7.6%——娱乐挤压深度投入，余力有限。</span></div>
+      <div class="snap-row"><span class="sk">历史决策模式</span><span class="sv">三个坑：AI 产出信任过度（交付出错、agent 泄露）、节奏被打乱即效率崩塌、被厌恶的同事点燃情绪。</span></div>
+      <div class="snap-row"><span class="sk">关系资产概览</span><span class="sv">2 级以上关系 15 人（3 级 6 人、2 级 9 人）；近 30 天感恩日志高频出现：家人 10 次、德强 8 次、天宇 4 次——关系资产处于高水位。</span></div>
+      <div class="snap-row"><span class="sk">本周余力判断</span><span class="sv"><span class="dot mid"></span>紧张——基于项目数量、身体状态、时间分配综合判定，不是拍脑袋。</span></div>
+    </div>
+    <p>两个关键设计：<b>矛盾优先</b>——第一字段只写最大的问题，不泛列指标，让决策一上来就看见真正要紧的事；<b>数据缺失诚实标注</b>——比如年度问题表暂无有效数据时，参考包会明说"长期锚点待年度复盘后补全"，不拿旧数据冒充。</p>
+  </section>
+
+  <section class="sec">
+    <h2>贰 · 取水：决策时，AI 读什么</h2>
+    <p>真到决策时，AI 按固定顺序取三样东西，缺一样都会退化成套话：</p>
+    <div class="rdgrp">
+      <div class="gh"><span class="gno">SOURCE 01</span><span class="gn">最新决策参考包</span></div>
+      <p class="gp">七个字段全读——这是 AI 对"你现在的处境"的实时快照。</p>
+      <span class="gt">意图 · <b>上下文的第一来源</b></span>
+    </div>
+    <div class="rdgrp">
+      <div class="gh"><span class="gno">SOURCE 02</span><span class="gn">个人模型匹配</span></div>
+      <p class="gp">查个人模型表里有没有相关的稳定模式——糖烟失控模型、周末充电模型、状态好守防守模型等，把对应规则融入建议。</p>
+      <span class="gt">意图 · <b>把长期沉淀的模式带进当下的判断</b></span>
+    </div>
+    <div class="rdgrp">
+      <div class="gh"><span class="gno">SOURCE 03</span><span class="gn">按决策类型定向读表</span></div>
+      <p class="gp">关系类决策 → 感恩日志、情感账户、社交网络；工作类决策 → 项目规划、工作产出、用时明细。</p>
+      <span class="gt">意图 · <b>不同类型读不同的数据，拒绝一刀切</b></span>
+    </div>
+    <p>这一环的设计原则：<b>先有上下文，再谈判断。</b>AI 不允许在没读参考包的情况下直接给建议——那跟任何搜索引擎给的结果没有区别。</p>
+  </section>
+
+  <section class="sec">
+    <h2>叁 · 澄清先行：不搞清楚问题，就没有个性化建议</h2>
+    <p>进入判断之前，还有一道不能跳过的门：<b>问题澄清</b>。这是整套流程里最反直觉的一步——用户来问决策，AI 却先问四个问题：</p>
+    <ul>
+      <li><b>具体是什么情况？</b>发生了什么？你现在在纠结什么？</li>
+      <li><b>严重程度怎么样？</b>是小摩擦，还是大矛盾？</li>
+      <li><b>现在各方状态如何？</b>你的情绪怎么样？对方呢？</li>
+      <li><b>这个决策背后，你真正担心的是什么？</b></li>
+    </ul>
+    <p>设计意图：<b>问题都没搞清楚，读什么数据都是错的。</b>大多数"AI 建议不靠谱"的根因，不是 AI 不够聪明，是它连问题本身都没确认就开始回答。澄清完问题，才允许去读数据、给理由。</p>
+  </section>
+
+  <section class="sec">
+    <h2>肆 · 红队输出：正反理由，个性化优先</h2>
+    <p>建议的输出结构固定：状态检查结果 → 决策前 Checklist → 支持理由三条 → 反对理由三条 → 倾向性建议。其中有一条<b>硬规则</b>：</p>
+    <p><b>至少两条理由必须个性化</b>——来自你的历史数据、个人模式、近期状态或具体项目；通用模板只允许做补充，不允许成为主体。</p>
+    <p>这是从真实首单里长出来的教训。一次关系修复决策中，反对理由两条是通用道理，支持理由只有一条——"你最近家人陪伴时间占比不高，关系本来就需要维护"——真正来自数据。当时给的建议被打了一般的评分，偏差点自评写得直白：</p>
+    <div class="redteam">
+      <div class="rt-side for">
+        <h4>支持理由 · 真实首单</h4>
+        <div class="rt-row"><span class="no">1</span><span>小不愉快拖久了容易攒成大隔阂，主动修复成本最低。<span class="badge tpl">通用</span></span></div>
+        <div class="rt-row"><span class="no">2</span><span><b>你最近家人陪伴时间占比不高，关系本来就需要维护。</b><span class="badge data">数据洞察</span></span></div>
+        <div class="rt-row"><span class="no">3</span><span>主动低头不是输，是你珍惜这段关系的表现。<span class="badge tpl">通用</span></span></div>
+      </div>
+      <div class="rt-side against">
+        <h4>当时的问题</h4>
+        <div class="rt-row"><span class="no">·</span><span>三条里只有一条从数据来，另外两条换个人也能说——这就是"通用模板成了主体"。</span></div>
+        <div class="rt-row"><span class="no">·</span><span>真实决策是：没有打电话，买了一杯星巴克作为修复方式。<span class="badge data">首单结局</span></span></div>
+        <div class="rt-row"><span class="no">·</span><span>评分：<span class="dot mid"></span>一般。偏差点成了这条回路最重要的产出。</span></div>
+      </div>
+    </div>
+    <p>决策前 Checklist 固定五问：<b>我现在是透支状态吗？这个想法是不是"旧兴趣新生"？我在逃避什么？我的身体在说什么？这个决策三个月后我会后悔吗？</b>——把最常见的非理性冲动显性化，让决策者先对完镜子再选边。</p>
+  </section>
+
+  <section class="sec">
+    <h2>伍 · 人际决策的专属机制：防止"主动沟通很重要"式废话</h2>
+    <p>关系类决策最容易掉进通用模板：劝沟通、劝理解、劝换位思考——全是正确的废话。这套系统为人际决策挂了两个专属机制，都来自个人模型的沉淀：</p>
+    <div class="rdgrp">
+      <div class="gh"><span class="gno">RULE 01</span><span class="gn">深度关系五步法</span></div>
+      <p class="gp">先判断这段关系走到哪一步了、问题出在哪个环节，再谈怎么办——不定位就开药方，是关系建议最常见的错误。</p>
+      <span class="gt">意图 · <b>先看关系阶段，再给行动</b></span>
+    </div>
+    <div class="rdgrp">
+      <div class="gh"><span class="gno">RULE 02</span><span class="gn">关系僵局先破场</span></div>
+      <p class="gp">冲突/冷战类决策，不要在对立关系里讲道理——先打破关系场，场破了道理才有机会被听见。</p>
+      <span class="gt">意图 · <b>破场优先于说理</b></span>
+    </div>
+    <p>这两条规则的存在，保证了关系类建议不是即兴发挥，而是有沉淀、可回测的判断依据。</p>
+  </section>
+
+  <section class="sec">
+    <h2>陆 · 事后记录与打分：不记录，就不知道 AI 错在哪</h2>
+    <p>决策之后，把全过程写回决策记录表——十一个字段：决策日期、主题、类型、AI 支持理由、AI 反对理由、检查清单结果、AI 建议、你的决策、建议质量评分、偏差点、后续结果。评分三档：<span class="dot ok"></span>很准 / <span class="dot mid"></span>一般 / <span class="dot bad"></span>不准；打不准必须追问偏差点在哪里。</p>
+    <p>设计意图：记录不是为了写日志，是给回流提供原料。<b>不记录，偏差点就散在对话里，永远变不成规则；记录下来，每一次"AI 说错了"就变成下一次"AI 不再说错"。</b></p>
+  </section>
+
+  <section class="sec">
+    <h2>柒 · 回流：偏差点，是这条回路最值钱的产出</h2>
+    <p>每次决策的偏差点，按类型回流到三个地方，让教训沉淀成可复用的机制：</p>
+    <ul>
+      <li><b>黄金数集：</b>口径、规则类错误——"AI 给建议必须基于我的数据"这类判断标准，沉淀为可判卷的黄金规则。</li>
+      <li><b>个人模型：</b>行为模式类发现——"通用模板会被立刻识别"这类稳定模式，沉淀为候选模型，回测后入库。</li>
+      <li><b>系统迭代表：</b>机制类问题——流程哪里断了、哪一环又退化了，沉淀为迭代记录。</li>
+    </ul>
+    <p>回流让回路真正闭合：<b>蓄水保证 AI 有数据，回流保证 AI 会长。</b>没有回流，这套系统只是一份每周更新的报表；有了回流，它才是一个持续自我修正的决策伙伴。</p>
+  </section>
+
+  <section class="sec">
+    <h2>捌 · 诚实边界：它还没成熟，但已经证明了一件事</h2>
+    <p>这套系统目前只有一条真实决策记录——它在验证期，远未成熟。两条已知的边界，如实写下：</p>
+    <ul>
+      <li><b>使用频率存疑。</b>一个重要顾虑是"重要决策少、日常决策多是噪音"——低频使用意味着回流原料少，成长可能很慢。这是它未来的真实风险，不是宣传话术。</li>
+      <li><b>已验证成立的一条结论：</b>个性化洞察是 AI 决策支持的生命线。通用模板会被使用者立刻识别并弃用，只有来自真实数据的理由才有被采纳的可能——这条已经用真实首单验证过了。</li>
+    </ul>
+    <p>把它放在这里，是因为这套系统的价值不在"现在多成熟"，而在<b>它把"AI 怎么才能给个性化建议"这件事，变成了一条可观察、可迭代、可复制的回路</b>。</p>
+  </section>
+
+  <div class="quote-block">
+    <p>通用模板可以用，但不能成为主体——<br>要有个性化的洞察。</p>
+    <small>— 决策辅助系统 · 真实首单的偏差点自评</small>
+  </div>
+
+  <div class="back-row"><a href="index.html#systems">← 返回系统与方法</a></div>
+</main>
+
+<footer>
+  <b>liudeva</b> · Data Cook, Field Observer, Meaning Surfer<br>
+  © 2026 · 一片仍在生长的生命田野
+</footer>
+
+</body>
+</html>
