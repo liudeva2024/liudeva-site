@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>深度关系方法论 — liudeva</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='26' cy='26' r='10' fill='%23e59b53'/%3E%3Ccircle cx='42' cy='40' r='14' fill='none' stroke='%23df6b4a' stroke-width='5'/%3E%3Cpath d='M8 56 L28 56 L20 44 Z' fill='%2393b8bf'/%3E%3C/svg%3E">
+<link href="https://miaoda.feishu.cn/fonts/css2?family=Noto+Sans+SC:wght@300;400;500;700&family=Noto+Serif+SC:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg-deep:#10132b;
+  --bg-mid:#151a38;
+  --bg-soft:#1c2245;
+  --ink:#f1ece2;
+  --ink-dim:#a9b1cb;
+  --ink-faint:#687095;
+  --amber:#e59b53;
+  --ember:#df6b4a;
+  --teal:#93b8bf;
+  --line:rgba(241,236,226,.14);
+  --serif:'Noto Serif SC','Songti SC','SimSun',serif;
+  --sans:'Noto Sans SC','PingFang SC','Microsoft YaHei','Helvetica Neue',Arial,sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg-deep);color:var(--ink);font-family:var(--sans);font-weight:300;line-height:1.9;-webkit-font-smoothing:antialiased}
+a{color:var(--teal);text-decoration:none;transition:color .25s}
+a:hover{color:var(--amber)}
+::selection{background:var(--amber);color:#10132b}
+
+/* ===== header ===== */
+.site-header{position:fixed;top:0;left:0;right:0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:22px 5vw;background:rgba(16,19,43,.82);backdrop-filter:blur(10px)}
+.brand{font-size:15px;letter-spacing:.22em;font-weight:500;color:var(--ink);display:inline-flex;align-items:center;min-height:44px}
+.brand span{color:var(--amber)}
+.nav{font-size:13px;letter-spacing:.12em}
+.nav a{color:var(--ink-dim)}
+.nav a:hover{color:var(--ink)}
+
+/* ===== article ===== */
+.article{max-width:760px;margin:0 auto;padding:150px 6vw 60px}
+.art-kicker{font-size:12px;letter-spacing:.4em;color:var(--amber)}
+.art-title{font-family:var(--serif);font-size:clamp(1.7rem,4.2vw,2.6rem);line-height:1.5;font-weight:600;letter-spacing:.04em;margin:20px 0 22px}
+.art-lead{font-family:var(--serif);font-size:clamp(1.05rem,2.2vw,1.25rem);color:var(--ink-dim);line-height:2;max-width:640px}
+.art-lead b{color:var(--ink);font-weight:500}
+.art-meta{display:flex;flex-wrap:wrap;gap:12px 28px;margin-top:26px;padding-top:20px;border-top:1px solid var(--line);font-size:12px;letter-spacing:.14em;color:var(--ink-faint)}
+.art-meta b{color:var(--teal);font-weight:400}
+.sec{margin-top:64px}
+.sec h2{font-family:var(--serif);font-size:clamp(1.3rem,3vw,1.7rem);font-weight:600;letter-spacing:.06em;margin-bottom:18px;color:var(--ink)}
+.sec h2::before{content:'';display:inline-block;width:22px;height:1px;background:var(--amber);margin-right:14px;vertical-align:middle}
+.sec p{color:var(--ink-dim);margin-bottom:16px}
+.sec p b{color:var(--ink);font-weight:500}
+.sec ul{list-style:none;margin:0 0 18px}
+.sec li{position:relative;padding-left:22px;color:var(--ink-dim);margin-bottom:12px}
+.sec li::before{content:'';position:absolute;left:2px;top:.85em;width:7px;height:1px;background:var(--amber)}
+.sec li b{color:var(--ink);font-weight:500}
+
+/* ===== 五步法总览 ===== */
+.steps5{display:flex;gap:10px;margin:26px 0 20px}
+.s5{flex:1;border:1px solid var(--line);background:var(--bg-soft);padding:18px 16px;position:relative;transition:border-color .3s}
+.s5:hover{border-color:rgba(229,155,83,.5)}
+.s5 .sn{font-family:var(--serif);font-size:13px;color:var(--amber);letter-spacing:.14em;margin-bottom:10px}
+.s5 h4{font-family:var(--serif);font-size:16px;color:var(--ink);letter-spacing:.04em;margin-bottom:8px;line-height:1.6}
+.s5 p{font-size:12.5px;color:var(--ink-faint);line-height:1.8;margin:0}
+.flowline{font-size:13px;color:var(--ink-faint);letter-spacing:.06em}
+.flowline b{color:var(--teal);font-weight:400}
+
+/* ===== 五步拆解 ===== */
+.sd{border:1px solid var(--line);background:var(--bg-soft);margin:18px 0}
+.sd-head{display:flex;align-items:baseline;gap:14px;padding:14px 20px;border-bottom:1px solid var(--line)}
+.sd-head .sno{font-family:var(--serif);font-size:13px;color:var(--amber);letter-spacing:.12em}
+.sd-head h4{font-family:var(--serif);font-size:18px;color:var(--ink);letter-spacing:.04em}
+.sd-body{display:flex;gap:0}
+.sd-col{flex:1;padding:16px 20px}
+.sd-col+.sd-col{border-left:1px solid var(--line)}
+.sd-col .cl{display:block;font-size:11px;letter-spacing:.2em;color:var(--amber);margin-bottom:8px}
+.sd-col p{font-size:13px;color:var(--ink-dim);line-height:1.9;margin:0}
+.sd-col p b{color:var(--ink);font-weight:500}
+.sd-col .tagline{display:inline-block;margin-top:10px;font-size:11px;letter-spacing:.1em;color:var(--teal)}
+
+/* ===== 配套模型 / 场景 ===== */
+.rdgrp{border:1px solid var(--line);background:var(--bg-soft);padding:14px 18px;margin-bottom:12px}
+.rdgrp .gh{display:flex;align-items:baseline;gap:12px;margin-bottom:8px}
+.rdgrp .gno{font-family:var(--serif);font-size:12px;color:var(--amber);letter-spacing:.1em}
+.rdgrp .gn{font-family:var(--serif);font-size:15px;color:var(--ink);letter-spacing:.06em}
+.rdgrp .gp{font-size:12.5px;color:var(--ink-faint);line-height:1.8;margin:0}
+.rdgrp .gt{display:block;margin-top:6px;font-size:12px;color:var(--ink-dim)}
+.rdgrp .gt b{color:var(--teal);font-weight:400}
+
+/* ===== 回测表格 ===== */
+.flowtable{width:100%;table-layout:fixed;border-collapse:collapse;margin:22px 0 18px}
+.flowtable th{font-family:var(--serif);font-weight:600;text-align:left;font-size:15px;color:var(--ink);padding:12px 14px;border-bottom:1px solid var(--line);letter-spacing:.1em;background:var(--bg-soft)}
+.flowtable td{padding:14px;color:var(--ink-dim);font-size:14px;line-height:1.9;border-bottom:1px solid var(--line);vertical-align:top}
+.flowtable td b{color:var(--ink);font-weight:500}
+.table-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:22px 0 18px;padding-bottom:4px}
+.table-scroll .flowtable{margin:0;min-width:560px}
+
+.quote-block{margin-top:76px;padding:38px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);text-align:center}
+.quote-block p{font-family:var(--serif);font-size:clamp(1.1rem,2.4vw,1.35rem);line-height:2;color:var(--ink);letter-spacing:.04em}
+.quote-block small{display:block;margin-top:16px;color:var(--amber);letter-spacing:.3em;font-size:12px}
+.back-row{margin:80px 0 0;text-align:center}
+.back-row a{font-size:13px;letter-spacing:.3em;color:var(--ink-dim)}
+.back-row a:hover{color:var(--amber)}
+
+/* ===== footer ===== */
+footer{padding:64px 5vw 56px;text-align:center;font-size:13px;color:var(--ink-faint);letter-spacing:.1em;line-height:2.2;border-top:1px solid var(--line)}
+footer b{color:var(--ink-dim);font-weight:400}
+
+@media (max-width:720px){
+  .steps5{flex-direction:column}
+  .s5 p{font-size:13.5px}
+  .sd-head h4{font-size:16px}
+  .sd-body{flex-direction:column}
+  .sd-col+.sd-col{border-left:none;border-top:1px solid var(--line)}
+  .sd-col p{font-size:13.5px}
+  .rdgrp .gp{font-size:13.5px}
+}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <a class="brand" href="index.html">liudeva<span>.</span></a>
+  <nav class="nav"><a href="index.html#systems">← 返回系统与方法</a></nav>
+</header>
+
+<main class="article">
+  <div class="art-kicker">SYSTEM · RELATION METHOD</div>
+  <h1 class="art-title">深度关系方法论：真正看见一个人</h1>
+  <p class="art-lead">这套方法的核心只有一条：<b>深度关系建立五步法</b>。它不是“社交技巧清单”，而是从两年真实关系数据里提炼出的完整路径——从共同做事切入，到真正看见对方这个人。五步法之外的一切——数据怎么来、怎么用、怎么迭代，都是围绕它展开的支撑系统。</p>
+  <div class="art-meta">
+    <span>状态 · <b>已回测 · 确信度强</b></span>
+    <span>关键词 · <b>共同做事</b> <b>真实暴露</b> <b>接住脆弱</b> <b>双向价值</b> <b>真正看见</b></span>
+  </div>
+
+  <section class="sec">
+    <h2>壹 · 五步法：建立深度关系的完整路径</h2>
+    <p>从三段真实关系演变（从上下级到挚友、从陌生到采用我的系统、从单向影响到互相教学）中提炼，五步是一条有先后顺序的路径，不是并列的清单——<b>每一步都建立在前一步之上</b>：</p>
+    <div class="steps5">
+      <div class="s5"><span class="sn">STEP 01</span><h4>从共同做事切入</h4><p>不刻意社交、不硬找话题。一起完成一件具体的事，关系在协作里自然生长。</p></div>
+      <div class="s5"><span class="sn">STEP 02</span><h4>先暴露真实状态</h4><p>不端着、不包装。主动让对方看见真实的你——包括状态不好、不确定的部分。</p></div>
+      <div class="s5"><span class="sn">STEP 03</span><h4>接住对方的脆弱</h4><p>对方敞开时不评判、不说教。接住脆弱，信任才第一次真正发生。</p></div>
+      <div class="s5"><span class="sn">STEP 04</span><h4>双向提供实际价值</h4><p>不单向索取。互相给对方真正有用的东西，价值流动关系才不倾斜。</p></div>
+      <div class="s5"><span class="sn">STEP 05</span><h4>真正看见这个人</h4><p>不只看见他的角色、标签、功能——看见他这个人本身。这是深度关系的终点。</p></div>
+    </div>
+    <p class="flowline">可检验的预测：<b>按这个方法推进的关系，能稳定成为长期可托底的朋友；关系出现波动时，对照五步法可以快速定位问题出在哪个环节。</b>——它不是事后总结，是可以回测的模型。</p>
+  </section>
+
+  <section class="sec">
+    <h2>贰 · 五步逐条拆解：怎么做，为什么，有据可依</h2>
+    <p>每步都有三个层面：<b>怎么做</b>（行动）、<b>为什么</b>（设计意图）、<b>关系片段</b>（从真实数据中提炼的证据，已脱敏）。五步合起来，是一条从“认识”走向“看见”的完整路径。</p>
+
+    <div class="sd">
+      <div class="sd-head"><span class="sno">STEP 01</span><h4>从共同做事切入，不刻意社交</h4></div>
+      <div class="sd-body">
+        <div class="sd-col"><span class="cl">怎么做</span><p>认识一个人，不从“约饭、找话题、寒暄”开始，而从<b>一起做一件具体的事</b>开始。共同任务会自动产生对话素材、协作信任和互相了解，不需要表演热情。</p></div>
+        <div class="sd-col"><span class="cl">为什么</span><p>刻意社交是高成本的表演，共同做事是低成本的相处。<b>一起扛过一件事之后，关系里的生分会自然消解</b>——深度关系的起点是共同目标，不是共同话题。</p></div>
+        <div class="sd-col"><span class="cl">关系片段</span><p>与一位管理者从“你搭一个系统给我用”开始，两周内她上手，并写下了第一条指向我的感恩日志——关系从“帮忙”变成了“一起在做事”。</p></div>
+      </div>
+    </div>
+
+    <div class="sd">
+      <div class="sd-head"><span class="sno">STEP 02</span><h4>先暴露真实状态，不端着</h4></div>
+      <div class="sd-body">
+        <div class="sd-col"><span class="cl">怎么做</span><p>主动让对方看见你的真实状态：在忙什么、卡在什么、状态好不好。<b>不用“都挺好”把真实的自己藏起来</b>——包括状态不好、不确定的部分。</p></div>
+        <div class="sd-col"><span class="cl">为什么</span><p>暴露真实状态是关系里的“信任先付”：你先不设防，对方才有勇气也不设防。<b>端着的关系永远停在客气层</b>，真实是通往深度的唯一门票。</p></div>
+        <div class="sd-col"><span class="cl">关系片段</span><p>倦怠期被一位朋友捕捉到状态不对——他没问“你怎么了”，而是先转文章、约散步，直接给了回应。<b>被看见的前提，是我先暴露了状态</b>。</p></div>
+      </div>
+    </div>
+
+    <div class="sd">
+      <div class="sd-head"><span class="sno">STEP 03</span><h4>接住对方的脆弱，不评判不说教</h4></div>
+      <div class="sd-body">
+        <div class="sd-col"><span class="cl">怎么做</span><p>当对方敞开脆弱（迷茫、失败、软肋）时，忍住“你应该……”“我早就说过”的冲动。<b>先接住，再说话</b>。评判和说教是脆弱的天敌。</p></div>
+        <div class="sd-col"><span class="cl">为什么</span><p>脆弱的敞开是信任的高风险动作——<b>被评判一次，对方就学会了把脆弱藏回去</b>。接住脆弱，是关系从“礼貌”走向“信任”的转折点。</p></div>
+        <div class="sd-col"><span class="cl">关系片段</span><p>一次深夜谈话，对方讲了正面对的难处，没有收到任何评判，只有被认真听。之后这段关系明显从“同事”变成了“能说真话的人”。</p></div>
+      </div>
+    </div>
+
+    <div class="sd">
+      <div class="sd-head"><span class="sno">STEP 04</span><h4>双向提供实际价值，不单向索取</h4></div>
+      <div class="sd-body">
+        <div class="sd-col"><span class="cl">怎么做</span><p>关系里持续问一句：<b>我能给对方什么实际有用的东西？</b>不只是情绪价值，更是具体的能力、资源、视角——并且允许对方同样给你。</p></div>
+        <div class="sd-col"><span class="cl">为什么</span><p>单向索取的关系是消耗性的，早晚断裂。<b>双向的价值流动让关系形成正循环</b>——双方都在变好，关系才有继续的理由。</p></div>
+        <div class="sd-col"><span class="cl">关系片段</span><p>我教一位朋友写作和 AI 工具，他反过来教我写作的结构与语感——<b>价值在双向流动，关系从“我帮你”变成了“我们互相成全”</b>。</p></div>
+      </div>
+    </div>
+
+    <div class="sd">
+      <div class="sd-head"><span class="sno">STEP 05</span><h4>真正看见对方这个人，不只是看他的角色</h4></div>
+      <div class="sd-body">
+        <div class="sd-col"><span class="cl">怎么做</span><p>看见对方作为“人”的部分：他的处境、他的在乎、他的来处。<b>而不只是他的头衔、功能、在组织里的位置</b>。这是五步法的终点，也是最难的一步。</p></div>
+        <div class="sd-col"><span class="cl">为什么</span><p>“被当作一个有用的人”和“被当作一个人”是两种体验。<b>前者让关系停在交易，后者让关系抵达深度</b>——深度关系的本质，就是两个人互相看见彼此的人。</p></div>
+        <div class="sd-col"><span class="cl">关系片段</span><p>一位曾经的上级对另一个朋友说：“你是他最好的朋友。”这句话的份量在于：<b>他被看见的不只是下属、合作者，而是一个人本身</b>。</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec">
+    <h2>叁 · 两个注意点：方法的边界条件</h2>
+    <p>五步法不是“按顺序执行就必然成功”的进度条，两条边界条件决定它是否适用：</p>
+    <ul>
+      <li><b>打开节奏要跟对方的开放度匹配，不硬撬。</b>对方没准备好的时候，别用“坦诚”当撬棍。五步法的每一步都要等对方走到同一步——硬推进只会让关系后退。</li>
+      <li><b>区分“对角色的情绪”和“对这个人的情绪”。</b>不要把对上级、对某个角色的抵触，迁移到具体的人身上。关系对象永远是人，不是角色——这一步判断错了，五步法会全部失准。</li>
+    </ul>
+  </section>
+
+  <section class="sec">
+    <h2>肆 · 五步法从哪来：四表长周期脉络法</h2>
+    <p>五步法不是拍脑袋写出来的，是从<b>两年真实关系数据</b>里提炼的。方法：把一段关系放进四张原始数据表，拉长时间线，看它如何演变——这是这套方法论的数据底座。</p>
+    <div class="rdgrp">
+      <div class="gh"><span class="gno">DATA 01</span><span class="gn">反思回顾</span></div>
+      <p class="gp">核心数据源，记录量最大、信息最丰富——关系的关键转折、冲突复盘、阶段判断都在这里。</p>
+      <span class="gt">作用 · <b>提供转折点与因果</b></span>
+    </div>
+    <div class="rdgrp">
+      <div class="gh"><span class="gno">DATA 02</span><span class="gn">感恩日志</span></div>
+      <p class="gp">辅助验证：正向反馈的变化——谁在靠近、谁在被感谢、谁多次出现，关系走向的第一手信号。</p>
+      <span class="gt">作用 · <b>提供正向证据</b></span>
+    </div>
+    <div class="rdgrp">
+      <div class="gh"><span class="gno">DATA 03</span><span class="gn">每日复盘</span></div>
+      <p class="gp">补充细节：日常观察和即时感受——单看可能琐碎，放在时间线上就是关系的日常纹理。</p>
+      <span class="gt">作用 · <b>提供日常观察</b></span>
+    </div>
+    <div class="rdgrp">
+      <div class="gh"><span class="gno">DATA 04</span><span class="gn">用时明细</span></div>
+      <p class="gp">时间维度：跟这段关系相关的时间投入、活动分布、时段特征——投入时间是最诚实的表态。</p>
+      <span class="gt">作用 · <b>提供投入证据</b></span>
+    </div>
+    <p>两条硬规则：<b>按认识时间拉数据</b>——数据表很大时，单次导出默认取最早记录，必须定位到认识对方的时间段再拉，否则只看到关系早期、漏掉最近的变化；<b>看关系的双向性</b>——不只记录“我怎么想”，也要看“对方做了什么”，关系演变是两条线的交汇。</p>
+  </section>
+
+  <section class="sec">
+    <h2>伍 · 配套模型：五步法的支撑规则</h2>
+    <p>五步法解决“怎么建立关系”，三个配套模型解决“怎么维持、怎么修复、怎么充电”——它们是同一个方法论的组成部分：</p>
+    <div class="rdgrp">
+      <div class="gh"><span class="gno">RULE 01</span><span class="gn">深谈滋养，泛聊消耗</span></div>
+      <p class="gp">社交配额优先留给 90 分钟以上的深度对话，无主题的泛聊、群聊、无效社交尽量砍——深度对话是充电，泛聊是耗电。</p>
+      <span class="gt">依据 · <b>能量管理表人际维度数据对比</b> · 可检验预测：深谈 &gt;2 次/周人际能量为正，泛聊 &gt;5 次/周为负</span>
+    </div>
+    <div class="rdgrp">
+      <div class="gh"><span class="gno">RULE 02</span><span class="gn">关系僵局，先破场</span></div>
+      <p class="gp">闹矛盾、冷战、聊不下去时，不要在“你对我错”的对立里反复辩对错——先破场：换物理环境、一起做件需要协作的事、主动认个软，从“对手”变回“队友”。</p>
+      <span class="gt">依据 · <b>多次关系冲突的解决路径复盘</b> · 可检验预测：冷战 24 小时内和解概率提升 80%</span>
+    </div>
+    <div class="rdgrp">
+      <div class="gh"><span class="gno">RULE 03</span><span class="gn">被看见，是修复与恢复的关键</span></div>
+      <p class="gp">对方主动捕捉并回应你的状态变化，比泛泛的关心更有效——“被看见”是高价值能量来源，也是关系修复的转折点。</p>
+      <span class="gt">依据 · <b>复盘简报精读（长周期人际记录）</b> · 这是第五步“真正看见”的背面：看见，是相互的</span>
+    </div>
+  </section>
+
+  <section class="sec">
+    <h2>陆 · 什么时候用：四个关系场景</h2>
+    <p>方法要落在场景里才有价值。四个场景沉淀表条目，覆盖关系生命周期的四个关键时刻，调用方式统一是“场景触发 → 匹配模型 → 给行动”：</p>
+    <div class="rdgrp">
+      <div class="gh"><span class="gno">SCENE 01</span><span class="gn">新关系建立指导</span></div>
+      <p class="gp">认识新同事、新朋友时，用五步法判断这段关系当前走到哪一步，给出下一步推进建议——不催熟，按节奏来。</p>
+      <span class="gt">触发 · <b>新认识一个人</b> → 定位阶段 → 下一步</span>
+    </div>
+    <div class="rdgrp">
+      <div class="gh"><span class="gno">SCENE 02</span><span class="gn">关系波动诊断</span></div>
+      <p class="gp">关系出现波动时，对照五步法定位问题出在哪个环节——是没共同事做了，还是价值流动断了，还是看见停滞了。</p>
+      <span class="gt">触发 · <b>关系变淡/变僵</b> → 五步法诊断 → 修复动作</span>
+    </div>
+    <div class="rdgrp">
+      <div class="gh"><span class="gno">SCENE 03</span><span class="gn">月度人际生态盘点</span></div>
+      <p class="gp">每月盘点所有重要关系的健康度：哪些需要推进、哪些需要维护、哪些正在自然疏远——关系也需要资产负债表。</p>
+      <span class="gt">触发 · <b>月度复盘</b> → 全量盘点 → 分组行动</span>
+    </div>
+    <div class="rdgrp">
+      <div class="gh"><span class="gno">SCENE 04</span><span class="gn">关系冲突处理</span></div>
+      <p class="gp">闹矛盾、冷战进行时，先破关系场，不在对立里讲道理——五步法定位问题，破场负责解决问题，顺序不能反。</p>
+      <span class="gt">触发 · <b>冲突/冷战</b> → 先破场 → 再复盘</span>
+    </div>
+  </section>
+
+  <section class="sec">
+    <h2>柒 · 怎么知道它有效：回测与迭代</h2>
+    <p>每条模型都带“可检验预测 + 验证数据源”，用真实数据回测，而不是凭感觉相信：</p>
+    <div class="table-scroll">
+    <table class="flowtable">
+      <colgroup><col style="width:26%"><col style="width:42%"><col style="width:32%"></colgroup>
+      <thead><tr><th>模型</th><th>可检验预测</th><th>验证状态</th></tr></thead>
+      <tbody>
+        <tr><td><b>深度关系五步法</b></td><td>按此法推进的关系能稳定成为长期可托底的朋友；波动时能快速定位问题环节</td><td>已回测 · 生效 · 确信度强</td></tr>
+        <tr><td><b>深谈滋养泛聊消耗</b></td><td>深谈&gt;2 次/周能量正，泛聊&gt;5 次/周能量负</td><td>已回测 · 生效</td></tr>
+        <tr><td><b>关系僵局先破场</b></td><td>冷战 24 小时内和解概率提升 80%</td><td>已回测 · 生效</td></tr>
+        <tr><td><b>被看见是关键</b></td><td>被看见事件发生后，人际能量与关系满意度上升</td><td>已回测 · 生效 · 确信度中</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <p>迭代路径：<b>候选 → 回测 → 生效</b>。每季度重跑一次长周期脉络分析，新的关系演变会回流为新的模型与场景条目——这套方法论自己也在被数据持续修正。</p>
+  </section>
+
+  <section class="sec">
+    <h2>捌 · 诚实边界：它只覆盖我这一侧</h2>
+    <ul>
+      <li><b>数据只覆盖“我”这一侧。</b>关系是双向的，这些模型描述的是我的行动与观察，替代不了对方的视角——方法有效的前提，是对方也在走向你。</li>
+      <li><b>对外呈现的脱敏口径。</b>人名、公司、具体吵架细节一律去掉，保留阶段命名与趋势结论。方法论讲的是路径，不是八卦。</li>
+    </ul>
+  </section>
+
+  <div class="quote-block">
+    <p>意义，是小狗的尾巴——<br>最终还是要回归到具体的、有限的、需要你的人身上。</p>
+    <small>— 深度关系方法论 · 页脚</small>
+  </div>
+
+  <div class="back-row"><a href="index.html#systems">← 返回系统与方法</a></div>
+</main>
+
+<footer>
+  <b>liudeva</b> · Data Cook, Field Observer, Meaning Surfer<br>
+  © 2026 · 一片仍在生长的生命田野
+</footer>
+
+</body>
+</html>
