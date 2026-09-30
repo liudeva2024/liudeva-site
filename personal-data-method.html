@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>个人数据系统方法论 — liudeva</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='26' cy='26' r='10' fill='%23e59b53'/%3E%3Ccircle cx='42' cy='40' r='14' fill='none' stroke='%23df6b4a' stroke-width='5'/%3E%3Cpath d='M8 56 L28 56 L20 44 Z' fill='%2393b8bf'/%3E%3C/svg%3E">
+<link href="https://miaoda.feishu.cn/fonts/css2?family=Noto+Sans+SC:wght@300;400;500;700&family=Noto+Serif+SC:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg-deep:#10132b;
+  --bg-mid:#151a38;
+  --bg-soft:#1c2245;
+  --ink:#f1ece2;
+  --ink-dim:#a9b1cb;
+  --ink-faint:#687095;
+  --amber:#e59b53;
+  --ember:#df6b4a;
+  --teal:#93b8bf;
+  --line:rgba(241,236,226,.14);
+  --serif:'Noto Serif SC','Songti SC','SimSun',serif;
+  --sans:'Noto Sans SC','PingFang SC','Microsoft YaHei','Helvetica Neue',Arial,sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg-deep);color:var(--ink);font-family:var(--sans);font-weight:300;line-height:1.9;-webkit-font-smoothing:antialiased}
+a{color:var(--teal);text-decoration:none;transition:color .25s}
+a:hover{color:var(--amber)}
+::selection{background:var(--amber);color:#10132b}
+
+/* ===== header ===== */
+.site-header{position:fixed;top:0;left:0;right:0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:22px 5vw;background:rgba(16,19,43,.82);backdrop-filter:blur(10px)}
+.brand{font-size:15px;letter-spacing:.22em;font-weight:500;color:var(--ink)}
+.brand span{color:var(--amber)}
+.nav{font-size:13px;letter-spacing:.12em}
+.nav a{color:var(--ink-dim)}
+.nav a:hover{color:var(--ink)}
+
+/* ===== article ===== */
+.article{max-width:720px;margin:0 auto;padding:150px 6vw 60px}
+.art-kicker{font-size:12px;letter-spacing:.4em;color:var(--amber)}
+.art-title{font-family:var(--serif);font-size:clamp(1.7rem,4.2vw,2.6rem);line-height:1.5;font-weight:600;letter-spacing:.04em;margin:20px 0 22px}
+.art-lead{font-family:var(--serif);font-size:clamp(1.05rem,2.2vw,1.25rem);color:var(--ink-dim);line-height:2;max-width:620px}
+.art-meta{display:flex;flex-wrap:wrap;gap:12px 28px;margin-top:26px;padding-top:20px;border-top:1px solid var(--line);font-size:12px;letter-spacing:.14em;color:var(--ink-faint)}
+.art-meta b{color:var(--teal);font-weight:400}
+.sec{margin-top:64px}
+.sec h2{font-family:var(--serif);font-size:clamp(1.3rem,3vw,1.7rem);font-weight:600;letter-spacing:.06em;margin-bottom:18px;color:var(--ink)}
+.sec h2::before{content:'';display:inline-block;width:22px;height:1px;background:var(--amber);margin-right:14px;vertical-align:middle}
+.sec p{color:var(--ink-dim);margin-bottom:16px}
+.sec p b{color:var(--ink);font-weight:500}
+.sec ul{list-style:none;margin:0 0 18px}
+.sec li{position:relative;padding-left:22px;color:var(--ink-dim);margin-bottom:12px}
+.sec li::before{content:'';position:absolute;left:2px;top:.85em;width:7px;height:1px;background:var(--amber)}
+.sec li b{color:var(--ink);font-weight:500}
+.sec ol{list-style:none;counter-reset:step;margin:0 0 18px}
+.sec ol li{position:relative;padding-left:34px;color:var(--ink-dim);margin-bottom:12px;counter-increment:step}
+.sec ol li::before{content:counter(step);position:absolute;left:0;top:1px;width:22px;height:22px;border:1px solid var(--line);color:var(--amber);font-size:12px;font-family:var(--serif);display:flex;align-items:center;justify-content:center}
+.sec ol li b{color:var(--ink);font-weight:500}
+.flowtable{width:100%;table-layout:fixed;border-collapse:collapse;margin:22px 0 18px}
+.flowtable th{font-family:var(--serif);font-weight:600;text-align:left;font-size:15px;color:var(--ink);padding:12px 14px;border-bottom:1px solid var(--line);letter-spacing:.1em;background:var(--bg-soft)}
+.flowtable td{padding:14px;color:var(--ink-dim);font-size:14px;line-height:1.9;border-bottom:1px solid var(--line);vertical-align:top}
+.flowtable td b{color:var(--ink);font-weight:500}
+.table-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:22px 0 18px;padding-bottom:4px}
+.table-scroll .flowtable{margin:0;min-width:600px}
+
+/* ===== 四层架构图 ===== */
+.layers{margin:26px 0 20px;display:flex;flex-direction:column;gap:0}
+.layer{display:flex;align-items:stretch;gap:0}
+.layer .tag{width:86px;flex:none;display:flex;align-items:center;justify-content:center;font-size:11px;letter-spacing:.2em;writing-mode:vertical-rl;background:var(--bg-soft);border:1px solid var(--line);color:var(--amber)}
+.layer .body{flex:1;border:1px solid var(--line);border-left:none;background:rgba(28,34,69,.5);padding:14px 18px}
+.layer .body h4{font-family:var(--serif);font-size:15px;color:var(--ink);letter-spacing:.1em;margin-bottom:4px}
+.layer .body p{font-size:13px;color:var(--ink-dim);margin:0}
+.layer .body span{color:var(--ink-faint)}
+.layer-arrow{text-align:center;color:var(--ink-faint);font-size:12px;line-height:1.4;letter-spacing:.14em;padding:2px 0}
+.layer-arrow .down{display:inline-block;margin-left:6px;color:var(--amber)}
+
+/* ===== 五色条 ===== */
+.fivebar{display:flex;gap:8px;margin:18px 0 8px;flex-wrap:wrap}
+.fivebar .f{flex:1;min-width:96px;border:1px solid var(--line);padding:10px 12px;background:var(--bg-soft)}
+.fivebar .f .dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:8px;vertical-align:middle}
+.fivebar .f .n{font-family:var(--serif);font-size:14px;color:var(--ink);letter-spacing:.08em}
+.fivebar .f .d{display:block;font-size:12px;color:var(--ink-faint);margin-top:2px;line-height:1.6}
+.c-red{background:#df6b4a}.c-blue{background:#5b7fb5}.c-green{background:#6f9a7e}.c-yellow{background:#d8a94c}.c-white{background:#d9d4c4}.c-grey{background:#687095}
+
+/* ===== 洞察分级 ===== */
+.levels{display:flex;flex-direction:column;gap:10px;margin:18px 0 8px}
+.level{display:flex;align-items:flex-start;gap:14px;border:1px solid var(--line);background:var(--bg-soft);padding:12px 16px}
+.level .lv{flex:none;width:52px;font-family:var(--serif);font-size:13px;color:var(--amber);letter-spacing:.1em;padding-top:2px}
+.level .lv small{display:block;font-family:var(--sans);font-size:10px;color:var(--ink-faint);letter-spacing:.12em}
+.level .tx{font-size:14px;color:var(--ink-dim);line-height:1.8}
+.level .tx b{color:var(--ink);font-weight:500}
+
+.quote-block{margin-top:76px;padding:38px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);text-align:center}
+.quote-block p{font-family:var(--serif);font-size:clamp(1.1rem,2.4vw,1.35rem);line-height:2;color:var(--ink);letter-spacing:.04em}
+.quote-block small{display:block;margin-top:16px;color:var(--amber);letter-spacing:.3em;font-size:12px}
+.back-row{margin:80px 0 0;text-align:center}
+.back-row a{font-size:13px;letter-spacing:.3em;color:var(--ink-dim)}
+.back-row a:hover{color:var(--amber)}
+
+/* ===== footer ===== */
+footer{padding:64px 5vw 56px;text-align:center;font-size:13px;color:var(--ink-faint);letter-spacing:.1em;line-height:2.2;border-top:1px solid var(--line)}
+footer b{color:var(--ink-dim);font-weight:400}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <a class="brand" href="index.html">liudeva<span>.</span></a>
+  <nav class="nav"><a href="index.html#systems">← 返回系统与方法</a></nav>
+</header>
+
+<main class="article">
+  <div class="art-kicker">METHOD · PERSONAL DATA METHOD</div>
+  <h1 class="art-title">个人数据系统方法论：从记录到决策的完整链路</h1>
+  <p class="art-lead">这不是一份工具教程，而是一个做了两年多的实验报告。52 张表、200 多次迭代，最后活下来的不是"记录得越多越好"，而是一条从记录通向决策的链路，加上让这条链路活下来的演化机制。方法论的核心骨架只有一句话：<b>一半数据、一半复盘。</b></p>
+  <div class="art-meta">
+    <span>状态 · <b>两年迭代 · 持续演进</b></span>
+    <span>关键词 · <b>记录哲学</b> <b>五色时间</b> <b>五级复盘</b> <b>个人模型</b></span>
+  </div>
+
+  <section class="sec">
+    <h2>总览：方法论的四层骨架</h2>
+    <p>整套系统的数据按层级组织，从原始记录一路加工到自我认知。每一层解决一个不同的问题，数据只朝一个方向流动——从辅助到输入，从整合到消费。</p>
+    <div class="layers">
+      <div class="layer">
+        <div class="tag">辅助层</div>
+        <div class="body">
+          <h4>定义口径</h4>
+          <p>活动分类、时间辅助等字典表。<span>给输入层提供统一的分类标准与计算规则——五色属于哪类、深度时光多长才算。</span></p>
+        </div>
+      </div>
+      <div class="layer-arrow">原始数据从这里进来<span class="down">↓</span></div>
+      <div class="layer">
+        <div class="tag">输入层</div>
+        <div class="body">
+          <h4>记录生活</h4>
+          <p>用时明细、身体记录、账单明细、任务日程、感恩日志。<span>一切分析的源头，记录每天真实发生了什么。</span></p>
+        </div>
+      </div>
+      <div class="layer-arrow">把散点变成指标<span class="down">↓</span></div>
+      <div class="layer">
+        <div class="tag">整合层</div>
+        <div class="body">
+          <h4>提炼指标</h4>
+          <p>能量管理、时间报表、深度时光、每日指标。<span>把原始记录聚合成可判断的指标——状态如何、时间花在哪、能量是正还是负。</span></p>
+        </div>
+      </div>
+      <div class="layer-arrow">指标沉淀为认知<span class="down">↓</span></div>
+      <div class="layer">
+        <div class="tag">消费层</div>
+        <div class="body">
+          <h4>产出认知</h4>
+          <p>复盘表、个人模型、年度日志。<span>复盘消费一切数据，产出洞察；洞察再沉淀为个人模型，反过来指导下一个周期的记录。</span></p>
+        </div>
+      </div>
+    </div>
+    <p>这条链路的关键不是"数据多"，而是<b>每一层都有明确的消费者</b>。没有下游消费的表会被自然淘汰——这正是演化哲学的由来（见第七章）。</p>
+  </section>
+
+  <section class="sec">
+    <h2>壹 · 记录层：怎么记，才能记得下去</h2>
+    <p>两年后回头看，52 张表里真正持续产出的，几乎全是<b>高频</b>（记时、记账）和<b>固定</b>（任务、反思）两类场景。其余大量实验性质的表，前期热闹、后期沉寂——不是失败，是设计约束在起作用。记录层的四条哲学，全部来自这个教训。</p>
+    <ul>
+      <li><b>记录密度本身是调节器。</b>数据少的时候，大概率是休假模式，不是漏记——不需要自责，更不需要补录。密度的变化本身就是信号：生活节奏放慢了，或者系统失灵了。</li>
+      <li><b>记录可行性是核心约束。</b>一个记录动作如果每次要花超过几秒的心力，就注定无法长期坚持。设计记录方式时先问：我能不能在不想动的时候还愿意记它？</li>
+      <li><b>标记类字段空白是设计选择。</b>该空就空。定位字段手机端随缘记、电脑端不支持，那就让它空着；字段是公式、是派生结果，空着反而是正确的状态。</li>
+      <li><b>简单打卡降低门槛。</b>习惯打卡就是打勾，越简单越能坚持。复杂的录入仪式会杀死一切长期习惯。</li>
+    </ul>
+    <p><b>为什么这套能成立：</b>记录的价值不在"全"，而在<b>连续</b>。一条断断续续的完美数据，不如一条连续两年的粗糙数据——长周期分析靠的是不间断的采样，不是精确的样本。</p>
+  </section>
+
+  <section class="sec">
+    <h2>贰 · 分析层：两个核心测量维度</h2>
+    <p>记录之后怎么读？这套系统用两个维度度量时间效能——不回答"做了多少事"，只回答<b>时间过得值不值</b>。</p>
+    <p><b>维度一：平衡（五色时间）。</b>每条时间块按用途染上一个颜色，一天、一周、一年的时间结构一眼可见。</p>
+    <div class="fivebar">
+      <div class="f"><span class="dot c-red"></span><span class="n">红 · 事业</span><span class="d">工作与创造</span></div>
+      <div class="f"><span class="dot c-blue"></span><span class="n">蓝 · 学习</span><span class="d">输入与修炼</span></div>
+      <div class="f"><span class="dot c-green"></span><span class="n">绿 · 生活</span><span class="d">日常与休息</span></div>
+      <div class="f"><span class="dot c-yellow"></span><span class="n">黄 · 爱</span><span class="d">关系与陪伴</span></div>
+      <div class="f"><span class="dot c-white"></span><span class="n">白 · 意义</span><span class="d">思考与意义</span></div>
+      <div class="f"><span class="dot c-grey"></span><span class="n">灰 · 低能量</span><span class="d">未归类时段</span></div>
+    </div>
+    <p>颜色结构的变化是兴趣迁移的第一信号——某段时间某一种颜色突然变多，通常就是新的重心在形成。</p>
+    <p><b>维度二：深度（TD率）。</b>深度在场的时长占比，反向衡量碎片化程度。一周 TD 率低于 30% 或五色偏科（某色超过 70%），周末会明显感到空虚与倦怠——这是经过两年数据验证的稳定模式。</p>
+    <p><b>为什么是两个维度：</b>平衡管广度——生活是否被单一主题占满；深度管浓度——时间是否真的投入了进去。只追平衡会散，只追深度会偏，两个维度互相牵制，才是完整的时间质量观。</p>
+  </section>
+
+  <section class="sec">
+    <h2>叁 · 能量中枢：把多张表合成一个仪表盘</h2>
+    <p>分析层往下走，这套系统有一个独特设计：<b>能量管理表把用时、身体、情绪、人际等多个维度的数据，整合成一个综合指标。</b>它是整套系统的仪表盘。</p>
+    <ul>
+      <li><b>六个维度分两类。</b>人际、创造、学习、复盘是<b>核心能量来源</b>；身体、睡眠是<b>约束因素</b>。工作不单独成维度——它融入人际、创造、学习里。</li>
+      <li><b>为什么能量是中枢：</b>最终要判断的不是"某个维度好不好"，而是<b>"我整个人状态好不好"</b>。所有表的数据最后都服务于一个判断：我现在是充电状态还是耗电状态。</li>
+      <li><b>能量也是预警器。</b>状态连续亮红灯时，重大决策建议推迟 24 小时再做——状态是决策的底层变量，比任何分析都优先。</li>
+    </ul>
+  </section>
+
+  <section class="sec">
+    <h2>肆 · 复盘层：五个时间维度，五套问题</h2>
+    <p>这是方法论最重的一层，也是"一半数据、一半复盘"里的另一半。数据层负责记录，复盘层负责消化——<b>复盘体系的频率，决定了数据价值的兑现速度。</b></p>
+    <div class="table-scroll">
+    <table class="flowtable">
+      <colgroup><col style="width:14%"><col style="width:22%"><col style="width:28%"><col style="width:36%"></colgroup>
+      <thead>
+        <tr><th>维度</th><th>频率与规模</th><th>执行方式</th><th>设计意图</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><b>日</b></td>
+          <td>每天 · 9 问</td>
+          <td>手动录入（固定框架）</td>
+          <td>最小单元的觉察。当天最高能量的时刻、受阻的环节、感受力训练、意外联结——9 个维度不多不少</td>
+        </tr>
+        <tr>
+          <td><b>周</b></td>
+          <td>每周 · 17 问（9 维度）</td>
+          <td>AI 自动（每周三 10:00）</td>
+          <td>循环定位、心流地图、身体感受、时间审计、系统迭代、边缘策略、关系生态、创作探索、下周主题</td>
+        </tr>
+        <tr>
+          <td><b>月</b></td>
+          <td>每月 · 28 问 + V4 框架</td>
+          <td>AI 自动（每月 1 日 10:00）</td>
+          <td>所有复盘里最重的一环。V4 框架含 12 个板块：主题、总结、经营、工作、志业、学习、情绪、健康、复盘的复盘、下月规划</td>
+        </tr>
+        <tr>
+          <td><b>季</b></td>
+          <td>每季 · 参照 V4 设计</td>
+          <td>AI 自动（每季首月 1 日）</td>
+          <td>跨月趋势分析、季度目标对齐、模式沉淀、资源再分配 + 工作评估（倦怠风险监测）</td>
+        </tr>
+        <tr>
+          <td><b>年</b></td>
+          <td>每年 · 40 问（16 维度）</td>
+          <td>AI 自动 + 人工深度参与</td>
+          <td>年度叙事、身份进化、能力矩阵、关系生态演化、产品作品集——最高的宏观层</td>
+        </tr>
+      </tbody>
+    </table>
+    </div>
+    <p><b>三条设计要点：</b></p>
+    <ul>
+      <li><b>时间跨度越大，颗粒度越粗、洞察越宏观。</b>日复盘看细节，年复盘看方向，每一层都是上一层的二次消费和提炼。</li>
+      <li><b>复盘问题是"从数据里长出来的"，不是拍脑袋想的。</b>周、月、年的问题框架，都是做完年度数据复盘后与 AI 一起梳理定稿的——先有数据，后有框架。</li>
+      <li><b>洞察分级 L0–L4，防止复盘变流水账。</b></li>
+    </ul>
+    <div class="levels">
+      <div class="level"><div class="lv">L0<small>描述</small></div><div class="tx"><b>发生了什么</b>——数据事实，复盘的基础层。</div></div>
+      <div class="level"><div class="lv">L1<small>诊断</small></div><div class="tx"><b>为什么</b>——归因，复盘的核心层。</div></div>
+      <div class="level"><div class="lv">L2<small>预测</small></div><div class="tx"><b>接下来会怎样</b>——按此节奏推演，非宿命。</div></div>
+      <div class="level"><div class="lv">L3<small>行动</small></div><div class="tx"><b>建议做什么</b>——给出可执行的行动选项。</div></div>
+      <div class="level"><div class="lv">L4<small>生成</small></div><div class="tx"><b>新视角 / 跨域联结</b>——每月至少 1 条，创新层。</div></div>
+    </div>
+    <p>每次复盘要求结论先行、数据支撑、与上周对照，数据缺失时诚实标注（"字段为空，用替代口径重建·待核实"），严禁脑补。</p>
+  </section>
+
+  <section class="sec">
+    <h2>伍 · 模型层：从洞察里提炼「我」</h2>
+    <p>复盘的产出不只是报告，还有持续沉淀的个人模型库——把反复验证的模式提炼成关于自己的规则。这是整个方法论区别于普通记账系统的关键。</p>
+    <ul>
+      <li><b>三级模型结构：</b>θ本质（关于人的本质性规则）、V状态（关于状态变化的规则）、C战术（关于具体战术的规则）。</li>
+      <li><b>每个模型带五个字段：</b>规则原文、确信度（强/中）、规则来源（来自哪次复盘/分析）、可检验预测（观测信号→预期结果）、验证方式（依赖的数据源与判定方法）。</li>
+      <li><b>验证闭环：</b>AI 从复盘中提炼候选模型 → 补充可检验预测与验证方式 → 用下个月数据回测 → 升级为"已回测"，或被证伪，或补充边界条件。</li>
+    </ul>
+    <p>举例：<b>"陷入冷战后，只要一起做一件共同参与的事（不是谈判），24 小时内和解概率提升 80%"</b>——这条战术来自多次与身边人冲突的解决路径复盘，已被验证为强确信度。方法论的目的，就是让这种"经验"从模糊的直觉变成可检验、可复用的规则。</p>
+  </section>
+
+  <section class="sec">
+    <h2>陆 · 决策层：AI 辅助人来决策</h2>
+    <p>链路最后一环是决策。系统每周生成一份决策参考包，共 7 个字段：当前状态快照、长期方向锚点、在途项目清单、近期时间分配、历史决策模式、关系资产概览、本周余力判断（充裕 / 刚好 / 紧张 / 透支）。</p>
+    <p>决策时遵循一套固定协作流程：先做状态前置检查（透支就推迟 24 小时），再读决策参考包，然后让 AI 输出<b>红队模式</b>的正反理由——3 条支持、3 条反对，其中<b>至少 2 条必须是个性化的</b>，从历史数据、个人模式、近期状态里挖出来。</p>
+    <p><b>为什么设这条红线：</b>通用模板可以用，但不能成为建议的主体——没有个性化洞察的建议，只是把问题重新包装了一遍。决策后还要打分并记录偏差点，反馈回模型层，形成"决策 → 反馈 → 模型迭代"的闭环。AI 辅助人来决策，不是替代决策；最终判断永远在人。</p>
+  </section>
+
+  <section class="sec">
+    <h2>柒 · 演化哲学：为什么这套系统两年没死</h2>
+    <p>任何个人系统最大的敌人不是设计得不好，而是<b>维护不动了</b>。系统的复杂度增长速度，永远快于录入习惯能跟上的速度。让系统活下来的，是三条演化原则。</p>
+    <ul>
+      <li><b>实验性迭代，快速试错。</b>想到可以数据化就尝试一下，不行就淘汰。很多场景是实验性质的，只有验证出价值才留下。</li>
+      <li><b>持续性数据积累 &gt; 框架完美。</b>不要频繁调整框架——框架稳定，数据才会长成可看的轨迹。至少以年度为单位才考虑大改。</li>
+      <li><b>敢删比敢建更稀缺。</b>删过 34 个板块、删过吸烟记录表、砍过时间简报层。判断标准是"记录可行性 + 有没有下游消费"，不是"想法好不好"。</li>
+    </ul>
+    <p>冗余是演化的正常过程：有些表一开始觉得有用，后来发现跟其他表重复，就慢慢不用了；历史遗留问题也接受——不是所有问题都要解决。系统是活的，它自己会修剪。</p>
+  </section>
+
+  <section class="sec">
+    <h2>捌 · 起步三问：给想复制这套方法的人</h2>
+    <p>如果这套方法论对你有一点启发，别急着搭表。动手前先过三问——这也是我如果重来一遍，会先问自己的三个问题：</p>
+    <ol>
+      <li><b>我要回答自己什么问题？</b>想理解时间？追踪能量？看清关系？先有真问题，才有值得记的数据。</li>
+      <li><b>哪几个场景我能做到高频记录？</b>找一个每天都会发生的动作（记一笔、打个勾、写一句），把记录埋进这个动作里。做不到高频的场景，一开始就不要建表。</li>
+      <li><b>数据最终给谁消费？</b>是进复盘、进模型、还是进决策？没有下游消费者的表，三个月后就会被你遗忘——不如一开始就不建。</li>
+    </ol>
+    <p>三问过完，你的系统可能只需要三张表。三张连续三年的表，胜过三十张断断续续的表。</p>
+  </section>
+
+  <div class="quote-block">
+    <p>用数据理解自己，用复盘迭代自己——<br>这不是一个工具，是一个做了两年的实验报告。</p>
+    <small>— 个人数据系统方法论 · 总纲</small>
+  </div>
+
+  <div class="back-row"><a href="index.html#systems">← 返回系统与方法</a></div>
+</main>
+
+<footer>
+  <b>liudeva</b> · Data Cook, Field Observer, Meaning Surfer<br>
+  © 2026 · 一片仍在生长的生命田野
+</footer>
+
+</body>
+</html>
