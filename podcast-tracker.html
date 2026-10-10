@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>播客对谈追踪 — liudeva</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='26' cy='26' r='10' fill='%23e59b53'/%3E%3Ccircle cx='42' cy='40' r='14' fill='none' stroke='%23df6b4a' stroke-width='5'/%3E%3Cpath d='M8 56 L28 56 L20 44 Z' fill='%2393b8bf'/%3E%3C/svg%3E">
+<link href="https://miaoda.feishu.cn/fonts/css2?family=Noto+Sans+SC:wght@300;400;500;700&family=Noto+Serif+SC:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg-deep:#10132b;
+  --bg-mid:#151a38;
+  --bg-soft:#1c2245;
+  --ink:#f1ece2;
+  --ink-dim:#a9b1cb;
+  --ink-faint:#687095;
+  --amber:#e59b53;
+  --ember:#df6b4a;
+  --teal:#93b8bf;
+  --line:rgba(241,236,226,.14);
+  --serif:'Noto Serif SC','Songti SC','SimSun',serif;
+  --sans:'Noto Sans SC','PingFang SC','Microsoft YaHei','Helvetica Neue',Arial,sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg-deep);color:var(--ink);font-family:var(--sans);font-weight:300;line-height:1.9;-webkit-font-smoothing:antialiased}
+a{color:var(--teal);text-decoration:none;transition:color .25s}
+a:hover{color:var(--amber)}
+::selection{background:var(--amber);color:#10132b}
+
+/* ===== header ===== */
+.site-header{position:fixed;top:0;left:0;right:0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:22px 5vw;background:rgba(16,19,43,.82);backdrop-filter:blur(10px)}
+.brand{font-size:15px;letter-spacing:.22em;font-weight:500;color:var(--ink)}
+.brand span{color:var(--amber)}
+.nav{font-size:13px;letter-spacing:.12em}
+.nav a{color:var(--ink-dim)}
+.nav a:hover{color:var(--ink)}
+
+/* ===== article ===== */
+.article{max-width:720px;margin:0 auto;padding:150px 6vw 60px}
+.art-kicker{font-size:12px;letter-spacing:.4em;color:var(--amber)}
+.art-title{font-family:var(--serif);font-size:clamp(1.7rem,4.2vw,2.6rem);line-height:1.5;font-weight:600;letter-spacing:.04em;margin:20px 0 22px}
+.art-lead{font-family:var(--serif);font-size:clamp(1.05rem,2.2vw,1.25rem);color:var(--ink-dim);line-height:2;max-width:620px}
+.art-meta{display:flex;flex-wrap:wrap;gap:12px 28px;margin-top:26px;padding-top:20px;border-top:1px solid var(--line);font-size:12px;letter-spacing:.14em;color:var(--ink-faint)}
+.art-meta b{color:var(--teal);font-weight:400}
+.sec{margin-top:64px}
+.sec h2{font-family:var(--serif);font-size:clamp(1.3rem,3vw,1.7rem);font-weight:600;letter-spacing:.06em;margin-bottom:18px;color:var(--ink)}
+.sec h2::before{content:'';display:inline-block;width:22px;height:1px;background:var(--amber);margin-right:14px;vertical-align:middle}
+.sec p{color:var(--ink-dim);margin-bottom:16px}
+.sec p b{color:var(--ink);font-weight:500}
+.sec ul{list-style:none;margin:0 0 18px}
+.sec li{position:relative;padding-left:22px;color:var(--ink-dim);margin-bottom:12px}
+.sec li::before{content:'';position:absolute;left:2px;top:.85em;width:7px;height:1px;background:var(--amber)}
+.sec li b{color:var(--ink);font-weight:500}
+.art-fig{margin:34px 0;text-align:center}
+.art-fig img{max-width:100%;border:1px solid var(--line);display:block;margin:0 auto}
+.art-fig figcaption{font-size:12px;color:var(--ink-faint);letter-spacing:.2em;margin-top:14px}
+.quote-block{margin-top:76px;padding:38px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);text-align:center}
+.quote-block p{font-family:var(--serif);font-size:clamp(1.1rem,2.4vw,1.35rem);line-height:2;color:var(--ink);letter-spacing:.04em}
+.quote-block small{display:block;margin-top:16px;color:var(--amber);letter-spacing:.3em;font-size:12px}
+.back-row{margin:80px 0 0;text-align:center}
+.back-row a{font-size:13px;letter-spacing:.3em;color:var(--ink-dim)}
+.back-row a:hover{color:var(--amber)}
+
+/* ===== footer ===== */
+footer{padding:64px 5vw 56px;text-align:center;font-size:13px;color:var(--ink-faint);letter-spacing:.1em;line-height:2.2;border-top:1px solid var(--line)}
+footer b{color:var(--ink-dim);font-weight:400}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <a class="brand" href="index.html">liudeva<span>.</span></a>
+  <nav class="nav"><a href="index.html#lab">← 返回试验田</a></nav>
+</header>
+
+<main class="article">
+  <div class="art-kicker">FIELD LAB · PERSONAL TOOL</div>
+  <h1 class="art-title">播客对谈追踪</h1>
+  <p class="art-lead">追踪关注对象以播客对谈为主的长期观点表达——一条三模块自动化闭环：每日检索 → 自动转写 → 卡片推送，让「这个人最近在想什么」不再靠刷到才算数。</p>
+  <div class="art-meta">
+    <span>时间 · <b>2026.10</b></span>
+    <span>关键词 · <b>自动化</b> <b>内容追踪</b> <b>反馈闭环</b></span>
+  </div>
+
+  <section class="sec">
+    <h2>我在搭什么</h2>
+    <p>一个人真正的长期观点，常常散落在各期播客对谈里。它们没有被整理、没有被推送，甚至听过就忘——想持续知道一个人在想什么，只能靠手动搜、手动听、手动记，坚持不了几天。</p>
+    <p>这套系统把整件事拆成一条流水线：定时检索关注对象的对谈节目、核实发布日期后入库；转写专员把音频转成保留原话的文字版；转写完成即推送消息卡片，卡片上的按钮把「感兴趣 / 读完」反馈直接写回表内。人只做判断，剩下的交给系统。</p>
+  </section>
+
+  <section class="sec">
+    <h2>三个模块，一条流水线</h2>
+    <p><b>模块一 · 检索入库（每日 02:00）</b>：按关注清单逐人检索——小宇宙、Apple Podcasts、喜马拉雅、B 站视频访谈、通用搜索，多路找「人物 + 播客 / 对谈 / 嘉宾 + 日期窗口」。命中后逐条打开单集页，以页面上的实际发布日期为准写入对谈表，不凭搜索结果的时间戳入库；当天无命中就把窗口拉长到近 30 天补检索。</p>
+    <p><b>模块二 · 转写专员（每日 05:00）</b>：aily 工作伙伴只做一件事——把待转写的播客链接变成保留原话的文字版云文档。解析单集页 og:audio 取音频直链（小宇宙是 302 重定向，必须跟随，否则拿到 0 字节文件）→ 上传飞书妙记转写 → 按编辑规则生成文字版 → 回填链接。单次最多处理 3 条、串行执行、完成一条立即回填。</p>
+    <p><b>模块三 · 卡片推送（转写完成即推）</b>：多维表 Workflow 在「转写文字」回填后推送消息卡片，五字段标题加粗：关注对象 / 对谈背景 / 主要议题 / 核心观点 / 值得关注。卡片带三个按钮——标记感兴趣、标记读完、打开文字版，点击即写回表内，不离开聊天就完成一轮筛选。</p>
+    <figure class="art-fig">
+      <img src="https://media.doubao.com/space/api/box/stream/download/all_by_mount_point/NIf0bK4i5o8BWOxs78jcKi9Bnxd" alt="三模块闭环：检索入库→转写专员→卡片推送">
+      <figcaption>三模块闭环：检索入库 → 转写专员 → 卡片推送，反馈写回影响明天的检索重点</figcaption>
+    </figure>
+  </section>
+
+  <section class="sec">
+    <h2>三个设计细节</h2>
+    <p><b>断点续传。</b>每条转写完成立即回填链接，任务中断后下次从剩余记录继续，不重跑、不丢单——长任务的可用性不赌一次跑完。</p>
+    <p><b>纠错词库。</b>转写里的错词沉淀为一张跨场景纠错权威源表：错误写法 → 正确写法，带类型、置信度、状态、适用场景。转写、纪要、字幕、文稿共用同一份词库，高置信词条强制替换——错误修一次，处处生效。</p>
+    <p><b>串行限流。</b>单次最多 3 条、串行处理，避开妙记并发与配额限制；失败不阻塞，记录原因次日重试，配额始终可控。</p>
+  </section>
+
+  <section class="sec">
+    <h2>质量底线：转写保留原话</h2>
+    <p>转写是这套系统里最容易被「聪明地毁掉」的一环，所以规则写死：保留原话是第一优先级，不概括、不缩写、不改写说话人的用词和语气；只修高置信度错别字、口吃重复与断句标点；听不清处保留原样并标注，绝不脑补。正文不加时间戳、段落之间真正空一行、姓名标注只在换人时出现一次且加粗。</p>
+  </section>
+
+  <section class="sec">
+    <h2>经验沉淀</h2>
+    <p><b>做对的：</b>把「追踪一个人」拆成检索、转写、反馈三个独立模块，各自有明确边界和回填链路，任何一环失败都不拖垮整条线；反馈闭环让系统不只是「收集」，而是「越用越知道你要什么」。</p>
+    <p><b>踩的坑：</b>302 重定向不跟随会拿到 0 字节；妙记转写有并发与配额限制，必须串行限流；按钮跳转要用链接字段的链接属性引用，直接取链接值类型会报错。</p>
+  </section>
+
+  <div class="quote-block">
+    <p>你关注的人在想什么，不该靠缘分听见。</p>
+    <small>— 播客对谈追踪 · 设计原则</small>
+  </div>
+
+  <div class="back-row"><a href="index.html#lab">← 返回试验田</a></div>
+</main>
+
+<footer>
+  <b>liudeva</b> · Data Cook, Field Observer, Meaning Surfer<br>
+  © 2026 · 一片仍在生长的生命田野<br>  <span id="busuanzi_container_site_pv" class="stat-line">浏览人数 <span id="busuanzi_value_site_uv"></span> 人 · 浏览次数 <span id="busuanzi_value_site_pv"></span> 次</span></footer>
+
+<script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+</body>
+</html>
