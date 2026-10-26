@@ -1,0 +1,1024 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>我与世界的关系 · 形态星图</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 2l2.4 7.2L22 12l-7.6 2.8L12 22l-2.4-7.2L2 12l7.6-2.8z' fill='%23e0b368'/%3E%3C/svg%3E">
+<style>
+:root{
+--bg:#161b29;
+--panel:#1f2534;
+--panel2:#272e42;
+--panel3:#2f3850;
+--line:#39415a;
+--line2:#454e6b;
+--text:#eae7df;
+--muted:#99a0b6;
+--faint:#6b7288;
+--gold:#e0b368;
+--gold2:#f3cf8f;
+--star:#f4ecd8;
+--ok:#7fb49a;
+--danger:#d97b6c;
+--r:14px;
+--shadow:0 10px 30px rgba(0,0,0,.35);
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;line-height:1.6}
+body{padding-bottom:40px}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+input,select,textarea{font-family:inherit;color:inherit}
+::selection{background:rgba(224,179,104,.35)}
+/* ===== 顶栏 ===== */
+.topbar{
+position:sticky;top:0;z-index:50;
+background:linear-gradient(180deg,var(--bg) 70%,transparent);
+backdrop-filter:blur(8px);
+padding:14px 16px 10px;
+border-bottom:1px solid var(--line);
+}
+.brand{display:flex;align-items:center;gap:9px;margin-bottom:10px}
+.brand .icon{width:26px;height:26px;flex:none}
+.brand h1{font-family:"Songti SC","STSong",serif;font-size:19px;font-weight:700;letter-spacing:.5px;color:var(--text)}
+.brand .sub{font-size:11px;color:var(--faint);margin-top:1px}
+.top-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.mode-switch{display:flex;background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:3px}
+.mode-switch button{font-size:13px;padding:6px 16px;border-radius:999px;color:var(--muted);transition:all .18s}
+.mode-switch button.on{background:var(--gold);color:#231a0c;font-weight:600}
+.tabs{display:flex;gap:2px;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:3px;margin-left:auto}
+.tabs button{font-size:13px;padding:7px 12px;border-radius:8px;color:var(--muted)}
+.tabs button.on{background:var(--panel3);color:var(--text);font-weight:600}
+.tabs button .dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--gold);margin-left:5px;vertical-align:1px}
+.action-btn{font-size:13px;padding:7px 13px;border-radius:9px;border:1px solid var(--line);color:var(--muted);background:var(--panel)}
+.action-btn:hover{color:var(--text);border-color:var(--line2)}
+.action-btn.primary{background:var(--gold);color:#231a0c;border:none;font-weight:600}
+.action-btn.primary:hover{background:var(--gold2)}
+.action-btn.ghost{border-style:dashed;color:var(--faint)}
+.action-btn[disabled]{opacity:.4;cursor:not-allowed}
+/* ===== 布局 ===== */
+.stage{max-width:1200px;margin:0 auto;padding:14px 16px}
+.grid{display:grid;grid-template-columns:1fr;gap:14px}
+@media(min-width:820px){.grid{grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:18px}}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:16px}
+.card h2{font-size:14px;font-weight:600;color:var(--text);margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.card h2 .tag{font-size:11px;color:var(--faint);font-weight:400}
+.hint{font-size:12px;color:var(--muted);line-height:1.7}
+/* ===== 光谱列表 ===== */
+.dim{border:1px solid var(--line);border-radius:12px;padding:10px 12px 12px;margin-bottom:10px;background:var(--panel2);transition:border-color .2s}
+.dim.active{border-color:var(--gold)}
+.dim-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px;cursor:pointer}
+.dim-name{font-size:13px;font-weight:600;color:var(--text)}
+.dim-count{font-size:11px;color:var(--faint)}
+.dim-poles{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-bottom:4px}
+.dim-poles .p-right{text-align:right}
+.track{position:relative;height:26px;border-radius:999px;background:linear-gradient(90deg,#232a3d,#1c2230);border:1px solid var(--line)}
+.track .fill{position:absolute;top:0;bottom:0;left:50%;width:0;background:rgba(224,179,104,.18);border-radius:999px;pointer-events:none;transition:left .1s,width .1s}
+.track input[type=range]{position:absolute;inset:0;width:100%;height:100%;opacity:0;margin:0;cursor:pointer}
+.track .knob{position:absolute;top:50%;width:16px;height:16px;border-radius:50%;background:var(--gold);border:2px solid #fff2d8;transform:translate(-50%,-50%);box-shadow:0 0 10px rgba(224,179,104,.8);pointer-events:none;transition:left .08s}
+.track .knob .glow{position:absolute;inset:-5px;border-radius:50%;border:1px solid rgba(224,179,104,.4);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:.6;transform:scale(1)}50%{opacity:0;transform:scale(1.25)}}
+/* ===== 星图 ===== */
+.sky-wrap{position:relative;display:flex;align-items:center;justify-content:center}
+.sky-wrap svg{width:100%;height:auto;display:block;touch-action:none;user-select:none;cursor:crosshair}
+.sky-wrap .star-pt{cursor:grab}
+.sky-legend{display:flex;justify-content:center;gap:14px;flex-wrap:wrap;margin-top:8px;font-size:11px;color:var(--muted)}
+.sky-legend .li{display:flex;align-items:center;gap:5px}
+.sky-legend .dot{width:8px;height:8px;border-radius:50%}
+.sky-note{text-align:center;font-size:11px;color:var(--faint);margin-top:6px;line-height:1.6}
+/* ===== 描述 ===== */
+.verdict{margin-top:14px;background:linear-gradient(180deg,var(--panel3),var(--panel2));border:1px solid var(--line2);border-radius:12px;padding:14px}
+.verdict .shape-name{font-family:"Songti SC","STSong",serif;font-size:17px;font-weight:700;color:var(--gold);margin-bottom:4px}
+.verdict .shape-img{font-size:12px;color:var(--muted);margin-bottom:10px}
+.verdict .body{font-size:13.5px;color:var(--text);line-height:1.85}
+.verdict .body p{margin-bottom:8px}
+.verdict .body p:last-child{margin-bottom:0}
+.verdict .body b{color:var(--gold2);font-weight:600}
+.verdict .tension{margin-top:10px;padding-top:10px;border-top:1px dashed var(--line2);font-size:12.5px;color:var(--muted)}
+.verdict .ref{margin-top:10px;font-size:12.5px;color:var(--muted)}
+.verdict .ref b{color:var(--text)}
+/* ===== 操作条 ===== */
+.ops{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;align-items:center}
+.ops .spacer{flex:1}
+/* ===== 视图面板 ===== */
+.view{display:none}
+.view.on{display:block}
+.section-title{font-size:15px;font-weight:700;margin:18px 0 10px;display:flex;align-items:center;gap:8px}
+.section-title .cnt{font-size:11px;color:var(--faint);font-weight:400}
+/* 参考库 */
+.lib-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px}
+.shape-card{background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:12px;cursor:pointer;transition:transform .15s,border-color .2s;position:relative}
+.shape-card:hover{transform:translateY(-2px);border-color:var(--gold)}
+.shape-card .nm{font-family:"Songti SC","STSong",serif;font-size:16px;font-weight:700;color:var(--gold)}
+.shape-card .im{font-size:12px;color:var(--muted);margin:2px 0 8px}
+.shape-card svg{width:100%;height:110px}
+.shape-card .cv{font-size:11px;color:var(--faint);margin-top:6px}
+.shape-card .use{position:absolute;top:10px;right:10px;font-size:11px;padding:5px 10px;border-radius:999px;background:var(--gold);color:#231a0c;font-weight:600;opacity:0;transition:opacity .15s}
+.shape-card:hover .use{opacity:1}
+.shape-card.locked{opacity:.55}
+.shape-card.locked .use{display:none}
+/* 历史 */
+.his-list{display:flex;flex-direction:column;gap:10px}
+.his-item{display:flex;align-items:center;gap:12px;background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:12px}
+.his-item .mini{width:74px;height:74px;flex:none}
+.his-item .meta{flex:1;min-width:0}
+.his-item .dt{font-size:12px;color:var(--muted)}
+.his-item .nm{font-size:14px;font-weight:600;margin:2px 0}
+.his-item .note{font-size:12px;color:var(--faint);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.his-item .ops-b{display:flex;gap:6px}
+.mini-btn{font-size:12px;padding:5px 10px;border-radius:8px;border:1px solid var(--line);color:var(--muted)}
+.mini-btn:hover{color:var(--text);border-color:var(--line2)}
+.mini-btn.primary{background:var(--gold);color:#231a0c;border:none}
+/* 对比 */
+.cmp-picks{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px}
+.cmp-pick{flex:1;min-width:200px;background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:12px}
+.cmp-pick label{font-size:12px;color:var(--muted);display:block;margin-bottom:6px}
+.cmp-pick select{width:100%;font-size:13px;background:var(--panel3);border:1px solid var(--line);border-radius:8px;padding:9px 8px;outline:none}
+.cmp-diff{background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:12px;font-size:13px;color:var(--muted);line-height:1.8;margin-top:12px}
+.cmp-diff b{color:var(--text)}
+/* 模态 */
+.modal-mask{position:fixed;inset:0;background:rgba(9,12,20,.7);backdrop-filter:blur(4px);z-index:100;display:none;align-items:center;justify-content:center;padding:20px}
+.modal-mask.on{display:flex}
+.modal{background:var(--panel);border:1px solid var(--line2);border-radius:16px;padding:20px;width:100%;max-width:440px;box-shadow:var(--shadow)}
+.modal h3{font-size:16px;margin-bottom:12px}
+.modal label{display:block;font-size:12px;color:var(--muted);margin:10px 0 5px}
+.modal input[type=text],.modal textarea{width:100%;background:var(--panel3);border:1px solid var(--line);border-radius:9px;padding:9px 11px;font-size:14px;outline:none}
+.modal input:focus,.modal textarea:focus{border-color:var(--gold)}
+.modal textarea{min-height:64px;resize:vertical;font-size:13px}
+.modal .row{display:flex;justify-content:flex-end;gap:8px;margin-top:16px}
+.modal .row button{font-size:13px;padding:8px 16px;border-radius:9px}
+/* AI 报告 */
+.rep-picks{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:14px}
+.rep-pick{background:var(--panel2);border:1px solid var(--line);border-radius:11px;padding:11px;cursor:pointer;transition:border-color .15s,transform .15s;text-align:left}
+.rep-pick:hover{transform:translateY(-1px)}
+.rep-pick.on{border-color:var(--gold);background:var(--panel3)}
+.rep-pick .pk-name{font-family:"Songti SC","STSong",serif;font-size:16px;font-weight:700;color:var(--gold)}
+.rep-pick .pk-img{font-size:11px;color:var(--muted);margin:2px 0 6px}
+.rep-pick .pk-why{font-size:12px;color:var(--muted);line-height:1.6}
+.rep-body{background:var(--panel2);border:1px solid var(--line);border-radius:11px;padding:14px;font-size:13.5px;line-height:1.9;color:var(--text);max-height:44vh;overflow-y:auto}
+.rep-body p{margin-bottom:10px}
+.rep-body p:last-child{margin-bottom:0}
+.rep-body b{color:var(--gold2)}
+.rep-body .pk-tag{display:inline-block;font-size:11px;color:#231a0c;background:var(--gold);border-radius:999px;padding:1px 8px;margin-right:6px;vertical-align:1px}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--panel3);border:1px solid var(--line2);color:var(--text);font-size:13px;padding:10px 18px;border-radius:999px;z-index:200;opacity:0;transition:all .3s;box-shadow:var(--shadow);white-space:nowrap;max-width:90vw;overflow:hidden;text-overflow:ellipsis}
+.toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+.empty{text-align:center;padding:40px 16px;color:var(--faint);font-size:13px;line-height:2}
+.empty .big{font-size:30px;color:var(--line2);margin-bottom:8px}
+@media(max-width:820px){
+.top-actions{justify-content:space-between}
+.tabs{margin-left:0;width:100%;justify-content:stretch;margin-top:8px}
+.tabs button{flex:1}
+.brand h1{font-size:17px}
+.stage{padding:10px 12px}
+.card{padding:13px}
+}
+@media(prefers-reduced-motion:reduce){
+.track .knob .glow{animation:none}
+*{transition:none!important}
+}
+</style>
+</head>
+<body>
+<!-- ===== 顶栏 ===== -->
+<header class="topbar">
+<div class="brand">
+<svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.4 7.2L22 12l-7.6 2.8L12 22l-2.4-7.2L2 12l7.6-2.8z" fill="#e0b368"/><circle cx="12" cy="12" r="2.2" fill="#f4ecd8"/></svg>
+<div>
+<h1>我与世界的关系 · 形态星图</h1>
+<div class="sub">11 个维度 · 拖出你的星座 · 存档对比</div>
+</div>
+</div>
+<div class="top-actions">
+<div class="mode-switch" id="modeSwitch">
+<button data-mode="free" class="on">自由拖拽</button>
+<button data-mode="ref">参考形态</button>
+</div>
+<div class="tabs" id="mainTabs">
+<button data-view="edit" class="on">编绘</button>
+<button data-view="history">我的星史<span class="dot" id="hisDot" style="display:none"></span></button>
+<button data-view="compare">对比</button>
+</div>
+</div>
+</header>
+<main class="stage">
+<!-- ===== 视图：编绘 ===== -->
+<section class="view on" id="view-edit">
+<div class="grid">
+<!-- 左：维度光谱 -->
+<div class="card" id="dimPanel">
+<h2>11 个维度光谱 <span class="tag">中心＝左极 · 外缘＝右极 · 可拖拽</span></h2>
+<div class="hint" style="margin-bottom:12px">每个维度是一条轴：拖动点位，星图会实时连出你的星座。点越靠左，你越接近这一端；越靠右，越接近另一端。</div>
+<div id="dimList"></div>
+</div>
+<!-- 右：星图 + 描述 -->
+<div class="card" style="align-self:start">
+<h2>你的形态星座</h2>
+<div class="sky-wrap">
+<svg id="sky" viewBox="0 0 460 460" role="img" aria-label="关系形态星图"></svg>
+</div>
+<div class="sky-legend">
+<span class="li"><span class="dot" style="background:#e0b368"></span>你的星点</span>
+<span class="li"><span class="dot" style="background:#f4ecd8"></span>连线＝你的形态</span>
+<span class="li"><span class="dot" style="background:#6fb8b0"></span>参考形态</span>
+</div>
+<div class="sky-note">记忆提示：记住星座形状，比记住 11 个维度容易。保存时给它起个名字。</div>
+<div class="verdict" id="verdict"></div>
+<div class="ops">
+<button class="action-btn primary" id="btnReport">生成 AI 报告</button>
+<button class="action-btn" id="btnSave">保存本次星图</button>
+<button class="action-btn" id="btnReset">重置</button>
+<span class="spacer"></span>
+<button class="action-btn ghost" id="btnExport">导出 JSON</button>
+<button class="action-btn ghost" id="btnImport">导入</button>
+</div>
+</div>
+</div>
+</section>
+<!-- ===== 视图：参考形态 ===== -->
+<section class="view" id="view-ref">
+<div class="card">
+<h2>参考形态库 <span class="tag">点击卡片套用到星图，或进入自由模式自己拖</span></h2>
+<div class="hint" style="margin-bottom:14px">这些星座来自我们聊过的两种原型与它们之间的中间态。套用后仍可在维度列表微调，再保存成你自己的快照。</div>
+<div class="lib-grid" id="libGrid"></div>
+</div>
+</section>
+<!-- ===== 视图：我的星史 ===== -->
+<section class="view" id="view-history">
+<div class="section-title">我的星史<span class="cnt" id="hisCnt"></span></div>
+<div class="card">
+<div class="hint" style="margin-bottom:12px">同一页"我与世界的关系"在不同时间的形状，回放它，看你的星座怎么变。</div>
+<div id="hisList"></div>
+<div class="empty" id="hisEmpty" style="display:none">
+<div class="big">尚未有记录</div>
+去编绘页拖出第一个星座，保存后它会出现在这里。<br>也可以先点「参考形态」套一个看看。
+</div>
+</div>
+</section>
+<!-- ===== 视图：对比 ===== -->
+<section class="view" id="view-compare">
+<div class="card">
+<h2>形态对比</h2>
+<div class="hint" style="margin-bottom:12px">选两个快照叠加看差异——可以是同一个你的两个时间，也可以是两个不同的人。</div>
+<div class="cmp-picks">
+<div class="cmp-pick">
+<label>快照 A</label>
+<select id="cmpA"></select>
+</div>
+<div class="cmp-pick">
+<label>快照 B</label>
+<select id="cmpB"></select>
+</div>
+</div>
+<div class="sky-wrap" style="max-width:460px;margin:0 auto">
+<svg id="skyCmp" viewBox="0 0 460 460" role="img" aria-label="对比星图"></svg>
+</div>
+<div class="sky-legend">
+<span class="li"><span class="dot" style="background:#e0b368"></span>快照 A</span>
+<span class="li"><span class="dot" style="background:#6fb8b0"></span>快照 B</span>
+</div>
+<div class="cmp-diff" id="cmpDiff"></div>
+</div>
+</section>
+</main>
+<!-- ===== 保存模态 ===== -->
+<div class="modal-mask" id="saveMask">
+<div class="modal">
+<h3>保存这次的关系形态</h3>
+<label>星座名（帮自己记住这个形状）</label>
+<input type="text" id="saveName" maxlength="20" placeholder="例如：根须座 · 田野的冬天">
+<label>一句话备注（可选）</label>
+<textarea id="saveNote" maxlength="140" placeholder="此刻你与世界的关系，有什么想留的？"></textarea>
+<div class="row">
+<button class="action-btn" id="btnCancelSave">取消</button>
+<button class="action-btn primary" id="btnConfirmSave">保存</button>
+</div>
+</div>
+</div>
+<!-- ===== AI 报告模态 ===== -->
+<div class="modal-mask" id="reportMask">
+<div class="modal" style="max-width:580px">
+<h3>你的关系形态 · AI 报告</h3>
+<div class="rep-picks" id="repPicks"></div>
+<div class="rep-body" id="repBody"></div>
+<div class="row">
+<button class="action-btn" id="btnRepClose">关闭</button>
+<button class="action-btn" id="btnRepCopy">复制全文</button>
+<button class="action-btn primary" id="btnRepSave">以所选名字保存</button>
+</div>
+</div>
+</div>
+<input type="file" id="fileImport" accept=".json,application/json" style="display:none">
+<div class="toast" id="toast"></div>
+<script>
+/* ===================== 数据模型 ===================== */
+const DIMS = [
+{id:'loop',   name:'回路强度', left:'强反馈 · 碰撞验证', right:'无反馈 · 抛掷随缘'},
+{id:'name',   name:'署名',     left:'在场 · 名字认领',   right:'匿名 · 消失'},
+{id:'span',   name:'持续性',   left:'长期经营',          right:'一次性抛掷'},
+{id:'target', name:'对象',     left:'特定的人',          right:'未知 / 无对象'},
+{id:'dir',    name:'指向',     left:'向内修炼 · 冲刷自己', right:'向外验证 · 滚一圈拿反馈'},
+{id:'stance', name:'投入姿态', left:'玩家 · 下场解题',   right:'观察者 · 在场记录'},
+{id:'util',   name:'功能取向', left:'有用 · 资源交换',   right:'无用 · 纯粹联结'},
+{id:'expr',   name:'显化程度', left:'内化 · 脑中闭环',   right:'外化 · 写出来做出来'},
+{id:'venue',  name:'场域开合', left:'私 · 闭门纯粹',     right:'公 · 被世界看见'},
+{id:'dens',   name:'密度',     left:'深而少 · 泡一个月', right:'广而杂 · 日读一本'},
+{id:'chance', name:'随机性',   left:'计划 · 筛选布局',   right:'机缘 · 接受变异'}
+];
+const REFS = [
+{id:'connector', name:'连通者', img:'天桥座', color:'#6fb8b0',
+desc:'把世界拉近，让它回应你。习惯碰撞、验证、在回声中校准自己。',
+coords:{loop:12,name:18,span:10,target:15,dir:72,stance:22,util:42,expr:78,venue:28,dens:30,chance:22}},
+{id:'thrower', name:'抛掷者', img:'流星座', color:'#d97b6c',
+desc:'灵感到了就丢出去，像顽童往水里扔石子，涟漪随缘。不追反馈，也成立。',
+coords:{loop:94,name:88,span:96,target:90,dir:70,stance:58,util:88,expr:40,venue:72,dens:68,chance:92}},
+{id:'field', name:'田野观察者', img:'根须座', color:'#7fb49a',
+desc:'扎根、在场、记录。不急着干预世界，先把它看清，把自己作为方法。',
+coords:{loop:58,name:24,span:18,target:42,dir:28,stance:84,util:78,expr:20,venue:46,dens:24,chance:28}},
+{id:'both', name:'双栖者', img:'太极座', color:'#9a8cc7',
+desc:'在两端之间游走，两边都有家，也两边都不完全属于。平衡是你的生存姿态。',
+coords:{loop:52,name:48,span:50,target:50,dir:52,stance:50,util:52,expr:48,venue:50,dens:50,chance:50}},
+{id:'keeper', name:'守望者', img:'灯塔座', color:'#e0b368',
+desc:'安静地发自己的光，不追人、不解释。世界来不来，光都在。',
+coords:{loop:86,name:62,span:52,target:76,dir:76,stance:82,util:70,expr:64,venue:18,dens:28,chance:42}},
+{id:'player', name:'玩家', img:'骰子座', color:'#8fb3d9',
+desc:'把世界当游乐场，下场解题、开一局有限游戏。输了重来，赢了换关。',
+coords:{loop:14,name:32,span:30,target:36,dir:82,stance:10,util:48,expr:36,venue:62,dens:62,chance:58}}
+];
+/* ===================== 状态 ===================== */
+const STORE_KEY = 'world-relation-shapes-v1';
+let state = {
+mode: 'free',            // free | ref
+view: 'edit',            // edit | ref | history | compare
+coords: {},              // 当前 11 维坐标
+refId: null,             // 当前套用的参考形态
+profiles: [],            // 档案
+activeProfile: null,
+activeSnap: null         // 历史回放时载入的快照 id
+};
+let skyDirty = false;      // 星图拖拽标记
+/* ===================== 工具函数 ===================== */
+function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,7)}
+function nowStr(){const d=new Date();const p=n=>String(n).padStart(2,'0');
+return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate())+' '+p(d.getHours())+':'+p(d.getMinutes())}
+function dist(a,b){let s=0;for(const k of Object.keys(a)){const d=(a[k]||50)-(b[k]||50);s+=d*d}return Math.sqrt(s)}
+function nearestRefs(coords){return REFS.map(r=>({r,d:dist(coords,r.coords)})).sort((x,y)=>x.d-y.d)}
+/* ===================== 存储 ===================== */
+function loadStore(){
+try{const raw=localStorage.getItem(STORE_KEY);if(raw){const d=JSON.parse(raw);
+state.profiles=d.profiles||[];state.activeProfile=d.activeProfile||(state.profiles[0]&&state.profiles[0].id)||null}
+}catch(e){}
+if(!state.profiles.length){const p={id:uid(),name:'我自己',color:'#e0b368',snapshots:[]};
+state.profiles=[p];state.activeProfile=p.id}
+if(!state.profiles.find(p=>p.id===state.activeProfile))state.activeProfile=state.profiles[0].id;
+}
+function saveStore(){try{localStorage.setItem(STORE_KEY,JSON.stringify({profiles:state.profiles,activeProfile:state.activeProfile}))}catch(e){}}
+function activeProfile(){return state.profiles.find(p=>p.id===state.activeProfile)||state.profiles[0]}
+function allSnapshots(){const out=[];state.profiles.forEach(p=>p.snapshots.forEach(s=>out.push({p,s})));return out.sort((a,b)=>b.s.ts-a.s.ts)}
+/* ===================== 维度光谱列表 ===================== */
+function dimHtml(d,v){
+const pct=v;const knobLeft=(v/100*100)+'%';
+return '<div class="dim" id="dim-'+d.id+'" data-dim="'+d.id+'">'+
+'<div class="dim-head" data-act="focus" data-dim="'+d.id+'">'+
+'<span class="dim-name">'+d.name+'</span>'+
+'<span class="dim-count">'+v+'</span>'+
+'</div>'+
+'<div class="dim-poles"><span>'+d.left+'</span><span class="p-right">'+d.right+'</span></div>'+
+'<div class="track">'+
+'<div class="fill" style="'+(v<50?'left:auto;right:'+(50-v/2)+'%':'left:'+(v/2)+'%;right:auto')+';width:'+(50-v/2)+'%"></div>'+
+'<input type="range" min="0" max="100" step="1" value="'+v+'" aria-label="'+d.name+'" data-dim="'+d.id+'">'+
+'<div class="knob" style="left:'+knobLeft+'"><span class="glow"></span></div>'+
+'</div>'+
+'</div>';
+}
+function renderDims(){
+const el=document.getElementById('dimList');
+el.innerHTML=DIMS.map(d=>dimHtml(d,state.coords[d.id]||50)).join('');
+}
+function updateDimKnob(id,v){
+const row=document.getElementById('dim-'+id);if(!row)return;
+row.querySelector('.knob').style.left=(v/100*100)+'%';
+const f=row.querySelector('.fill');
+if(v<50){f.style.left='auto';f.style.right=(100-v)/2+'%';f.style.width=(50-v/2)+'%'}
+else{f.style.right='auto';f.style.left=(v/2)+'%';f.style.width=(50-v/2)+'%'}
+row.querySelector('.dim-count').textContent=v;
+}
+function highlightDim(id){
+document.querySelectorAll('.dim').forEach(d=>d.classList.remove('active'));
+if(id)document.getElementById('dim-'+id).classList.add('active');
+}
+/* ===================== 星图 ===================== */
+const SKY={W:460,H:460,CX:230,CY:230,R:168,LR:200,ANG:360/11};
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+const SHORT={
+loop:['强反馈','无反馈'],name:['在场','匿名'],span:['长期','抛掷'],target:['特定人','无对象'],
+dir:['向内','向外'],stance:['玩家','观察'],util:['有用','无用'],expr:['内化','外化'],
+venue:['私','公'],dens:['深而少','广而杂'],chance:['计划','机缘']
+};
+function axisUV(i){const a=(-90+i*SKY.ANG)*Math.PI/180;return {x:Math.cos(a),y:Math.sin(a)}}
+function coordsToPoint(v,i){
+const u=axisUV(i),t=v/50-1; // 0→左端(-1) 50→中心(0) 100→右端(1)
+return {x:SKY.CX+u.x*t*SKY.R, y:SKY.CY+u.y*t*SKY.R};
+}
+function polyPoints(c){return DIMS.map((d,i)=>coordsToPoint(c[d.id]||50,i))}
+function renderSky(){
+const svg=document.getElementById('sky');
+const refMode=state.mode==='ref'&&state.refId;
+const ref=refMode?REFS.find(r=>r.id===state.refId):null;
+const pts=polyPoints(state.coords);
+const P=pts.map(p=>p.x.toFixed(1)+','+p.y.toFixed(1)).join(' ');
+let inner='';
+// 背景辉光
+inner+='<defs>'+
+'<radialGradient id="bgGrad" cx="50%" cy="50%" r="60%">'+
+'<stop offset="0%" stop-color="#2a3150"/><stop offset="70%" stop-color="#1b2134"/><stop offset="100%" stop-color="#171c2c"/>'+
+'</radialGradient>'+
+'</defs>';
+inner+='<circle cx="230" cy="230" r="'+SKY.R+'" fill="url(#bgGrad)" stroke="#39415a" stroke-width="1"/>';
+inner+='<circle cx="230" cy="230" r="'+(SKY.R/2)+'" fill="none" stroke="#2a3145" stroke-width="1" stroke-dasharray="3 5"/>';
+inner+='<circle cx="230" cy="230" r="4" fill="#6b7288"/>';
+// 参考形态（底层）
+if(ref){
+const rp=ref.coords;
+const refPts=polyPoints(rp);
+const RP=refPts.map(p=>p.x.toFixed(1)+','+p.y.toFixed(1)).join(' ');
+inner+='<polygon points="'+RP+'" fill="'+ref.color+'" fill-opacity=".10" stroke="'+ref.color+'" stroke-width="1.5" stroke-dasharray="5 4"/>';
+}
+// 轴线 + 标签
+DIMS.forEach((d,i)=>{
+const u=axisUV(i);
+const x1=SKY.CX-u.x*SKY.R,y1=SKY.CY-u.y*SKY.R,x2=SKY.CX+u.x*SKY.R,y2=SKY.CY+u.y*SKY.R;
+const on=state.focusDim===d.id;
+inner+='<line x1="'+x1.toFixed(1)+'" y1="'+y1.toFixed(1)+'" x2="'+x2.toFixed(1)+'" y2="'+y2.toFixed(1)+'" '+
+'stroke="'+(on?'#e0b368':'#313a52')+'" stroke-width="'+(on?'2':'1')+'" opacity="'+(on?'.9':'.7')+'"/>';
+// 标签（短词，两端外侧；窄屏减半防重叠）
+const narrow=window.innerWidth<820;
+if(!narrow||i%2===0){
+const sh=SHORT[d.id]||['',''];
+inner+='<text x="'+(SKY.CX-u.x*SKY.LR).toFixed(1)+'" y="'+(SKY.CY-u.y*SKY.LR+3.5).toFixed(1)+'" text-anchor="middle" font-size="10.5" fill="#66708a" pointer-events="none">'+esc(sh[0])+'</text>';
+inner+='<text x="'+(SKY.CX+u.x*SKY.LR).toFixed(1)+'" y="'+(SKY.CY+u.y*SKY.LR+3.5).toFixed(1)+'" text-anchor="middle" font-size="10.5" fill="#66708a" pointer-events="none">'+esc(sh[1])+'</text>';
+}
+});
+// 当前多边形
+inner+='<polygon points="'+P+'" fill="#e0b368" fill-opacity=".13" stroke="#f3cf8f" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/>';
+// 星点
+pts.forEach((p,i)=>{
+inner+='<circle cx="'+p.x.toFixed(1)+'" cy="'+p.y.toFixed(1)+'" r="6" fill="#f4ecd8" stroke="#e0b368" stroke-width="2" data-i="'+i+'" class="star-pt"/>';
+});
+svg.innerHTML=inner;
+}
+/* 星图拖拽：指针→最近轴投影 */
+function bindSkyDrag(svg){
+const W=SKY.W,H=SKY.H;
+let active=-1;
+function posFrom(e){
+const rect=svg.getBoundingClientRect();
+const sx=(e.clientX-rect.left)/rect.width*W;
+const sy=(e.clientY-rect.top)/rect.height*H;
+return {x:sx-SKY.CX,y:sy-SKY.CY};
+}
+function nearestAxis(p){
+const ang=Math.atan2(p.y,p.x)*180/Math.PI;
+let best=-1,bd=1e9;
+DIMS.forEach((d,i)=>{const a=(-90+i*SKY.ANG)%360;let da=Math.abs(((ang-a)%360+540)%360-180);if(da<bd){bd=da;best=i}});
+return bd<=SKY.ANG/2+6?best:-1;
+}
+function project(i,p){
+const u=axisUV(i);
+const t=(p.x*u.x+p.y*u.y)/SKY.R;
+const clamped=Math.max(-1,Math.min(1,t));
+return Math.round((clamped+1)/2*100);
+}
+function onDown(e){
+if(state.mode==='ref'){ /* 参考模式下也允许微调，视为自由微调 */ }
+const p=posFrom(e);
+const i=nearestAxis(p);
+if(i>=0){active=i;state.focusDim=DIMS[i].id;highlightDim(state.focusDim);setVal(i,project(i,p));
+svg.setPointerCapture(e.pointerId);renderSky();}
+}
+function onMove(e){
+if(active<0)return;
+const p=posFrom(e);setVal(active,project(active,p));
+const pts=polyPoints(state.coords);
+const pt=pts[active];
+const c=svg.querySelector('circle[data-i="'+active+'"]');
+if(c){c.setAttribute('cx',pt.x.toFixed(1));c.setAttribute('cy',pt.y.toFixed(1))}
+const poly=svg.querySelector('polygon');let P=pts.map(p=>p.x.toFixed(1)+','+p.y.toFixed(1)).join(' ');
+if(poly&&poly.getAttribute('stroke')==='#f3cf8f')poly.setAttribute('points',P);
+renderVerdict();
+}
+function onUp(){if(active>=0){active=-1;state.focusDim=null;highlightDim(null);renderSky()}}
+svg.addEventListener('pointerdown',onDown);
+svg.addEventListener('pointermove',onMove);
+svg.addEventListener('pointerup',onUp);
+svg.addEventListener('pointercancel',onUp);
+}
+/* 设置某维坐标：滑块与星图联动 */
+function setVal(i,v){
+const d=DIMS[i];
+state.coords[d.id]=v;
+updateDimKnob(d.id,v);
+renderVerdict();
+}
+/* ===================== 视图与描述 ===================== */
+function renderVerdict(){
+const el=document.getElementById('verdict');
+const d=describe(state.coords);
+let html='<div class="shape-name">'+(state.refId?'':'未命名星座')+'</div>';
+if(state.refId){const r=REFS.find(x=>x.id===state.refId);html='<div class="shape-name">'+r.name+' · '+r.img+'</div><div class="shape-img">参考形态 · 可在下方微调</div>'}
+html+='<div class="body">'+d.body+'</div>';
+html+='<div class="tension">张力 · '+d.tension+'</div>';
+html+='<div class="ref">参照 · '+d.ref+'</div>';
+html+='<div class="ref" style="margin-top:6px">'+d.end+'</div>';
+el.innerHTML=html;
+}
+function renderAll(){
+renderDims();renderSky();renderVerdict();renderLib();renderHistory();renderCompare();updateHisDot();
+}
+/* ===================== 描述引擎（对话感） ===================== */
+const BAND=(v)=>v<38?'L':(v>62?'R':'M');
+const TXT={
+loop:{L:'你在关系里是接得住回应的：把它丢出去，就是要它弹回来，弹回来的声音帮你校准下一次。',
+M:'你对反馈既不追也不躲——有回应当然好，没有也能继续。',
+R:'你不指望世界回应你。丢出去就丢出去，涟漪有没有、溅到谁，你都接受。'},
+name:{L:'你愿意署名、认领自己的言行——在场，意味着你为它负责。',
+M:'你时而留下名字，时而隐去，看场合、也看心情。',
+R:'你更想消失——不被知道是谁，动作本身就够了。'},
+span:{L:'你是长期主义者：一个场、一段关系、一份耕耘，你愿意慢慢养。',
+M:'你的经营时长随对象而定，有的值得长跑，有的点到为止。',
+R:'你偏爱一次性：灵感到了就抛，不背长期包袱。'},
+target:{L:'你的动作有明确对象——特定的那些人，你为他们而在场。',
+M:'你的对象有时是具体的人，有时是恰好路过的人。',
+R:'你没有预设对象。石子落向水面，谁接住都行，没人接也行。'},
+dir:{L:'你更多把关系用在自己身上——读书、记录、冲刷神经元，养自己的内部。',
+M:'你一半时间向内修炼，一半时间向外验证。',
+R:'你习惯把思考滚进世界里，让生产力转一圈、拿回反馈。'},
+stance:{L:'你下场。解题、开一局、亲手把它玩起来——是玩家的姿态。',
+M:'你有时下场，有时退到一旁看，视局面而定。',
+R:'你在场而不下场：观察、记录、让事情自行展开。你更信任看清，而非干预。'},
+util:{L:'你倾向有用的联结——关系带着资源交换的实感。',
+M:'你既在意关系有没有用，也在意它够不够纯粹。',
+R:'你追求无用的联结——不为交换什么，纯粹因为气味相投、聊得来。'},
+expr:{L:'你的很多关系发生在脑内闭环——想清楚了，不一定要做出来。',
+M:'你一部分想法留在脑中，一部分落成文字、图、系统。',
+R:'你高度外化：写下来、画出来、做出来。白板是你的思想画布。'},
+venue:{L:'你偏好私密的场：闭门、纯粹，不为被看见。',
+M:'你在私密和公开之间切换，看你此刻想要什么。',
+R:'你不介意被世界看见——公开发声、留下痕迹，也是你与世界关系的一部分。'},
+dens:{L:'你深而少：一个主题泡一个月，几个人深耕到底。',
+M:'你有时深潜、有时广览，看手里的时间怎么分。',
+R:'你广而杂：日读一本、多方涉猎，宁可摊开也不错过。'},
+chance:{L:'你偏好计划：筛选、布局，世界按你的脚本走。',
+M:'你一面列计划，一面给机缘留了一道门缝。',
+R:'你欢迎机缘：随机变异是你的灵感来源，计划常常让位于偶然。'}
+};
+const DIM_CN={loop:'回路强度',name:'署名',span:'持续性',target:'对象',dir:'指向',stance:'投入姿态',util:'功能取向',expr:'显化程度',venue:'场域开合',dens:'密度',chance:'随机性'};
+function describe(coords,opts){
+opts=opts||{};
+const vals=DIMS.map(d=>coords[d.id]||50);
+const avg=vals.reduce((a,b)=>a+b,0)/vals.length;
+const sorted=DIMS.map(d=>({d,v:coords[d.id]||50})).sort((a,b)=>Math.abs((b.v||50)-50)-Math.abs((a.v||50)-50));
+const top=sorted.slice(0,3);
+// 总起
+let opening;
+if(avg<42)opening='你的星座整体向内收——大多数维度你靠向左极，站在在场、经营、计划这一侧。';
+else if(avg>58)opening='你的星座整体向外张——大多数维度你靠向右极，站在抛掷、匿名、机缘这一侧。';
+else opening='你的星座舒展在圆盘两侧，没有哪一边绝对占上风。';
+// 维度句（突出的详述，中间的合并）
+const detail=[],mid=[];
+top.forEach(t=>{
+if(Math.abs(t.v-50)>=22)detail.push('在「'+t.d.name+'」上，'+TXT[t.d.id][BAND(t.v)]);
+else mid.push('「'+t.d.name+'」');
+});
+const midLine=mid.length?'其余维度你大多停在中间附近，'+(mid.slice(0,2).join('、'))+(mid.length>2?'等':'')+'的姿态还没定死。':'';
+let body='<p>'+opening+'</p>';
+if(detail.length){body+='<p>最明显的是：</p>';detail.forEach(s=>{body+='<p>'+s+'</p>'})}
+if(midLine)body+='<p>'+midLine+'</p>';
+// 张力（只认偏离中心足够远的棱角）
+const edges=top.filter(t=>Math.abs(t.v-50)>=12);
+let tension;
+if(edges.length){
+tension='你形状上最尖的棱角在 '+edges.map(t=>'「'+t.d.name+'」（偏'+(t.v<50?'左极':'右极')+'）').join('、')+'——这些地方你的姿态最不含糊，也是你与他人的形状最不一样的地方。';
+}else{
+tension='你目前几乎停在中间态，棱角还没长出来——拖一拖维度，形状会告诉你你站在哪。';
+}
+// 参照
+const nr=nearestRefs(coords);
+const refA=nr[0].r,refB=nr[1].r;
+let ref;
+if(nr[0].d<22){
+ref='你和「'+refA.name+' · '+refA.img+'」几乎重合——你的形状和它是一个星座的。';
+}else{
+const diffDims=DIMS.map(d=>({d,df:Math.abs((coords[d.id]||50)-(refA.coords[d.id]||50))})).sort((a,b)=>b.df-a.df);
+const dd=diffDims[0].d;
+const dirTxt=(coords[dd.id]||50)<(refA.coords[dd.id]||50)?'更偏「'+dd.left+'」这一端':'更偏「'+dd.right+'」这一端';
+ref='你的形状最接近「'+refA.name+' · '+refA.img+'」，其次接近「'+refB.name+'」。和它相比，你在「'+dd.name+'」上'+dirTxt+'。';
+}
+// 收尾
+const end='这张星图是会变的。隔段时间再画一次，对比看看你的星座往哪儿移动了——那往往就是生活本身在移动。';
+return {
+opening, body, tension, ref, end,
+avg,
+top: top.map(t=>({id:t.d.id,name:t.d.name,val:t.v})),
+nearest: refA
+};
+}
+/* ===================== AI 报告引擎（本地生成：命名候选 + 叙述解读） ===================== */
+const avgOf=c=>DIMS.reduce((s,d)=>s+(c[d.id]||50),0)/DIMS.length;
+const spreadOf=c=>DIMS.reduce((s,d)=>s+Math.abs((c[d.id]||50)-50),0); // 总偏离
+const conflictScore=c=>{
+let n=0;
+const pairs=[['loop','chance'],['stance','expr'],['dir','util'],['venue','dens'],['span','chance']];
+pairs.forEach(([a,b])=>{
+const va=(c[a]||50)-50,vb=(c[b]||50)-50;
+if(Math.abs(va)>=18&&Math.abs(vb)>=18&&va*vb<0)n++;
+});
+return n*20;
+};
+const CANDIDATES=[
+{name:'根须座',img:'向下扎根 · 向内深耕',
+score:c=>(50-avgOf(c))*1.2+(50-(c.span||50))*0.6+(50-(c.dens||50))*0.6,
+why:'整体向内收、偏好长期深耕——像根系扎进土壤，不与浮土争风，慢慢把土养肥。'},
+{name:'流星座',img:'划过即走 · 涟漪随缘',
+score:c=>(avgOf(c)-50)*1.2+((c.loop||50)-50)*0.6+((c.target||50)-50)*0.5,
+why:'整体向外张，不追反馈、不预设对象——像流星划过夜空，涟漪有没有都不影响它划过。'},
+{name:'天桥座',img:'连接两岸 · 以回应校准',
+score:c=>(50-(c.loop||50))*0.8+((c.dir||50)-50)*0.8,
+why:'既要强反馈、又倾向向外验证——你在两岸之间架桥，用弹回来的声音校准自己。'},
+{name:'太极座',img:'两端之间 · 舒展平衡',
+score:c=>60-spreadOf(c),
+why:'你的形状舒展在两端之间，不把任何一极占死——平衡本身就是你的姿态。'},
+{name:'灯塔座',img:'安静发光 · 不追人',
+score:c=>((c.stance||50)-50)*0.7+(50-(c.venue||50))*0.7+(50-(c.dir||50))*0.4,
+why:'你观察多过下场、偏好私密的场——像灯塔，安静发光，不追人、不解释。'},
+{name:'骰子座',img:'下场开局 · 输赢随缘',
+score:c=>((c.chance||50)-50)*0.7+(50-(c.stance||50))*0.7+((c.dir||50)-50)*0.3,
+why:'你欢迎机缘、习惯下场解题——像掷骰子的人，开局就要玩，结果随缘。'},
+{name:'棱镜座',img:'把内在折射出来',
+score:c=>((c.expr||50)-50)*0.8+((c.dir||50)-50)*0.6,
+why:'你高度外化、倾向向外验证——像棱镜，把内在的光折射给世界看。'},
+{name:'水纹座',img:'丢出即走 · 不追回声',
+score:c=>((c.loop||50)-50)*0.8+((c.target||50)-50)*0.5,
+why:'你不指望回应、也不预设对象——像往水里丢石子，涟漪有没有都不影响这个动作本身。'},
+{name:'树冠座',img:'长期经营 · 枝叶舒展',
+score:c=>(50-(c.span||50))*0.8+(50-(c.dens||50))*0.5+(50-(c.target||50))*0.4,
+why:'你愿意长期养一段关系、深而少地投入——像一棵树，把时间一点点长进年轮里。'},
+{name:'漩涡座',img:'内在拉扯 · 张力即动能',
+score:c=>conflictScore(c),
+why:'你的形状里有相互拉扯的维度——像漩涡，表面矛盾，其实是动能的来源。'},
+{name:'琥珀座',img:'内化沉淀 · 不急于外放',
+score:c=>(50-(c.expr||50))*0.8+(50-(c.dir||50))*0.5+(50-(c.chance||50))*0.4,
+why:'你多在内化、少向外放——像琥珀，把想清楚的东西沉淀封存，等它自己变珍贵。'},
+{name:'候鸟座',img:'广纳迁移 · 不占一隅',
+score:c=>((c.dens||50)-50)*0.6+((c.chance||50)-50)*0.4+((c.venue||50)-50)*0.4,
+why:'你广而杂、随机缘、不介意被看见——像候鸟，逐季迁移，不把任何一处当唯一的家。'}
+];
+function aiReport(coords){
+const c={...coords};
+const scored=CANDIDATES.map(x=>({...x,s:x.score(c)})).sort((a,b)=>b.s-a.s);
+const top2=scored.slice(0,2);
+const swirl=scored.find(x=>x.name==='漩涡座');
+const third=(swirl&&swirl.s>=12&&!top2.some(x=>x.name==='漩涡座'))?swirl:scored[2];
+const picks=[top2[0],top2[1],third].filter((x,i,a)=>x&&a.findIndex(y=>y.name===x.name)===i).slice(0,3);
+const d=describe(c);
+const edges=d.top.filter(t=>Math.abs(t.val-50)>=12);
+// 段落
+const P1='你的形状最像一座<b class="pk-tag">'+picks[0].name+'</b>'+picks[0].img+'。'+d.opening;
+let P2='';
+if(edges.length){
+P2='最突出的棱角在<b>'+edges.slice(0,3).map(t=>'「'+t.name+'」').join('、')+'</b>：'+edges.slice(0,2).map(t=>TXT[t.id][BAND(t.val)]).join('');
+}else{
+P2='你目前几乎停在中间态——所有维度都在观望，形状还没长出棱角。';
+}
+let P3='';
+if(conflictScore(c)>=12){
+const pairs=[['loop','chance','你一边想要无反馈的松弛，一边想要计划的掌控'],['stance','expr','你一边想退到旁边观察，一边忍不住把事情做出来'],['dir','util','你一边想向内养自己，一边又在意关系有没有用']];
+const hit=pairs.find(([a,b])=>Math.abs((c[a]||50)-50)>=18&&Math.abs((c[b]||50)-50)>=18&&((c[a]||50)-50)*((c[b]||50)-50)<0);
+P3=hit?('你身上有组不太安分的拉扯：'+hit[2]+'。这不是毛病——漩涡的动能，往往就是从这种拉扯里来的。'):'';
+}else if(avgOf(c)>44&&avgOf(c)<56){
+P3='你目前两面都够得着，但也因此还没把姿态定死——这可以是自由，也可以是等待。';
+}
+const P4=d.ref;
+const P5=picks.length>1?('命名说明：如果「'+picks[0].name+'」不太像你，试试<b>「'+picks[1].name+'」</b>——'+picks[1].why):'';
+const P6='这份报告来自你的 11 个坐标。隔段时间重画一次，对比看看星座往哪儿移动——那往往就是生活本身在移动。';
+const narrative='<p>'+P1+'</p>'+(P2?'<p>'+P2+'</p>':'')+(P3?'<p>'+P3+'</p>':'')+'<p>'+P4+'</p>'+(P5?'<p>'+P5+'</p>':'')+'<p>'+P6+'</p>';
+// 复制全文（纯文本）
+const copyText=['【我与世界的关系 · AI 报告】',
+'主命名：'+picks[0].name+'（'+picks[0].img+'）',
+'你的形状最像一座「'+picks[0].name+'」。'+d.opening.replace(/<[^>]+>/g,''),
+'最突出的棱角：'+(edges.length?edges.slice(0,3).map(t=>t.name+'（偏'+(t.val<50?'左极':'右极')+'）').join('、'):'暂无，停在中间态'),
+d.ref.replace(/<[^>]+>/g,''),
+picks.length>1?'备选命名：'+picks.slice(1).map(x=>x.name+'（'+x.img+'）').join('、'):'',
+'维度明细：'+DIMS.map(dd=>dd.name+' '+((c[dd.id]||50)<38?'偏左极':(c[dd.id]||50)>62?'偏右极':'居中')+'('+(c[dd.id]||50)+')').join('，')
+].filter(Boolean).join('\n');
+return {picks, narrative, copyText, mainName:picks[0].name};
+}
+let repPickIdx=0, repLast=null;
+/* ===================== 默认坐标（起步形：中间附近的微扰，让星图先有形） ===================== */
+function defaultCoords(){return {loop:42,name:38,span:40,target:44,dir:48,stance:45,util:44,expr:36,venue:42,dens:38,chance:46}}
+/* ===================== 参考形态库 ===================== */
+function miniSky(coords,color,opts){
+opts=opts||{};
+const W=140,H=140,CX=70,CY=70,R=opts.R||50,ANG=360/11;
+const P=DIMS.map((d,i)=>{const a=(-90+i*ANG)*Math.PI/180,t=(coords[d.id]||50)/50-1;
+return {x:CX+Math.cos(a)*t*R,y:CY+Math.sin(a)*t*R}});
+const pts=P.map(p=>p.x.toFixed(1)+','+p.y.toFixed(1)).join(' ');
+let s='<svg viewBox="0 0 140 140" role="img" aria-hidden="true">';
+s+='<circle cx="70" cy="70" r="'+R+'" fill="#1b2134" stroke="#39415a" stroke-width="1"/>';
+s+='<polygon points="'+pts+'" fill="'+(opts.fill||color)+'" fill-opacity=".13" stroke="'+(opts.stroke||color)+'" stroke-width="2" stroke-linejoin="round"/>';
+P.forEach(p=>{s+='<circle cx="'+p.x.toFixed(1)+'" cy="'+p.y.toFixed(1)+'" r="3.2" fill="#f4ecd8" stroke="'+(opts.stroke||color)+'" stroke-width="1.4"/>'});
+s+='</svg>';
+return s;
+}
+function renderLib(){
+const el=document.getElementById('libGrid');if(!el)return;
+el.innerHTML=REFS.map(r=>{
+const locked=state.mode==='ref'&&state.refId===r.id;
+return '<div class="shape-card'+(locked?' locked':'')+'" data-ref="'+r.id+'">'+
+'<span class="use">套用</span>'+
+'<div class="nm">'+r.name+'</div>'+
+'<div class="im">'+r.img+' · '+r.desc+'</div>'+
+miniSky(r.coords,r.color)+
+'<div class="cv">点击卡片，把你的星图变成这个形状（仍可微调）</div>'+
+'</div>';
+}).join('');
+}
+/* ===================== 我的星史 ===================== */
+function renderHistory(){
+const list=document.getElementById('hisList');
+const cnt=document.getElementById('hisCnt');
+const empty=document.getElementById('hisEmpty');
+const p=activeProfile();
+if(!p)return;
+cnt.textContent='共 '+p.snapshots.length+' 次 · 档案「'+p.name+'」';
+// 档案控制条
+let html='<div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:14px">'+
+'<select id="profSel" style="flex:1;min-width:150px;font-size:13px;background:var(--panel3);border:1px solid var(--line);border-radius:8px;padding:8px;outline:none">'+
+state.profiles.map(pr=>'<option value="'+pr.id+'"'+(pr.id===p.id?' selected':'')+'>'+esc(pr.name)+'</option>').join('')+
+'</select>'+
+'<button class="action-btn" id="btnNewProf">＋ 新建档案</button>'+
+'</div>';
+if(!p.snapshots.length){
+list.innerHTML=html+'';
+empty.style.display='block';
+}else{
+empty.style.display='none';
+const snaps=[...p.snapshots].sort((a,b)=>b.ts-a.ts);
+list.innerHTML=html+snaps.map(s=>{
+return '<div class="his-item">'+
+'<div class="mini">'+miniSky(s.coords,p.color)+'</div>'+
+'<div class="meta"><div class="dt">'+esc(s.ts)+'</div><div class="nm">'+esc(s.label||'未命名星座')+'</div>'+
+'<div class="note">'+(s.note?esc(s.note):'（无备注）')+'</div></div>'+
+'<div class="ops-b"><button class="mini-btn primary" data-act="load" data-id="'+s.id+'">回放</button>'+
+'<button class="mini-btn" data-act="del" data-id="'+s.id+'">删除</button></div>'+
+'</div>';
+}).join('');
+}
+document.getElementById('profSel').addEventListener('change',e=>{
+state.activeProfile=e.target.value;saveStore();renderHistory();renderCompare();updateHisDot();
+});
+document.getElementById('btnNewProf').addEventListener('click',()=>{
+const nm=window.prompt('新档案的名字（例如一位朋友的昵称）','');
+if(!nm||!nm.trim())return;
+state.profiles.push({id:uid(),name:nm.trim(),color:PROFILE_COLORS[state.profiles.length%PROFILE_COLORS.length],snapshots:[]});
+state.activeProfile=state.profiles[state.profiles.length-1].id;saveStore();renderHistory();renderCompare();toast('已创建档案「'+nm.trim()+'」');
+});
+}
+function updateHisDot(){
+const dot=document.getElementById('hisDot');
+dot.style.display=allSnapshots().length?'inline-block':'none';
+}
+const PROFILE_COLORS=['#e0b368','#6fb8b0','#d97b6c','#9a8cc7','#8fb3d9','#7fb49a'];
+/* ===================== 对比 ===================== */
+function snapshotOptions(){
+return allSnapshots().map(o=>({id:o.s.id,label:o.p.name+' · '+(o.s.label||'未命名星座')+' · '+o.s.ts}));
+}
+function renderCompare(){
+const a=document.getElementById('cmpA'),b=document.getElementById('cmpB');
+const opts=snapshotOptions();
+const fill=sel=>{const cur=sel.value;sel.innerHTML=opts.map(o=>'<option value="'+o.id+'">'+esc(o.label)+'</option>').join('');
+if(opts.some(o=>o.id===cur))sel.value=cur;
+else sel.value=opts[0]?opts[0].id:''};
+fill(a);fill(b);
+if(!opts.length){document.getElementById('skyCmp').innerHTML='';document.getElementById('cmpDiff').innerHTML='<div class="empty"><div class="big">尚未有可对比的记录</div>先保存两段星史，或导入别人的 JSON。</div>';return}
+if(a.value===b.value&&opts.length>1){const other=opts.find(o=>o.id!==a.value);if(other)b.value=other.id}
+renderCmpSky();renderCmpDiff();
+}
+function findSnap(id){const o=allSnapshots().find(x=>x.s.id===id);return o?o:null}
+function renderCmpSky(){
+const svg=document.getElementById('skyCmp');
+const A=findSnap(document.getElementById('cmpA').value),B=findSnap(document.getElementById('cmpB').value);
+if(!A||!B)return;
+const P=SKY2;const W=P.W,H=P.H,CX=P.CX,CY=P.CY,R=P.R;
+const mk=(coords,color,strokeW,op)=>{
+const pts=DIMS.map((d,i)=>{const a=(-90+i*P.ANG)*Math.PI/180,t=(coords[d.id]||50)/50-1;
+return {x:CX+Math.cos(a)*t*R,y:CY+Math.sin(a)*t*R}});
+return {pts:pts, poly:pts.map(p=>p.x.toFixed(1)+','+p.y.toFixed(1)).join(' '), color:color, strokeW:strokeW, op:op};
+};
+const mA=mk(A.s.coords,A.p.color,2.4,.85),mB=mk(B.s.coords,B.p.color,2.4,.85);
+let inner='';
+inner+='<defs><radialGradient id="bgGradC" cx="50%" cy="50%" r="60%">'+
+'<stop offset="0%" stop-color="#2a3150"/><stop offset="70%" stop-color="#1b2134"/><stop offset="100%" stop-color="#171c2c"/></radialGradient></defs>';
+inner+='<circle cx="230" cy="230" r="'+R+'" fill="url(#bgGradC)" stroke="#39415a" stroke-width="1"/>';
+DIMS.forEach((d,i)=>{const a=(-90+i*P.ANG)*Math.PI/180;
+inner+='<line x1="'+(CX-Math.cos(a)*R).toFixed(1)+'" y1="'+(CY-Math.sin(a)*R).toFixed(1)+'" x2="'+(CX+Math.cos(a)*R).toFixed(1)+'" y2="'+(CY+Math.sin(a)*R).toFixed(1)+'" stroke="#313a52" stroke-width="1" opacity=".55"/>'});
+inner+='<polygon points="'+mA.poly+'" fill="'+mA.color+'" fill-opacity=".10" stroke="'+mA.color+'" stroke-width="'+mA.strokeW+'" stroke-linejoin="round" stroke-dasharray="2 3"/>';
+inner+='<polygon points="'+mB.poly+'" fill="'+mB.color+'" fill-opacity=".10" stroke="'+mB.color+'" stroke-width="'+mB.strokeW+'" stroke-linejoin="round"/>';
+mA.pts.forEach(p=>{inner+='<circle cx="'+p.x.toFixed(1)+'" cy="'+p.y.toFixed(1)+'" r="4" fill="'+mA.color+'" opacity=".9"/>'});
+mB.pts.forEach(p=>{inner+='<circle cx="'+p.x.toFixed(1)+'" cy="'+p.y.toFixed(1)+'" r="4" fill="'+mB.color+'" opacity=".9"/>'});
+svg.innerHTML=inner;
+}
+const SKY2={W:460,H:460,CX:230,CY:230,R:178,ANG:360/11};
+function renderCmpDiff(){
+const el=document.getElementById('cmpDiff');
+const idA=document.getElementById('cmpA').value,idB=document.getElementById('cmpB').value;
+const A=findSnap(idA),B=findSnap(idB);
+if(!A||!B)return;
+if(idA===idB){
+el.innerHTML='<b>你选了同一个快照</b><br><br>先再保存一段星史（换一个时间，或换一种心情重画一次），就能在这里看到两个形状的差异了。';
+return;
+}
+const diffs=DIMS.map(d=>({d,da:A.s.coords[d.id]||50,db:B.s.coords[d.id]||50,df:Math.abs((A.s.coords[d.id]||50)-(B.s.coords[d.id]||50))})).filter(x=>x.df>=18).sort((a,b)=>b.df-a.df);
+const avgA=DIMS.reduce((s,d)=>s+(A.s.coords[d.id]||50),0)/DIMS.length;
+const avgB=DIMS.reduce((s,d)=>s+(B.s.coords[d.id]||50),0)/DIMS.length;
+let html='<b>'+esc(A.p.name+' · '+(A.s.label||'未命名星座'))+'</b>（实线）对比 <b>'+esc(B.p.name+' · '+(B.s.label||'未命名星座'))+'</b>（虚线）';
+if(diffs.length){
+html+='<br><br>差异最明显的维度：';
+diffs.slice(0,4).forEach(x=>{
+const aTxt=x.da<38?'偏「'+x.d.left+'」':(x.da>62?'偏「'+x.d.right+'」':'居中');
+const bTxt=x.db<38?'偏「'+x.d.left+'」':(x.db>62?'偏「'+x.d.right+'」':'居中');
+html+='<br>· <b>'+x.d.name+'</b>：A '+aTxt+'（'+x.da+'），B '+bTxt+'（'+x.db+'）';
+});
+}else html+='<br><br>两个形状非常接近，各维度差异都在 18 以内。';
+const dirA=avgA<44?'整体更靠左极（在场·经营一侧）':(avgA>56?'整体更靠右极（抛掷·机缘一侧）':'整体居中');
+const dirB=avgB<44?'整体更靠左极':(avgB>56?'整体更靠右极':'整体居中');
+html+='<br><br>A '+dirA+'；B '+dirB+'。';
+el.innerHTML=html;
+}
+/* ===================== 交互事件 ===================== */
+function toast(msg){
+const t=document.getElementById('toast');
+t.textContent=msg;t.classList.add('show');
+clearTimeout(t._h);t._h=setTimeout(()=>t.classList.remove('show'),2400);
+}
+function switchView(v){
+state.view=v;
+document.querySelectorAll('#mainTabs button').forEach(b=>b.classList.toggle('on',b.dataset.view===v));
+document.querySelectorAll('.view').forEach(s=>s.classList.toggle('on',s.id==='view-'+v));
+}
+function bindEvents(){
+// 模式切换
+document.getElementById('modeSwitch').addEventListener('click',e=>{
+const b=e.target.closest('button');if(!b)return;
+const m=b.dataset.mode;
+document.querySelectorAll('#modeSwitch button').forEach(x=>x.classList.toggle('on',x.dataset.mode===m));
+if(m==='free'){state.mode='free';state.refId=null;renderSky();renderVerdict();renderLib();toast('已切换到自由拖拽')}
+else{
+state.mode='ref';
+if(!state.refId){switchView('ref');toast('先选一个参考形态，套用后回到编绘微调')}
+else{renderSky();renderVerdict();toast('参考形态叠加显示，可继续微调')}
+}
+});
+// 视图 tab
+document.getElementById('mainTabs').addEventListener('click',e=>{
+const b=e.target.closest('button');if(!b)return;
+switchView(b.dataset.view);
+if(b.dataset.view==='history')renderHistory();
+if(b.dataset.view==='compare')renderCompare();
+});
+// 维度列表
+document.getElementById('dimList').addEventListener('input',e=>{
+const r=e.target;
+if(r.matches('input[type=range]')){
+const id=r.dataset.dim;const v=+r.value;
+state.coords[id]=v;updateDimKnob(id,v);renderSky();renderVerdict();
+}
+});
+document.getElementById('dimList').addEventListener('click',e=>{
+const h=e.target.closest('.dim-head');if(!h)return;
+const id=h.dataset.dim;
+state.focusDim=state.focusDim===id?null:id;
+highlightDim(state.focusDim);renderSky();
+});
+// AI 报告
+function renderReport(){
+const rep=aiReport(state.coords);repLast=rep;repPickIdx=0;
+document.getElementById('repPicks').innerHTML=rep.picks.map((p,i)=>
+'<div class="rep-pick'+(i===0?' on':'')+'" data-i="'+i+'">'+
+'<div class="pk-name">'+p.name+'</div><div class="pk-img">'+p.img+'</div>'+
+'<div class="pk-why">'+p.why+'</div></div>').join('');
+document.getElementById('repBody').innerHTML=rep.narrative;
+document.getElementById('btnRepSave').textContent='以「'+rep.picks[0].name+'」保存';
+document.getElementById('reportMask').classList.add('on');
+}
+document.getElementById('btnReport').addEventListener('click',renderReport);
+document.getElementById('btnRepClose').addEventListener('click',()=>document.getElementById('reportMask').classList.remove('on'));
+document.getElementById('repPicks').addEventListener('click',e=>{
+const pk=e.target.closest('.rep-pick');if(!pk)return;
+repPickIdx=+pk.dataset.i;
+document.querySelectorAll('#repPicks .rep-pick').forEach(x=>x.classList.remove('on'));
+pk.classList.add('on');
+document.getElementById('btnRepSave').textContent='以「'+repLast.picks[repPickIdx].name+'」保存';
+});
+document.getElementById('btnRepCopy').addEventListener('click',()=>{
+if(!repLast)return;
+const txt=repLast.copyText;
+if(navigator.clipboard&&navigator.clipboard.writeText){
+navigator.clipboard.writeText(txt).then(()=>toast('报告已复制')).catch(()=>toast('复制失败，请长按选择复制'));
+}else{
+const ta=document.createElement('textarea');ta.value=txt;document.body.appendChild(ta);ta.select();
+try{document.execCommand('copy');toast('报告已复制')}catch(e){toast('复制失败，请长按选择复制')}
+ta.remove();
+}
+});
+document.getElementById('btnRepSave').addEventListener('click',()=>{
+const name=repLast.picks[repPickIdx].name;
+document.getElementById('reportMask').classList.remove('on');
+document.getElementById('saveMask').classList.add('on');
+document.getElementById('saveName').value=name;
+document.getElementById('saveNote').value='';
+setTimeout(()=>document.getElementById('saveName').focus(),100);
+});
+// 保存
+document.getElementById('btnSave').addEventListener('click',()=>{
+document.getElementById('saveMask').classList.add('on');
+document.getElementById('saveName').value=state.refId?(REFS.find(r=>r.id===state.refId).name+' · 我的变体'):'未命名星座';
+document.getElementById('saveNote').value='';
+setTimeout(()=>document.getElementById('saveName').focus(),100);
+});
+document.getElementById('btnCancelSave').addEventListener('click',()=>document.getElementById('saveMask').classList.remove('on'));
+document.getElementById('btnConfirmSave').addEventListener('click',()=>{
+const p=activeProfile();
+const label=document.getElementById('saveName').value.trim()||'未命名星座';
+const note=document.getElementById('saveNote').value.trim();
+p.snapshots.push({id:uid(),ts:nowStr(),label,note,coords:{...state.coords},refId:state.refId});
+saveStore();document.getElementById('saveMask').classList.remove('on');
+renderHistory();renderCompare();updateHisDot();toast('已保存到「'+p.name+'」的星史');
+});
+// 重置 / 导出 / 导入
+document.getElementById('btnReset').addEventListener('click',()=>{
+state.coords=defaultCoords();state.refId=null;state.focusDim=null;
+highlightDim(null);renderDims();renderSky();renderVerdict();toast('已重置为中间态');
+});
+document.getElementById('btnExport').addEventListener('click',()=>{
+const data={app:'world-relation-shapes',version:1,profiles:state.profiles,activeProfile:state.activeProfile};
+const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+const a=document.createElement('a');a.href=URL.createObjectURL(blob);
+a.download='我与世界的关系-星史.json';document.body.appendChild(a);a.click();a.remove();
+setTimeout(()=>URL.revokeObjectURL(a.href),500);
+toast('已导出星史 JSON');
+});
+document.getElementById('btnImport').addEventListener('click',()=>document.getElementById('fileImport').click());
+document.getElementById('fileImport').addEventListener('change',e=>{
+const f=e.target.files[0];if(!f)return;
+const reader=new FileReader();
+reader.onload=()=>{
+try{
+const d=JSON.parse(reader.result);
+if(!d.profiles||!Array.isArray(d.profiles))throw new Error('bad');
+let added=0;
+d.profiles.forEach(p=>{
+if(!state.profiles.some(x=>x.id===p.id)){state.profiles.push({id:p.id||uid(),name:p.name||'导入档案',color:PROFILE_COLORS[state.profiles.length%PROFILE_COLORS.length],snapshots:p.snapshots||[]});added++}
+else{const t=state.profiles.find(x=>x.id===p.id);(p.snapshots||[]).forEach(s=>{if(!t.snapshots.some(y=>y.id===s.id)){t.snapshots.push(s);added++}})}
+});
+saveStore();renderAll();toast('导入完成：新增 '+added+' 条记录');
+}catch(err){toast('导入失败：文件格式不对')}
+e.target.value='';
+};
+reader.readAsText(f);
+});
+// 参考库
+document.getElementById('libGrid').addEventListener('click',e=>{
+const card=e.target.closest('.shape-card');if(!card)return;
+const r=REFS.find(x=>x.id===card.dataset.ref);if(!r)return;
+state.mode='ref';state.refId=r.id;state.coords={...r.coords};
+document.querySelectorAll('#modeSwitch button').forEach(x=>x.classList.toggle('on',x.dataset.mode==='ref'));
+switchView('edit');renderAll();toast('已套用「'+r.name+' · '+r.img+'」，可继续微调');
+});
+// 历史操作
+document.getElementById('hisList').addEventListener('click',e=>{
+const b=e.target.closest('button[data-act]');if(!b)return;
+const p=activeProfile();const snap=p.snapshots.find(s=>s.id===b.dataset.id);if(!snap)return;
+if(b.dataset.act==='load'){
+state.coords={...snap.coords};state.refId=snap.refId||null;
+state.mode=state.refId?'ref':'free';
+document.querySelectorAll('#modeSwitch button').forEach(x=>x.classList.toggle('on',x.dataset.mode===state.mode));
+switchView('edit');renderDims();renderSky();renderVerdict();toast('已回放「'+(snap.label||'未命名星座')+'」');
+}else if(b.dataset.act==='del'){
+if(window.confirm('删除这条记录？')){p.snapshots=p.snapshots.filter(s=>s.id!==snap.id);saveStore();renderHistory();renderCompare();updateHisDot();toast('已删除')}
+}
+});
+// 对比
+document.getElementById('cmpA').addEventListener('change',()=>{renderCmpSky();renderCmpDiff()});
+document.getElementById('cmpB').addEventListener('change',()=>{renderCmpSky();renderCmpDiff()});
+}
+/* ===================== 初始化 ===================== */
+(function init(){
+loadStore();
+state.coords=defaultCoords();
+bindEvents();
+bindSkyDrag(document.getElementById('sky'));
+renderAll();
+})();
+</script>
+</body>
+</html>
