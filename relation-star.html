@@ -672,17 +672,20 @@ why:'你多在内化、少向外放——像琥珀，把想清楚的东西沉淀
 score:c=>((c.dens||50)-50)*0.6+((c.chance||50)-50)*0.4+((c.venue||50)-50)*0.4,
 why:'你广而杂、随机缘、不介意被看见——像候鸟，逐季迁移，不把任何一处当唯一的家。'}
 ];
-function aiReport(coords){
+function buildReport(coords){
 const c={...coords};
 const scored=CANDIDATES.map(x=>({...x,s:x.score(c)})).sort((a,b)=>b.s-a.s);
 const top2=scored.slice(0,2);
 const swirl=scored.find(x=>x.name==='漩涡座');
 const third=(swirl&&swirl.s>=12&&!top2.some(x=>x.name==='漩涡座'))?swirl:scored[2];
 const picks=[top2[0],top2[1],third].filter((x,i,a)=>x&&a.findIndex(y=>y.name===x.name)===i).slice(0,3);
-const d=describe(c);
+return {picks, coords:c, d:describe(c)};
+}
+function narrativeHtml(rep, idx){
+const c=rep.coords, picks=rep.picks, main=picks[idx]||picks[0];
+const d=rep.d;
 const edges=d.top.filter(t=>Math.abs(t.val-50)>=12);
-// 段落
-const P1='你的形状最像一座<b class="pk-tag">'+picks[0].name+'</b>'+picks[0].img+'。'+d.opening;
+const P1='你的形状最像一座<b class="pk-tag">'+main.name+'</b>'+main.img+'。'+d.opening;
 let P2='';
 if(edges.length){
 P2='最突出的棱角在<b>'+edges.slice(0,3).map(t=>'「'+t.name+'」').join('、')+'</b>：'+edges.slice(0,2).map(t=>TXT[t.id][BAND(t.val)]).join('');
@@ -698,19 +701,24 @@ P3=hit?('你身上有组不太安分的拉扯：'+hit[2]+'。这不是毛病—�
 P3='你目前两面都够得着，但也因此还没把姿态定死——这可以是自由，也可以是等待。';
 }
 const P4=d.ref;
-const P5=picks.length>1?('命名说明：如果「'+picks[0].name+'」不太像你，试试<b>「'+picks[1].name+'」</b>——'+picks[1].why):'';
+const others=picks.filter((_,j)=>j!==idx);
+const P5=others.length?('命名说明：如果「'+main.name+'」不太像你，试试<b>「'+others[0].name+'」</b>——'+others[0].why):'';
 const P6='这份报告来自你的 11 个坐标。隔段时间重画一次，对比看看星座往哪儿移动——那往往就是生活本身在移动。';
 const narrative='<p>'+P1+'</p>'+(P2?'<p>'+P2+'</p>':'')+(P3?'<p>'+P3+'</p>':'')+'<p>'+P4+'</p>'+(P5?'<p>'+P5+'</p>':'')+'<p>'+P6+'</p>';
-// 复制全文（纯文本）
+// 复制全文（纯文本，跟随当前所选命名）
 const copyText=['【我与世界的关系 · AI 报告】',
-'主命名：'+picks[0].name+'（'+picks[0].img+'）',
-'你的形状最像一座「'+picks[0].name+'」。'+d.opening.replace(/<[^>]+>/g,''),
+'主命名：'+main.name+'（'+main.img+'）',
+'你的形状最像一座「'+main.name+'」。'+d.opening.replace(/<[^>]+>/g,''),
 '最突出的棱角：'+(edges.length?edges.slice(0,3).map(t=>t.name+'（偏'+(t.val<50?'左极':'右极')+'）').join('、'):'暂无，停在中间态'),
 d.ref.replace(/<[^>]+>/g,''),
-picks.length>1?'备选命名：'+picks.slice(1).map(x=>x.name+'（'+x.img+'）').join('、'):'',
+others.length?'备选命名：'+others.map(x=>x.name+'（'+x.img+'）').join('、'):'',
 '维度明细：'+DIMS.map(dd=>dd.name+' '+((c[dd.id]||50)<38?'偏左极':(c[dd.id]||50)>62?'偏右极':'居中')+'('+(c[dd.id]||50)+')').join('，')
 ].filter(Boolean).join('\n');
-return {picks, narrative, copyText, mainName:picks[0].name};
+return {narrative, copyText, mainName:main.name};
+}
+function aiReport(coords){
+const rep=buildReport(coords);
+return Object.assign({picks:rep.picks}, narrativeHtml(rep,0));
 }
 let repPickIdx=0, repLast=null;
 /* ===================== 默认坐标（起步形：中间附近的微扰，让星图先有形） ===================== */
@@ -900,14 +908,21 @@ state.focusDim=state.focusDim===id?null:id;
 highlightDim(state.focusDim);renderSky();
 });
 // AI 报告
-function renderReport(){
-const rep=aiReport(state.coords);repLast=rep;repPickIdx=0;
-document.getElementById('repPicks').innerHTML=rep.picks.map((p,i)=>
-'<div class="rep-pick'+(i===0?' on':'')+'" data-i="'+i+'">'+
+function renderRepPicks(){
+document.getElementById('repPicks').innerHTML=repLast.picks.map((p,i)=>
+'<div class="rep-pick'+(i===repPickIdx?' on':'')+'" data-i="'+i+'">'+
 '<div class="pk-name">'+p.name+'</div><div class="pk-img">'+p.img+'</div>'+
 '<div class="pk-why">'+p.why+'</div></div>').join('');
-document.getElementById('repBody').innerHTML=rep.narrative;
-document.getElementById('btnRepSave').textContent='以「'+rep.picks[0].name+'」保存';
+}
+function renderRepBody(){
+const r=narrativeHtml(repLast,repPickIdx);
+repLast.copyText=r.copyText;
+document.getElementById('repBody').innerHTML=r.narrative;
+document.getElementById('btnRepSave').textContent='以「'+r.mainName+'」保存';
+}
+function renderReport(){
+repLast=buildReport(state.coords);repPickIdx=0;
+renderRepPicks();renderRepBody();
 document.getElementById('reportMask').classList.add('on');
 }
 document.getElementById('btnReport').addEventListener('click',renderReport);
@@ -917,7 +932,7 @@ const pk=e.target.closest('.rep-pick');if(!pk)return;
 repPickIdx=+pk.dataset.i;
 document.querySelectorAll('#repPicks .rep-pick').forEach(x=>x.classList.remove('on'));
 pk.classList.add('on');
-document.getElementById('btnRepSave').textContent='以「'+repLast.picks[repPickIdx].name+'」保存';
+renderRepBody();
 });
 document.getElementById('btnRepCopy').addEventListener('click',()=>{
 if(!repLast)return;
