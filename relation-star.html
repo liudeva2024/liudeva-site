@@ -288,6 +288,7 @@ details.p-paste textarea:focus{border-color:var(--gold)}
 <div class="mode-switch" id="modeSwitch">
 <button data-mode="free" class="on">自由拖拽</button>
 <button data-mode="ref">参考形态</button>
+<button data-mode="quiz">问卷评测</button>
 </div>
 <div class="tabs" id="mainTabs">
 <button data-view="edit" class="on">编绘</button>
@@ -318,7 +319,6 @@ details.p-paste textarea:focus{border-color:var(--gold)}
 <div class="sky-note">记忆提示：记住星座形状，比记住 11 个维度容易。保存时给它起个名字。</div>
 <div class="verdict" id="verdict"></div>
 <div class="ops">
-<button class="action-btn primary" id="quizOpen">问卷评测</button>
 <button class="action-btn primary" id="btnReport">生成 AI 报告</button>
 <button class="action-btn" id="btnSave">保存本次星图</button>
 <button class="action-btn" id="btnReset">重置</button>
@@ -332,7 +332,7 @@ details.p-paste textarea:focus{border-color:var(--gold)}
 <section class="view" id="view-quiz">
 <div class="card">
 <div class="quiz-head">
-<div class="quiz-title">问卷评测 <span class="tag" style="font-size:11px;color:var(--faint);font-weight:400">MBTI 式 · 22 题 · 约 3 分钟</span></div>
+<div class="quiz-title">问卷评测 <span class="tag" style="font-size:11px;color:var(--faint);font-weight:400">33 题 · 约 5 分钟</span></div>
 <button class="action-btn quiz-quit" id="quizQuit">退出评测</button>
 </div>
 <div class="hint" style="margin-bottom:10px">每道题选最接近你的那档，测完直接生成你的星座——之后仍可在维度列表自由拖拽微调、保存。</div>
