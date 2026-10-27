@@ -242,6 +242,25 @@ details.p-paste textarea:focus{border-color:var(--gold)}
 .toast.show{transform:translateX(-50%) translateY(0);opacity:1}
 .empty{text-align:center;padding:40px 16px;color:var(--faint);font-size:13px;line-height:2}
 .empty .big{font-size:30px;color:var(--line2);margin-bottom:8px}
+/* ===== 问卷评测（MBTI 式） ===== */
+.quiz-head{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+.quiz-title{font-size:15px;font-weight:700;display:flex;align-items:center;gap:8px}
+.quiz-quit{margin-left:auto}
+.quiz-progress{height:6px;border-radius:999px;background:var(--panel2);border:1px solid var(--line);overflow:hidden;margin:12px 0 4px}
+.quiz-progress i{display:block;height:100%;background:var(--gold);border-radius:999px;transition:width .25s}
+.quiz-pos{font-size:11px;color:var(--faint);text-align:right;margin-bottom:14px}
+.quiz-q{background:var(--panel2);border:1px solid var(--line);border-radius:14px;padding:18px}
+.quiz-q .qn{font-family:"Songti SC","STSong",serif;font-size:18px;font-weight:700;color:var(--text);line-height:1.6;margin-bottom:14px}
+.quiz-poles{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-bottom:12px}
+.quiz-poles .pr{text-align:right}
+.quiz-opts{display:flex;flex-direction:column;gap:9px}
+.quiz-opt{text-align:left;background:var(--panel3);border:1px solid var(--line);border-radius:11px;padding:11px 14px;font-size:13.5px;color:var(--text);transition:all .15s;display:flex;gap:10px;align-items:center}
+.quiz-opt .tag{flex:none;width:26px;height:26px;border-radius:50%;background:var(--panel2);border:1px solid var(--line2);display:flex;align-items:center;justify-content:center;font-size:12px;color:var(--muted);font-weight:600}
+.quiz-opt:hover{border-color:var(--gold)}
+.quiz-opt.on{border-color:var(--gold);background:rgba(224,179,104,.12)}
+.quiz-opt.on .tag{background:var(--gold);color:#231a0c;border-color:var(--gold)}
+.quiz-nav{display:flex;gap:10px;margin-top:16px;align-items:center}
+.quiz-nav .sp{flex:1}
 @media(max-width:820px){
 .top-actions{justify-content:space-between}
 .tabs{margin-left:0;width:100%;justify-content:stretch;margin-top:8px}
@@ -299,12 +318,34 @@ details.p-paste textarea:focus{border-color:var(--gold)}
 <div class="sky-note">记忆提示：记住星座形状，比记住 11 个维度容易。保存时给它起个名字。</div>
 <div class="verdict" id="verdict"></div>
 <div class="ops">
+<button class="action-btn primary" id="quizOpen">问卷评测</button>
 <button class="action-btn primary" id="btnReport">生成 AI 报告</button>
 <button class="action-btn" id="btnSave">保存本次星图</button>
 <button class="action-btn" id="btnReset">重置</button>
 <span class="spacer"></span>
 <button class="action-btn ghost" id="btnExport">导出 JSON</button>
 <button class="action-btn ghost" id="btnImport">导入</button>
+</div>
+</div>
+</div>
+</section>
+<section class="view" id="view-quiz">
+<div class="card">
+<div class="quiz-head">
+<div class="quiz-title">问卷评测 <span class="tag" style="font-size:11px;color:var(--faint);font-weight:400">MBTI 式 · 22 题 · 约 3 分钟</span></div>
+<button class="action-btn quiz-quit" id="quizQuit">退出评测</button>
+</div>
+<div class="hint" style="margin-bottom:10px">每道题选最接近你的那档，测完直接生成你的星座——之后仍可在维度列表自由拖拽微调、保存。</div>
+<div class="quiz-progress"><i id="quizProg" style="width:0%"></i></div>
+<div class="quiz-pos" id="quizPos"></div>
+<div class="quiz-q">
+<div class="qn" id="quizQ"></div>
+<div class="quiz-poles"><span id="quizLeft"></span><span id="quizRight" class="pr"></span></div>
+<div class="quiz-opts" id="quizOpts"></div>
+<div class="quiz-nav">
+<button class="action-btn" id="quizPrev">上一题</button>
+<span class="sp"></span>
+<button class="action-btn primary" id="quizNext" disabled>下一题</button>
 </div>
 </div>
 </div>
@@ -493,5 +534,6 @@ details.p-paste textarea:focus{border-color:var(--gold)}
 <script src="relation-star.ui.js"></script>
 <script src="relation-star.ui2.js"></script>
 <script src="relation-star.people.js"></script>
+<script src="relation-star.quiz.js"></script>
 </body>
 </html>
