@@ -73,6 +73,7 @@ let qzAns=Array(QUIZ_ITEMS.length).fill(null);
 let qzIdx=0;
 function qzStart(){
 qzAns=Array(QUIZ_ITEMS.length).fill(null);qzIdx=0;
+state.qzTension=[];qzFresh=false;renderCalHint();
 switchView('quiz');renderQuiz();
 }
 function renderQuiz(){
@@ -91,17 +92,26 @@ next.textContent=qzIdx===QUIZ_ITEMS.length-1?'生成星图':'下一题';
 document.getElementById('quizPrev').disabled=qzIdx===0;
 }
 function finishQuiz(){
-const coords={};
+const coords={},sums={};
 QUIZ_ITEMS.forEach((it,i)=>{
-coords[it.dim]=(coords[it.dim]||0)+(qzAns[i]===null?0:qzAns[i]);
+const v=qzAns[i]===null?0:qzAns[i];
+coords[it.dim]=(coords[it.dim]||0)+v;
+(sums[it.dim]=sums[it.dim]||[]).push(v);
 });
 for(const k in coords)coords[k]=Math.round(coords[k]/6*10);
+const tens=[];
+for(const k in sums){
+const a=sums[k];
+if(Math.max.apply(null,a)-Math.min.apply(null,a)>=3)tens.push(k);
+}
+qzFresh=true;
+state.qzTension=tens;
 state.coords=coords;state.mode='free';state.refId=null;personActive=null;
 document.querySelectorAll('#modeSwitch button').forEach(x=>x.classList.toggle('on',x.dataset.mode==='free'));
 switchView('edit');
 renderAll();
 document.getElementById('btnReport').click();
-toast('问卷完成，已生成你的星图');
+toast(tens.length?('问卷完成：'+tens.length+' 个维度答得不一致，可点校准提示直达拖拽'):'问卷完成，已生成你的星图');
 }
 const qzOpenEl=document.getElementById('quizOpen');
 if(qzOpenEl)qzOpenEl.addEventListener('click',qzStart);
@@ -118,3 +128,50 @@ else finishQuiz();
 document.getElementById('quizPrev').addEventListener('click',()=>{
 if(qzIdx>0){qzIdx--;renderQuiz();}
 });
+
+/* ===== 问卷校准：三题不一致的维度，提示直达拖拽 ===== */
+let qzFresh=false;
+function renderCalHint(){
+const el=document.getElementById('calHint');if(!el)return;
+const t=state.qzTension||[];
+if(!t.length){el.innerHTML='';return;}
+el.innerHTML='<span class="cal-t">校准提示</span><span>这 '+t.length+' 个维度你答得不一致，星图分值是被折中的——点一下直达拖拽：</span>'+
+t.map(id=>'<button data-dim="'+id+'">'+((DIMS.find(x=>x.id===id)||{}).name||id)+'</button>').join('');
+}
+(function(){
+const panel=document.getElementById('dimPanel');
+if(panel&&!document.getElementById('calHint')){
+const h=document.createElement('div');
+h.id='calHint';
+panel.insertBefore(h,document.getElementById('dimList'));
+}
+const __renderAll=window.renderAll;
+window.renderAll=function(){
+if(!qzFresh)state.qzTension=[];
+qzFresh=false;
+const r=__renderAll.apply(this,arguments);
+renderCalHint();
+return r;
+};
+const hint=document.getElementById('calHint');
+hint.addEventListener('click',e=>{
+const b=e.target.closest('button[data-dim]');if(!b)return;
+const id=b.dataset.dim,card=document.getElementById('dim-'+id);
+if(!card)return;
+card.scrollIntoView({behavior:'smooth',block:'center'});
+highlightDim(id);
+card.classList.add('flash');
+setTimeout(()=>card.classList.remove('flash'),2700);
+const inp=card.querySelector('input[type=range]');
+if(inp)setTimeout(()=>inp.focus({preventScroll:true}),450);
+});
+document.getElementById('dimList').addEventListener('input',e=>{
+const r=e.target.closest('input[data-dim]');if(!r)return;
+const id=r.dataset.dim;
+if((state.qzTension||[]).includes(id)){
+state.qzTension=state.qzTension.filter(x=>x!==id);
+renderCalHint();
+if(!state.qzTension.length)toast('校准完成，星图已按你的微调更新');
+}
+});
+})();
