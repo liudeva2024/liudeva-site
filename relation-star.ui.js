@@ -137,6 +137,7 @@ function usedColors(){return state.profiles.map(p=>p.color).filter(Boolean)}
 function nextFreeColor(){const u=usedColors();return PROFILE_COLORS.find(c=>!u.includes(c))||PROFILE_COLORS[state.profiles.length%PROFILE_COLORS.length]}
 function profileColor(p){return p.color||PROFILE_COLORS[state.profiles.indexOf(p)%PROFILE_COLORS.length]}
 /* ===================== 对比 ===================== */
+const peopleCache={};   // id → 完整人物数据（对比视图异步拉取后缓存，避免重复请求）
 function compareOptions(){
 const snaps=allSnapshots();
 const people=peopleLib.length?peopleLib:BUILTIN_INDEX;
@@ -147,7 +148,7 @@ h+=people.map(o=>'<option value="person:'+o.id+'">'+esc(o.name+(o.summary?' · '
 h+='</optgroup>';
 return h;
 }
-function resolveShape(v){
+async function resolveShape(v){
 if(!v)return null;
 if(v.indexOf('snap:')===0){
 const o=allSnapshots().find(x=>x.s.id===v.slice(5));
@@ -155,9 +156,19 @@ return o?{kind:'snap',name:o.p.name+' · '+(o.s.label||'未命名星座'),color:
 }
 if(v.indexOf('person:')===0){
 const id=v.slice(7);
-const p=BUILTIN_PEOPLE[id]||peopleLib.find(x=>x.id===id);
-if(!p)return null;
-return {kind:'person',name:p.name,color:p.color||'#8fb3d9',coords:p.coords||defaultCoords(),sub:''};
+const builtin=BUILTIN_PEOPLE[id];
+if(builtin)return {kind:'person',name:builtin.name,color:builtin.color||'#8fb3d9',coords:builtin.coords||defaultCoords(),sub:''};
+let p=peopleCache[id];
+if(!p){
+const idx=peopleLib.find(x=>x.id===id);
+if(idx&&idx.coords){p={coords:idx.coords,...idx};peopleCache[id]=p;}
+else{
+try{p=await fetchJson(PEOPLE_BASE.map(b=>b+'people/'+encodeURIComponent(id)+'.json'),6000)}catch(e){}
+if(p&&p.coords)peopleCache[id]=p;
+}
+}
+if(!p||!p.coords)return null;
+return {kind:'person',name:p.name,color:p.color||'#8fb3d9',coords:p.coords,sub:''};
 }
 return null;
 }
@@ -181,9 +192,9 @@ if(other)b.value=other;
 }
 renderCmpSky();renderCmpReport();
 }
-function renderCmpSky(){
+async function renderCmpSky(){
 const svg=document.getElementById('skyCmp');
-const A=resolveShape(document.getElementById('cmpA').value),B=resolveShape(document.getElementById('cmpB').value);
+const A=await resolveShape(document.getElementById('cmpA').value),B=await resolveShape(document.getElementById('cmpB').value);
 if(!A||!B)return;
 const P=SKY2;const W=P.W,H=P.H,CX=P.CX,CY=P.CY,R=P.R;
 const mk=(coords,color,strokeW,op)=>{
@@ -257,10 +268,10 @@ polar.length?'分歧维度：'+polar.slice(0,3).map(x=>x.d.name+'（'+fmtVal(x.d
 ].filter(Boolean).join('\n');
 return {html:h,copyText:copy};
 }
-function renderCmpReport(){
+async function renderCmpReport(){
 const el=document.getElementById('cmpReport');
 const idA=document.getElementById('cmpA').value,idB=document.getElementById('cmpB').value;
-const A=resolveShape(idA),B=resolveShape(idB);
+const A=await resolveShape(idA),B=await resolveShape(idB);
 if(!A||!B)return;
 if(idA===idB){
 el.innerHTML='<h4>AI 对比报告</h4><p>你选了同一个对象。换一个再对比：先保存一段新的星史，或从人物库挑另一个人。</p>';
