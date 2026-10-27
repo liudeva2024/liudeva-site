@@ -4,11 +4,11 @@ const b=e.target.closest('button');if(!b)return;
 const m=b.dataset.mode;
 if(m==='quiz'){qzStart();return;}
 document.querySelectorAll('#modeSwitch button').forEach(x=>x.classList.toggle('on',x.dataset.mode===m));
-if(m==='free'){state.mode='free';state.refId=null;renderSky();renderVerdict();renderLib();toast('已切换到自由拖拽')}
+if(m==='free'){state.mode='free';state.refId=null;renderSky();renderVerdict();renderLib();switchView('edit');toast('已切换到自由拖拽')}
 else{
 state.mode='ref';
 if(!state.refId){switchView('ref');toast('先选一个参考形态，套用后回到编绘微调')}
-else{renderSky();renderVerdict();toast('参考形态叠加显示，可继续微调')}
+else{switchView('edit');renderSky();renderVerdict();toast('参考形态叠加显示，可继续微调')}
 }
 });
 document.getElementById('mainTabs').addEventListener('click',e=>{
