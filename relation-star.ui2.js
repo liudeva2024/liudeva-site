@@ -2,6 +2,7 @@ function bindEvents(){
 document.getElementById('modeSwitch').addEventListener('click',e=>{
 const b=e.target.closest('button');if(!b)return;
 const m=b.dataset.mode;
+if(m==='quiz'){qzStart();return;}
 document.querySelectorAll('#modeSwitch button').forEach(x=>x.classList.toggle('on',x.dataset.mode===m));
 if(m==='free'){state.mode='free';state.refId=null;renderSky();renderVerdict();renderLib();toast('已切换到自由拖拽')}
 else{
