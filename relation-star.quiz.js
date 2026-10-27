@@ -71,9 +71,10 @@ const QUIZ_ITEMS=[
 ];
 let qzAns=Array(QUIZ_ITEMS.length).fill(null);
 let qzIdx=0;
+let qzFix={};
 function qzStart(){
-qzAns=Array(QUIZ_ITEMS.length).fill(null);qzIdx=0;
-state.qzTension=[];qzFresh=false;renderCalHint();
+qzAns=Array(QUIZ_ITEMS.length).fill(null);qzIdx=0;qzFix={};
+document.querySelectorAll('#modeSwitch button').forEach(x=>x.classList.toggle('on',x.dataset.mode==='quiz'));
 switchView('quiz');renderQuiz();
 }
 function renderQuiz(){
@@ -90,33 +91,28 @@ const next=document.getElementById('quizNext');
 next.disabled=qzAns[qzIdx]===null;
 next.textContent=qzIdx===QUIZ_ITEMS.length-1?'生成星图':'下一题';
 document.getElementById('quizPrev').disabled=qzIdx===0;
+renderInlineCal();
 }
 function finishQuiz(){
-const coords={},sums={};
+const coords={};
 QUIZ_ITEMS.forEach((it,i)=>{
 const v=qzAns[i]===null?0:qzAns[i];
 coords[it.dim]=(coords[it.dim]||0)+v;
-(sums[it.dim]=sums[it.dim]||[]).push(v);
 });
-for(const k in coords)coords[k]=Math.round(coords[k]/6*10);
-const tens=[];
-for(const k in sums){
-const a=sums[k];
-if(new Set(a).size>1)tens.push(k);
-}
-qzFresh=true;
-quizCalKeep=true;
-state.qzTension=tens;
+for(const k in coords)coords[k]=qzFix[k]!==undefined?qzFix[k]:Math.round(coords[k]/6*10);
 state.coords=coords;state.mode='free';state.refId=null;personActive=null;
 document.querySelectorAll('#modeSwitch button').forEach(x=>x.classList.toggle('on',x.dataset.mode==='free'));
 switchView('edit');
 renderAll();
 document.getElementById('btnReport').click();
-toast(tens.length?('问卷完成：'+tens.length+' 个维度答得不一致，可点校准提示直达拖拽'):'问卷完成，已生成你的星图');
+toast('问卷完成，已生成你的星图');
 }
 const qzOpenEl=document.getElementById('quizOpen');
 if(qzOpenEl)qzOpenEl.addEventListener('click',qzStart);
-document.getElementById('quizQuit').addEventListener('click',()=>switchView('edit'));
+document.getElementById('quizQuit').addEventListener('click',()=>{
+document.querySelectorAll('#modeSwitch button').forEach(x=>x.classList.toggle('on',x.dataset.mode==='free'));
+switchView('edit');
+});
 document.getElementById('quizOpts').addEventListener('click',e=>{
 const b=e.target.closest('.quiz-opt');if(!b)return;
 qzAns[qzIdx]=QUIZ_ITEMS[qzIdx].opts[+b.dataset.i].v;
@@ -130,62 +126,34 @@ document.getElementById('quizPrev').addEventListener('click',()=>{
 if(qzIdx>0){qzIdx--;renderQuiz();}
 });
 
-/* ===== 问卷校准：三题不一致的维度，提示直达拖拽 ===== */
-let qzFresh=false;
-let quizCalKeep=false;
-function renderCalHint(){
-const el=document.getElementById('calHint');if(!el)return;
-const t=state.qzTension||[];
-if(!t.length){el.innerHTML='';return;}
-el.innerHTML='<span class="cal-t">校准提示</span><span>这 '+t.length+' 个维度你答得不一致，星图分值是被折中的——点一下直达拖拽：</span>'+
-t.map(id=>'<button data-dim="'+id+'">'+((DIMS.find(x=>x.id===id)||{}).name||id)+'</button>').join('');
-}
-(function(){
-const panel=document.getElementById('dimPanel');
-if(panel&&!document.getElementById('calHint')){
-const h=document.createElement('div');
-h.id='calHint';
-panel.insertBefore(h,document.getElementById('dimList'));
-}
-const __renderAll=window.renderAll;
-window.renderAll=function(){
-if(!qzFresh)state.qzTension=[];
-qzFresh=false;
-const r=__renderAll.apply(this,arguments);
-renderCalHint();
-return r;
-};
-const __closeReportAndReset=window.closeReportAndReset;
-window.closeReportAndReset=function(){
-if(quizCalKeep&&(state.qzTension||[]).length){
-document.getElementById('reportMask').classList.remove('on');
-document.getElementById('saveMask').classList.remove('on');
-renderCalHint();
-toast('星图保留在问卷结果上，可拖动校准提示中的维度微调');
+/* ===== 答题中就地校准：某维度三题不一致 → 本题下方直接拖 ===== */
+function dimName(id){return (DIMS.find(x=>x.id===id)||{}).name||id;}
+function renderInlineCal(){
+const box=document.getElementById('inlineCal');if(!box)return;
+const it=QUIZ_ITEMS[qzIdx],dim=it.dim;
+const idxs=[];
+QUIZ_ITEMS.forEach((x,i)=>{if(x.dim===dim)idxs.push(i);});
+const vals=idxs.map(i=>qzAns[i]);
+if(vals.some(v=>v===null)||new Set(vals).size===1){
+box.innerHTML='';
 return;
 }
-return __closeReportAndReset.apply(this,arguments);
-};
-document.getElementById('btnReset').addEventListener('click',()=>{quizCalKeep=false;});
-const hint=document.getElementById('calHint');
-hint.addEventListener('click',e=>{
-const b=e.target.closest('button[data-dim]');if(!b)return;
-const id=b.dataset.dim,card=document.getElementById('dim-'+id);
-if(!card)return;
-card.scrollIntoView({behavior:'smooth',block:'center'});
-highlightDim(id);
-card.classList.add('flash');
-setTimeout(()=>card.classList.remove('flash'),2700);
-const inp=card.querySelector('input[type=range]');
-if(inp)setTimeout(()=>inp.focus({preventScroll:true}),450);
+const sum=vals.reduce((a,b)=>a+b,0);
+const def=Math.round(sum/6*10);
+const fixed=qzFix[dim]!==undefined;
+const cur=fixed?qzFix[dim]:def;
+box.innerHTML='<div class="ic-head"><span class="ic-t">这 3 题你答得不一致</span><span>拖动下面的条，直接定下「'+dimName(dim)+'」这个维度的值，再继续答题</span></div>'+
+'<div class="ic-poles"><span>← '+it.left+'</span><span>'+it.right+' →</span></div>'+
+'<div class="ic-track"><div class="ic-knob"></div><input type="range" min="-10" max="10" step="1" value="'+cur+'" data-dim="'+dim+'"></div>'+
+'<div class="ic-state'+(fixed?' ok':'')+'" id="icState">'+(fixed?'已校准：'+qzFix[dim]+' 分':'暂未校准：将按 '+def+' 分计入，拖动后立即生效')+'</div>';
+const inp=box.querySelector('input[type=range]');
+const knob=box.querySelector('.ic-knob');
+knob.style.left=((cur+10)/20*100)+'%';
+inp.addEventListener('input',()=>{
+qzFix[dim]=+inp.value;
+knob.style.left=((+inp.value+10)/20*100)+'%';
+const st=document.getElementById('icState');
+if(st)st.textContent='已校准：'+qzFix[dim]+' 分';
+box.classList.add('fixed');
 });
-document.getElementById('dimList').addEventListener('input',e=>{
-const r=e.target.closest('input[data-dim]');if(!r)return;
-const id=r.dataset.dim;
-if((state.qzTension||[]).includes(id)){
-state.qzTension=state.qzTension.filter(x=>x!==id);
-renderCalHint();
-if(!state.qzTension.length)toast('校准完成，星图已按你的微调更新');
 }
-});
-})();
