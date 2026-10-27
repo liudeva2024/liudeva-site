@@ -737,7 +737,7 @@ top.forEach(t=>{
 if(Math.abs(t.v)>=4)detail.push('在「'+t.d.name+'」上，'+TXT[t.d.id][BAND(t.v)]);
 else mid.push('「'+t.d.name+'」');
 });
-const midLine=mid.length?'其余维度你大多停在中间附近，'+(mid.slice(0,2).join('、'))+(mid.length>2?'等':'')+'的姿态还没定死。':' ';
+const midLine=mid.length?'其余维度你大多停在中间附近，'+(mid.slice(0,2).join('、'))+(mid.length>2?'等':'')+'的姿态还没定死。':'';
 let body='<p>'+opening+'</p>';
 if(detail.length){body+='<p>最明显的是：</p>';detail.forEach(s=>{body+='<p>'+s+'</p>'})}
 if(midLine)body+='<p>'+midLine+'</p>';
@@ -1167,7 +1167,7 @@ state.focusDim=state.focusDim===id?null:id;
 highlightDim(state.focusDim);renderSky();
 });
 function renderRepPicks(){
-document.getElementById('repPicks').innerHTML=repLast.picks.map((p,i)=>
+document.getElementById('repPicks').innerHTML=repLast.picks.map((p,i)=
 '<div class="rep-pick'+(i===repPickIdx?' on':'')+'" data-i="'+i+'">'+
 '<div class="pk-name">'+p.name+'</div><div class="pk-img">'+p.img+'</div>'+
 '<div class="pk-why">'+p.why+'</div></div>').join('');
@@ -1379,17 +1379,17 @@ throw new Error('all sources failed');
 }
 async function loadPeopleIndex(){
 const empty=document.getElementById('pEmpty');
-let fallbackUsed=false;
+peopleLib=BUILTIN_INDEX.slice();   // 内置索引立即渲染，秒开人物库
+renderPeopleLib();
+const cnt=document.getElementById('pCnt');if(cnt)cnt.textContent='共 '+peopleLib.length+' 人 · 内置版';
 try{
-const idx=await fetchJson(PEOPLE_BASE.map(b=>b+'index.json'),10000);
-peopleLib=(idx&&Array.isArray(idx.people))?idx.people:[];
-if(!peopleLib.length){peopleLib=BUILTIN_INDEX;fallbackUsed=true}
-}catch(e){peopleLib=BUILTIN_INDEX;fallbackUsed=true}
+const idx=await fetchJson(PEOPLE_BASE.map(b=>b+'index.json'),6000);
+if(idx&&Array.isArray(idx.people)&&idx.people.length){
+peopleLib=idx.people;          // 在线索引可达 → 静默升级
 renderPeopleLib();
 try{renderCompare()}catch(e){}
-if(fallbackUsed){
-const cnt=document.getElementById('pCnt');if(cnt)cnt.textContent='共 '+peopleLib.length+' 人 · 离线';
 }
+}catch(e){/* 在线不可达时保持内置版 */}
 }
 function renderPeopleLib(){
 const el=document.getElementById('pLib');if(!el)return;
@@ -1409,13 +1409,21 @@ miniSky(c,p.color||'#8fb3d9')+
 }).join('');
 }
 async function loadPerson(id){
-try{
-const data=await fetchJson(PEOPLE_BASE.map(b=>b+'people/'+encodeURIComponent(id)+'.json'),12000);
-applyPerson(data);
-}catch(e){
 const builtin=BUILTIN_PEOPLE[id];
-if(builtin){applyPerson(builtin);toast('网络数据源暂不可达，已载入内置版「'+builtin.name+'」');}
-else toast('人物数据加载失败，请稍后再试');
+if(builtin){
+applyPerson(builtin);            // 内置数据秒开，不等网络
+}else{
+const st=document.getElementById('pStatus');
+st.innerHTML='正在加载 <b>'+esc(id)+'</b> 的资料…';
+}
+try{
+const data=await fetchJson(PEOPLE_BASE.map(b=>b+'people/'+encodeURIComponent(id)+'.json'),6000);
+if(data&&data.id&&data.name&&!(builtin&&data.updated===builtin.updated)){
+applyPerson(data);             // 在线版可用且与内置不同 → 静默升级
+toast('已载入在线版「'+data.name+'」');
+}
+}catch(e){
+if(!builtin)toast('在线数据加载失败，请稍后再试');
 }
 }
 function applyPerson(data){
