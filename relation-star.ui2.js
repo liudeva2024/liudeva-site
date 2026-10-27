@@ -30,9 +30,9 @@ state.focusDim=state.focusDim===id?null:id;
 highlightDim(state.focusDim);renderSky();
 });
 function renderRepPicks(){
-document.getElementById('repPicks').innerHTML=repLast.picks.map((p,i)=>{
-'<div class="rep-pick"+(i===repPickIdx?' on':'')+'" data-i="'+i+'">'+\
-'<div class="pk-name">'+p.name+'</div><div class="pk-img">'+p.img+'</div>'+\
+document.getElementById('repPicks').innerHTML=repLast.picks.map((p,i)=>
+'<div class="rep-pick'+(i===repPickIdx?' on':'')+'" data-i="'+i+'">'+
+'<div class="pk-name">'+p.name+'</div><div class="pk-img">'+p.img+'</div>'+
 '<div class="pk-why">'+p.why+'</div></div>').join('');
 }
 function renderRepBody(){
