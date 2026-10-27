@@ -182,6 +182,7 @@ if(!ok)sel.value=sel.options.length?sel.options[0].value:''};
 keep(a,curA);keep(b,curB);
 if(!a.value){
 document.getElementById('skyCmp').innerHTML='';
+document.getElementById('cmpDims').innerHTML='<h4 style="margin-top:0">维度对比 · 面积之外看棱角</h4><div class="empty"><div class="big">还没有可对比的对象</div>选好两个形状后，这里会列出 11 维逐项对比。</div>';
 document.getElementById('cmpReport').innerHTML='<h4>AI 对比报告</h4><div class="empty"><div class="big">还没有可对比的对象</div>先保存两段星史，或等人物库有人物。</div>';
 return;
 }
@@ -190,7 +191,7 @@ const vals=[...a.options].map(o=>o.value);
 const other=vals.find(v=>v!==a.value);
 if(other)b.value=other;
 }
-renderCmpSky();renderCmpReport();
+renderCmpSky();renderCmpDims();renderCmpReport();
 }
 async function renderCmpSky(){
 const svg=document.getElementById('skyCmp');
@@ -214,6 +215,47 @@ inner+='<polygon points="'+mB.poly+'" fill="'+mB.color+'" fill-opacity=".10" str
 mA.pts.forEach(p=>{inner+='<circle cx="'+p.x.toFixed(1)+'" cy="'+p.y.toFixed(1)+'" r="4" fill="'+mA.color+'" opacity=".9"/>'});
 mB.pts.forEach(p=>{inner+='<circle cx="'+p.x.toFixed(1)+'" cy="'+p.y.toFixed(1)+'" r="4" fill="'+mB.color+'" opacity=".9"/>'});
 svg.innerHTML=inner;
+}
+function dimPos(v){return 50+((v||0)/10)*50;}
+async function renderCmpDims(){
+const el=document.getElementById('cmpDims');
+const idA=document.getElementById('cmpA').value,idB=document.getElementById('cmpB').value;
+if(!idA||!idB){el.innerHTML='';return;}
+if(idA===idB){
+el.innerHTML='<h4 style="margin-top:0">维度对比 · 面积之外看棱角</h4><p>你选了同一个对象，维度对比没有意义。换一个再对比。</p>';
+return;
+}
+const A=await resolveShape(idA),B=await resolveShape(idB);
+if(!A||!B)return;
+const c1=A.coords,c2=B.coords;
+const rows=DIMS.map(d=>{
+const v1=c1[d.id]||0,v2=c2[d.id]||0;
+const same=v1*v2>0;
+return {d:d,v1:v1,v2:v2,same:same,eq:v1===v2,df:Math.abs(v1-v2),strong:same&&Math.abs(v1)>=2&&Math.abs(v2)>=2};
+});
+const sameN=rows.filter(r=>r.same).length;
+const polarN=rows.filter(r=>r.df>=3).length;
+const maxDf=Math.max.apply(null,rows.map(r=>r.df));
+const sameDims=rows.filter(r=>r.strong).map(r=>r.d.name);
+const polarDims=rows.filter(r=>r.df>=3).map(r=>r.d.name);
+const list=(a,max)=>{const s=a.slice(0,max).join('、');return a.length>max?s+' 等':s;};
+const nA=esc(A.name.split(' · ')[0]),nB=esc(B.name.split(' · ')[0]);
+let h='<div class="dims-sum">同侧 <b>'+sameN+'</b> 维'+(sameDims.length?'（'+list(sameDims,5)+'）':'')+' · 分歧（差 ≥3）<b>'+polarN+'</b> 维'+(polarDims.length?'（'+list(polarDims,5)+'）':'')+' · 最深差距 <b>'+maxDf+'</b></div>';
+h+='<div class="dims-head"><div class="dims-hn">维度</div><div class="dims-hl">← 左极</div><div class="dims-ht">'+nA+' ⇄ '+nB+'</div><div class="dims-hr">右极 →</div><div class="dims-hv">A / B</div></div>';
+rows.forEach(r=>{
+h+='<div class="dims-row'+(r.same?' dims-same':' dims-polar')+(r.eq?' dims-eq':'')+'">';
+h+='<div class="dims-hn dims-name">'+esc(r.d.name)+'</div>';
+h+='<div class="dims-hl">'+esc(r.d.left)+'</div>';
+h+='<div class="dims-ht dims-track">';
+h+='<div class="dims-axis"></div><div class="dims-mid"></div>';
+h+='<div class="dims-dot" style="left:'+dimPos(r.v1)+'%;background:'+A.color+'"></div>';
+h+='<div class="dims-dot" style="left:'+dimPos(r.v2)+'%;background:'+B.color+'"></div>';
+h+='</div>';
+h+='<div class="dims-hr">'+esc(r.d.right)+'</div>';
+h+='<div class="dims-hv"><span style="color:'+A.color+'">'+fmtVal(r.v1)+'</span><span class="dims-slash">/</span><span style="color:'+B.color+'">'+fmtVal(r.v2)+'</span></div>';
+h+='</div>';
+});
+el.innerHTML='<h4 style="margin-top:0">维度对比 · 面积之外看棱角</h4>'+h;
 }
 const SKY2={W:460,H:460,CX:230,CY:230,R:178,ANG:360/11};
 let cmpReportCopy='';
