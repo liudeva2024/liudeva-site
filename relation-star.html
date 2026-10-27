@@ -157,6 +157,28 @@ border-bottom:1px solid var(--line);
 .cmp-report p:last-child{margin-bottom:0}
 .cmp-report b{color:var(--gold2)}
 .cmp-sec{font-size:12px;color:var(--faint);font-weight:600;letter-spacing:.5px;margin:12px 0 6px}
+/* 维度对比（面积之外的逐维棱角） */
+.dims-sum{font-size:12.5px;color:var(--muted);margin:2px 0 10px;line-height:1.75}
+.dims-sum b{color:var(--text);font-weight:700}
+.dims-head{display:flex;align-items:center;gap:8px;font-size:10.5px;color:var(--faint);letter-spacing:.4px;padding:0 8px 6px}
+.dims-hn{width:72px;flex:none}
+.dims-hl{width:104px;flex:none;text-align:right}
+.dims-ht{flex:1;min-width:110px;text-align:center;font-size:10px}
+.dims-hr{width:104px;flex:none}
+.dims-hv{width:70px;flex:none;text-align:right;font-variant-numeric:tabular-nums;font-size:11px}
+.dims-row{display:flex;align-items:center;gap:8px;padding:7px 8px;border-radius:7px;border-left:3px solid transparent;margin-bottom:4px;font-size:12px}
+.dims-same{background:rgba(127,180,154,.09);border-left-color:#7fb49a}
+.dims-polar{background:rgba(214,102,60,.09);border-left-color:#d9663c}
+.dims-eq{outline:1px dashed rgba(255,255,255,.14);outline-offset:-1px}
+.dims-name{color:var(--text);font-weight:600}
+.dims-row .dims-hl,.dims-row .dims-hr{color:var(--faint);font-size:11px;line-height:1.35}
+.dims-track{position:relative;height:26px}
+.dims-axis{position:absolute;left:0;right:0;top:50%;height:2px;background:var(--line);opacity:.55}
+.dims-mid{position:absolute;left:50%;top:2px;bottom:2px;width:1px;background:rgba(255,255,255,.22)}
+.dims-dot{position:absolute;top:3px;width:12px;height:12px;border-radius:50%;transform:translateX(-50%);border:1px solid rgba(0,0,0,.35);box-shadow:0 0 0 1px rgba(255,255,255,.08)}
+.dims-row .dims-dot:last-of-type{top:13px}
+.dims-hv .dims-slash{color:var(--faint);margin:0 3px}
+@media(max-width:560px){.dims-hl,.dims-hr{display:none}.dims-hn{width:62px}.dims-hv{width:52px}}
 /* 详情视图（星史 / 人物） */
 .detail-top{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:4px 0 14px}
 .detail-title{font-family:"Songti SC","STSong",serif;font-size:19px;font-weight:700;color:var(--gold)}
@@ -352,6 +374,10 @@ details.p-paste textarea:focus{border-color:var(--gold)}
 <span class="li"><span class="dot" style="background:#e0b368"></span>形状 A（虚线）</span>
 <span class="li"><span class="dot" style="background:#6fb8b0"></span>形状 B（实线）</span>
 </div>
+</div>
+<div class="card">
+<h2>维度对比 <span class="tag">11 维逐项 · 面积之外看棱角</span></h2>
+<div class="cmp-dims" id="cmpDims"></div>
 </div>
 <div class="card">
 <h2>AI 对比报告 <span class="tag">两个形状 · 一段解读</span></h2>
