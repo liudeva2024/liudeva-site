@@ -102,9 +102,10 @@ for(const k in coords)coords[k]=Math.round(coords[k]/6*10);
 const tens=[];
 for(const k in sums){
 const a=sums[k];
-if(Math.max.apply(null,a)-Math.min.apply(null,a)>=3)tens.push(k);
+if(new Set(a).size>1)tens.push(k);
 }
 qzFresh=true;
+quizCalKeep=true;
 state.qzTension=tens;
 state.coords=coords;state.mode='free';state.refId=null;personActive=null;
 document.querySelectorAll('#modeSwitch button').forEach(x=>x.classList.toggle('on',x.dataset.mode==='free'));
@@ -131,6 +132,7 @@ if(qzIdx>0){qzIdx--;renderQuiz();}
 
 /* ===== 问卷校准：三题不一致的维度，提示直达拖拽 ===== */
 let qzFresh=false;
+let quizCalKeep=false;
 function renderCalHint(){
 const el=document.getElementById('calHint');if(!el)return;
 const t=state.qzTension||[];
@@ -153,6 +155,18 @@ const r=__renderAll.apply(this,arguments);
 renderCalHint();
 return r;
 };
+const __closeReportAndReset=window.closeReportAndReset;
+window.closeReportAndReset=function(){
+if(quizCalKeep&&(state.qzTension||[]).length){
+document.getElementById('reportMask').classList.remove('on');
+document.getElementById('saveMask').classList.remove('on');
+renderCalHint();
+toast('星图保留在问卷结果上，可拖动校准提示中的维度微调');
+return;
+}
+return __closeReportAndReset.apply(this,arguments);
+};
+document.getElementById('btnReset').addEventListener('click',()=>{quizCalKeep=false;});
 const hint=document.getElementById('calHint');
 hint.addEventListener('click',e=>{
 const b=e.target.closest('button[data-dim]');if(!b)return;
