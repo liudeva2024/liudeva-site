@@ -352,9 +352,10 @@ toast('星图已回到初始状态，可以开始下一张');
 }
 function switchView(v){
 state.view=v;
-const tabV=v==='ref'?'edit':v;
-if(['edit','history','compare','people'].includes(tabV)){
-document.querySelectorAll('#mainTabs button').forEach(b=>b.classList.toggle('on',b.dataset.view===tabV));
+if(['history','compare','people'].includes(v)){
+document.querySelectorAll('#mainTabs button').forEach(b=>b.classList.toggle('on',b.dataset.view===v));
+}else{
+document.querySelectorAll('#mainTabs button').forEach(b=>b.classList.remove('on'));
 }
 document.querySelectorAll('.view').forEach(s=>s.classList.toggle('on',s.id==='view-'+v));
 }
