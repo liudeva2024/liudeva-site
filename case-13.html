@@ -1,1 +1,181 @@
-PLACEHOLDER
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>偷师：把 500 集对谈变成一座随取随用的经验库 — liudeva</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='26' cy='26' r='10' fill='%23e59b53'/%3E%3Ccircle cx='42' cy='40' r='14' fill='none' stroke='%23df6b4a' stroke-width='5'/%3E%3Cpath d='M8 56 L28 56 L20 44 Z' fill='%2393b8bf'/%3E%3C/svg%3E">
+<link href="https://miaoda.feishu.cn/fonts/css2?family=Noto+Sans+SC:wght@300;400;500;700&family=Noto+Serif+SC:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg-deep:#10132b;
+  --bg-mid:#151a38;
+  --bg-soft:#1c2245;
+  --ink:#f1ece2;
+  --ink-dim:#a9b1cb;
+  --ink-faint:#687095;
+  --amber:#e59b53;
+  --ember:#df6b4a;
+  --teal:#93b8bf;
+  --line:rgba(241,236,226,.14);
+  --serif:'Noto Serif SC','Songti SC','SimSun',serif;
+  --sans:'Noto Sans SC','PingFang SC','Microsoft YaHei','Helvetica Neue',Arial,sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg-deep);color:var(--ink);font-family:var(--sans);font-weight:300;line-height:1.9;-webkit-font-smoothing:antialiased}
+a{color:var(--teal);text-decoration:none;transition:color .25s}
+a:hover{color:var(--amber)}
+::selection{background:var(--amber);color:#10132b}
+
+/* ===== header ===== */
+.site-header{position:fixed;top:0;left:0;right:0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:22px 5vw;background:rgba(16,19,43,.82);backdrop-filter:blur(10px)}
+.brand{font-size:15px;letter-spacing:.22em;font-weight:500;color:var(--ink)}
+.brand span{color:var(--amber)}
+.nav{font-size:13px;letter-spacing:.12em}
+.nav a{color:var(--ink-dim)}
+.nav a:hover{color:var(--ink)}
+
+/* ===== article ===== */
+.article{max-width:720px;margin:0 auto;padding:150px 6vw 60px}
+.art-kicker{font-size:12px;letter-spacing:.4em;color:var(--amber)}
+.art-title{font-family:var(--serif);font-size:clamp(1.7rem,4.2vw,2.6rem);line-height:1.5;font-weight:600;letter-spacing:.04em;margin:20px 0 22px}
+.art-lead{font-family:var(--serif);font-size:clamp(1.05rem,2.2vw,1.25rem);color:var(--ink-dim);line-height:2;max-width:620px}
+.art-meta{display:flex;flex-wrap:wrap;gap:12px 28px;margin-top:26px;padding-top:20px;border-top:1px solid var(--line);font-size:12px;letter-spacing:.14em;color:var(--ink-faint)}
+.art-meta b{color:var(--teal);font-weight:400}
+.sec{margin-top:64px}
+.sec h2{font-family:var(--serif);font-size:clamp(1.3rem,3vw,1.7rem);font-weight:600;letter-spacing:.06em;margin-bottom:18px;color:var(--ink)}
+.sec h2::before{content:'';display:inline-block;width:22px;height:1px;background:var(--amber);margin-right:14px;vertical-align:middle}
+.sec p{color:var(--ink-dim);margin-bottom:16px}
+.sec p b{color:var(--ink);font-weight:500}
+.sec ul{list-style:none;margin:0 0 18px}
+.sec li{position:relative;padding-left:22px;color:var(--ink-dim);margin-bottom:12px}
+.sec li::before{content:'';position:absolute;left:2px;top:.85em;width:7px;height:1px;background:var(--amber)}
+.sec li b{color:var(--ink);font-weight:500}
+.art-fig{margin:34px 0;text-align:center}
+.art-fig img{max-width:100%;border:1px solid var(--line);display:block;margin:0 auto}
+.art-fig figcaption{font-size:12px;color:var(--ink-faint);letter-spacing:.2em;margin-top:14px}
+.quote-block{margin-top:76px;padding:38px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);text-align:center}
+.quote-block p{font-family:var(--serif);font-size:clamp(1.1rem,2.4vw,1.35rem);line-height:2;color:var(--ink);letter-spacing:.04em}
+.quote-block small{display:block;margin-top:16px;color:var(--amber);letter-spacing:.3em;font-size:12px}
+.back-row{margin:80px 0 0;text-align:center}
+.back-row a{font-size:13px;letter-spacing:.3em;color:var(--ink-dim)}
+.back-row a:hover{color:var(--amber)}
+
+/* ===== footer ===== */
+footer{padding:64px 5vw 56px;text-align:center;font-size:13px;color:var(--ink-faint);letter-spacing:.1em;line-height:2.2;border-top:1px solid var(--line)}
+footer b{color:var(--ink-dim);font-weight:400}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <a class="brand" href="index.html">liudeva<span>.</span></a>
+  <nav class="nav"><a href="index.html#notes">← 返回田野笔记</a></nav>
+</header>
+
+<main class="article">
+  <div class="art-kicker">FIELD STORIES · CASE 13</div>
+  <h1 class="art-title">偷师：把 500 集对谈变成一座随取随用的经验库</h1>
+  <p class="art-lead">有一种学习方式不上台面，但极有效：偷师。不是抄，是坐在旁边听一个做了二十年的人，把他怎么判断、在哪摔过、付了什么代价，一句一句听完。播客对谈是这种偷师最便宜的入口。</p>
+  <div class="art-meta">
+    <span>时间 · <b>2026.11</b></span>
+    <span>关键词 · <b>知识提炼</b> <b>经验库</b> <b>AI 工作流</b> <b>播客</b></span>
+  </div>
+
+  <section class="sec">
+    <h2>我在做什么</h2>
+    <p>问题是，听完之后，经验还留在对方那里，你只带走一个「听过」的感觉。我用一套 AI 工作流，把近 500 集对谈改写成了一座自己的经验库：<b>五百多条记录，每条带原话、边界和失效条件，问一个具体问题，两分钟内能翻到。</b></p>
+    <p>我在一家媒体机构做数据和流程，不是研究者。我听对谈，是为了解决具体问题：一个行业为什么这么运转，一个人怎么在困境里做决定，我下次遇到同样的事该怎么办。</p>
+    <p>对谈真正值钱的是「过程」：嘉宾会说他的犹豫、付过的代价、事后后悔的地方。这些在成品文章里基本都被抹掉了，只在两个小时的对话里漏出来。</p>
+  </section>
+
+  <section class="sec">
+    <h2>事故现场：三百条笔记，一条也用不上</h2>
+    <p>最初我的做法很朴素：听一集，写三到五条笔记，分进三张表——这个行业怎么运转、别人怎么做事、换个角度看问题。半年攒了三百多条，我以为自己已经有了一座库。</p>
+    <p>直到有一次要回答一个具体问题：某个行业产能为什么上得那么快、下得那么慢。我明明听过一集讲透了，翻表翻了二十分钟，翻到的是「产能扩张要谨慎」「周期是常态」——正确，但一句都用不上。</p>
+    <p>更难看的是，同一条对谈，我在「别人怎么做事」里写了一个动作，又在「换个角度看问题」里写了一副看法，两条互相打架，我自己都说不清哪条算数。</p>
+    <p>那时才承认：<b>我做的是摘抄加分类，不是偷师。摘抄保存了句子，没保存判断；分类保存了主题，没保存用途。</b></p>
+  </section>
+
+  <section class="sec">
+    <h2>破题时刻：不问「讲了什么」，问「下次在哪调用」</h2>
+    <p>转折来自一句很土的验收标准：三个月后我还愿意翻吗？翻到能不能直接用？</p>
+    <p>把这句话拆开，问题就变形了。我原来一直在问「这段讲了什么」，该问的是「下次我要在什么场合调用它」。于是我不再按主题分表，按<b>用途</b>分表。</p>
+    <p>一集对谈能长出五种东西，但一条素材只该长出其中一种：</p>
+    <ul>
+      <li><b>看世界</b>：这个世界、这个行业是怎么运转的——机制；</li>
+      <li><b>照着做</b>：在这个处境里该怎么做——动作；</li>
+      <li><b>换个眼镜</b>：换一副视角看同一件事；</li>
+      <li><b>重历一次</b>：一个值得重新经历的时刻——场景；</li>
+      <li><b>看见相遇</b>：两个人卸下身份、彼此看见的一瞬。</li>
+    </ul>
+    <p>前两种最容易被混在一起：一个是「知道了」，一个是「照着做」。我给自己定了一条硬规矩：同一条素材只能进一张表，不许两边都放。判据只有一句——下次拿来，是要照着做一个动作，还是要换一副看问题的眼镜？分不清，就说明这条素材还没被想清楚，退回原文重读。</p>
+    <figure class="art-fig">
+      <img src="https://media.doubao.com/space/api/box/stream/download/all_by_mount_point/Ck6mb7skhoM8u6xtmruciMofnrd" alt="一条对谈，五种用法">
+      <figcaption>五大用途分流 · 「照着做」与「换个眼镜」互斥 · 一条素材只进一张表</figcaption>
+    </figure>
+  </section>
+
+  <section class="sec">
+    <h2>解法：AI 干苦力，人只定标准和拍板</h2>
+    <p>整套流程里，人只做两件事：<b>定验收标准、对模糊的条目拍板。</b>其余交给工作流：</p>
+    <ul>
+      <li><b>材料进管道</b>：音频转成逐字稿，抽出全文和时长，先判断这条材料该严还是该松——长对谈允许机制链少一环，短材料必须每条都过全部门槛；</li>
+      <li><b>一条素材只回答一个问题</b>：机制、动作、视角、场景、相遇，五选一；每条必须带判断、边界（什么时候失效）、反例；</li>
+      <li><b>原话必填</b>：没有对方原话的判断，都是二手的；宁可写「这份材料没有逐字稿」，也不拿自己的话冒充别人；</li>
+      <li><b>淘汰要指名卡点</b>：被否掉的候选，写清卡在哪一关——缺代价、缺失效条件、顶不掉旧说法；</li>
+      <li><b>不设条数配额</b>：有一张表到今天只有二十六条，我宁可它空着。</li>
+    </ul>
+    <p>AI 在这里不是「帮我总结」，而是把五百集逐字稿读完、把每条的边界追问到底、把不合格的退回重读。<b>这个工作量一个人做不完，所以以前只能摘抄；现在可以真的做提炼。</b></p>
+  </section>
+
+  <section class="sec">
+    <h2>地基：材料源不干净，库就是沙上建塔</h2>
+    <p>五百集对谈，时长一列全空，十条没有核心观点，三集没有逐字稿，还有四篇稿子躺在云空间没进目录。我原以为这是杂活，做完才知道它是地基：一集材料连多长都不知道，就不知道该给它哪套门槛。</p>
+    <p>更麻烦的是「真值在哪」。链接页会骗人——苹果播客的地址如果指向节目主页而不是单集，抓回来的是默认单集的信息；我因此把一集一百零八分钟的对谈写成十一分钟。最后定死一条规矩：<b>以转写稿抬头那行「时长」为唯一真值，统一截断取整，不信任何页面。</b></p>
+    <p>二百五十一条时长重算，全量回读零差异。这件事做完，流水线才有资格谈提炼。</p>
+    <figure class="art-fig">
+      <img src="https://media.doubao.com/space/api/box/stream/download/all_by_mount_point/V4HlbrguNo6XywxIkHbcwIPMnJh" alt="从 500 集音频到一座可调用的经验库">
+      <figcaption>材料上桌 → 一条一用途 → 建成库 → 随时调用 · 551 条（169/152/178/26/26）</figcaption>
+    </figure>
+  </section>
+
+  <section class="sec">
+    <h2>验证：能不能在两分钟内被调用</h2>
+    <p>现在库里是五百五十一条：行业机制一百六十九、做事动作一百五十二、看问题的视角一百七十八、场景二十六、相遇二十六。</p>
+    <p>数量不重要，能验的是三个动作：问一个具体问题，两分钟内能定位到一条带原话、带边界、带反例的记录；读完一条，说得出它什么时候失效；写新东西时，先问它卡在哪一关，而不是先问它像不像。</p>
+    <p>更实际的验证是复用：写稿、开会、跟人争论、给同事解释一个行业，都能直接从库里调一条出来，而不是重新搜、重新听。</p>
+  </section>
+
+  <section class="sec">
+    <h2>经验沉淀</h2>
+    <p><b>做对的：</b></p>
+    <ul>
+      <li>先定验收标准，再定结构——「三个月后还愿意翻、翻到能直接用」这一句，决定了后面所有分表规则；</li>
+      <li>把「分不清」写成规则，而不是靠当天手感：互斥、指名卡点，都是把判断从直觉变成可复核的动作；</li>
+      <li>先修材料源，再谈提炼：时长、观点、转写、目录，四件杂活是整条流水线的地基。</li>
+    </ul>
+    <p><b>踩的坑：</b></p>
+    <ul>
+      <li>先建表后立标准，前期堆的三百条大多是废条；</li>
+      <li>允许一条素材拆多表，结果是同源互咬，两条互相作废；</li>
+      <li>相信链接页而不回原文，错值一片，一集 108 分钟写成 11 分钟。</li>
+    </ul>
+    <p><b>一句话方法论：</b>偷师失败，从来不是因为听得少，是因为经验没有落成可调用的形状；AI 的价值不在总结，在承担「读完、追问、退回」的苦力——它把五百集的规模变得可负担，人才有可能真的把别人的经验收进自己这里。</p>
+  </section>
+
+  <div class="quote-block">
+    <p>偷师不是把别人的话记住，是让他的话在你这里长出一个能调用的接口。<br>一座经验库的专属，不在于收录了什么，而在于口径是你自己拍的。</p>
+    <small>— 从三百条废条，到五百五十一条可调用的经验</small>
+  </div>
+
+  <div class="back-row"><a href="index.html#notes">← 返回田野笔记</a></div>
+</main>
+
+<footer>
+  <b>liudeva</b> · Data Cook, Field Observer, Meaning Surfer<br>
+  © 2026 · 一片仍在生长的生命田野<br>  <span id="busuanzi_container_site_pv" class="stat-line">浏览人数 <span id="busuanzi_value_site_uv"></span> 人 · 浏览次数 <span id="busuanzi_value_site_pv"></span> 次</span></footer>
+
+<script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+</body>
+</html>
